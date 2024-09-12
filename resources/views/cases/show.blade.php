@@ -21,34 +21,53 @@
 
 
 
-            <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-                <ul class="flex flex-wrap -mb-px">
-                    <li class="me-2">
-                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Profile</a>
+{{--            <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">--}}
+{{--                <ul class="flex flex-wrap -mb-px">--}}
+{{--                    <li class="me-2">--}}
+{{--                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Profile</a>--}}
+{{--                    </li>--}}
+{{--                    <li class="me-2">--}}
+{{--                        <a href="#" class="inline-block p-4 text-red-650 border-b-2 border-red-650 rounded-t-lg active" aria-current="page">Dashboard</a>--}}
+{{--                    </li>--}}
+{{--                    <li class="me-2">--}}
+{{--                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Settings</a>--}}
+{{--                    </li>--}}
+{{--                    <li class="me-2">--}}
+{{--                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Contacts</a>--}}
+{{--                    </li>--}}
+{{--                </ul>--}}
+{{--            </div>--}}
+
+            <div class="mb-4 border-b border-gray-200">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist"
+                    data-tabs-active-classes="text-red-650 border-red-650"
+                    data-tabs-inactive-classes="text-gray-500 hover:text-gray-650 dark:text-gray-400 border-gray-100 hover:border-gray-300">
+                    <li class="me-2" role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg" id="context-tab" data-tabs-target="#context" type="button" role="tab" aria-controls="context" aria-selected="false">Contexto</button>
                     </li>
-                    <li class="me-2">
-                        <a href="#" class="inline-block p-4 text-red-650 border-b-2 border-red-650 rounded-t-lg active" aria-current="page">Dashboard</a>
+                    <li class="me-2" role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="analysis-tab" data-tabs-target="#analysis" type="button" role="tab" aria-controls="analysis" aria-selected="false">Análisis Jurídico</button>
                     </li>
-                    <li class="me-2">
-                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Settings</a>
+                    <li class="me-2" role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="resolution-tab" data-tabs-target="#resolution" type="button" role="tab" aria-controls="resolution" aria-selected="false">Resolución</button>
                     </li>
-                    <li class="me-2">
-                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Contacts</a>
+                    <li role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="note-tab" data-tabs-target="#note" type="button" role="tab" aria-controls="note" aria-selected="false">Nota</button>
                     </li>
                 </ul>
             </div>
             <div id="default-tab-content">
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div class="hidden p-4 rounded-lg bg-gray-50" id="context" role="tabpanel" aria-labelledby="context-tab">
+                    <p class="text-sm text-gray-500 ">{{$case->context}}</p>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div class="hidden p-4 rounded-lg bg-gray-50" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
+                    <p class="text-sm text-gray-500 ">{{$case->analysis}}</p>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div class="hidden p-4 rounded-lg bg-gray-50" id="resolution" role="tabpanel" aria-labelledby="resolution-tab">
+                    <p class="text-sm text-gray-500">{{$case->resolution}}</p>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="note" role="tabpanel" aria-labelledby="note-tab">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{$case->note}}</p>
                 </div>
             </div>
 
