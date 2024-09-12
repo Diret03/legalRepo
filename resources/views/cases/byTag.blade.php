@@ -3,9 +3,9 @@
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
 
         <div class="flex items-center flex-wrap mb-8">
-            <h2 class="text-4xl mr-2">Casos de</h2>
+            <h2 class="text-4xl mr-2">Casos de etiqueta:</h2>
             <h2 class="text-4xl font-extrabold underline underline-offset-3 decoration-8 decoration-blue-400">
-                {{$trial_name}}
+                {{$tag_name}}
             </h2>
         </div>
 
@@ -31,9 +31,13 @@
                             <p class="text-gray-700 font-extrabold">Caso:</p>
                             <p class="font-normal text-gray-700">{{$case->id}}</p>
                         </div>
-                        <div class="mb-3 flex items-center">
+                        <div class="mb-1 flex items-center">
                             <p class="text-gray-700 font-extrabold">Fecha:</p>
                             <p class="font-normal text-gray-700">{{$case->date}}</p>
+                        </div>
+                        <div class="mb-3 flex items-center">
+                            <p class="text-gray-700 font-extrabold">Materia:</p>
+                            <p class="font-normal text-gray-700">{{$case->trial->subject->name}}</p>
                         </div>
 
                         <a href="{{route('cases.show',$case->id)}}"

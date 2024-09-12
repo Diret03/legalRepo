@@ -49,12 +49,12 @@
                     @if ($paginator->onFirstPage())
                         <li>
                             <span
-                                class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg cursor-default">Previous</span>
+                                class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg cursor-default">Previo</span>
                         </li>
                     @else
                         <li>
                             <a href="{{ $paginator->previousPageUrl() }}"
-                               class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">Previous</a>
+                               class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">Previo</a>
                         </li>
                     @endif
 
@@ -90,12 +90,12 @@
                     @if ($paginator->hasMorePages())
                         <li>
                             <a href="{{ $paginator->nextPageUrl() }}"
-                               class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">Next</a>
+                               class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">Siguiente</a>
                         </li>
                     @else
                         <li>
                             <span
-                                class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg cursor-default">Next</span>
+                                class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg cursor-default">Siguiente</span>
                         </li>
                     @endif
                 </ul>

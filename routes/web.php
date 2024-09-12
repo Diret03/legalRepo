@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TrialController;
 use App\Http\Controllers\CaseController;
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,7 +22,10 @@ Route::get('/juicios-materia/{id}',  [TrialController::class, 'showTrials'])->na
 Route::get('/casos-juicio/{id}',  [CaseController::class, 'showCasesbyTrial'])->name('cases.showByTrial');
 
 Route::get('/caso/{id}', [CaseController::class, 'show'])->name('cases.show');
+Route::get('/casos', [CaseController::class, 'list'])->name('cases.list');
+Route::get('/casos-etiqueta/{id}',[CaseController::class,'showByTag'])->name('cases.showByTag');
 
+Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
 Route::get('/prueba', function () {
     return view('prueba');

@@ -1,0 +1,28 @@
+<x-app-layout>
+    <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
+        <h2 class="text-4xl font-extrabold mb-8">Etiquetas</h2>
+
+        <div class="py-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-200 rounded-lg shadow mb-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                @foreach($paginatedTags as $letter => $groupedTags)
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-2">{{ $letter }}</h3>
+                        <hr class="mb-4">
+                        <div class="space-y-2">
+                            @foreach($groupedTags as $tag)
+                                <a href="{{ route('cases.showByTag', $tag->id) }}"
+                                   class="block bg-gray-100 rounded-lg p-3 text-lg hover:bg-gray-200 transition-colors duration-200">
+                                    {{ $tag->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="mt-4">
+            {{ $paginatedTags->links() }}
+        </div>
+    </div>
+</x-app-layout>

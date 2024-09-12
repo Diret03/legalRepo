@@ -15,28 +15,23 @@
                 </div>
                 <div class="w-full lg:w-1/2">
                     <x-colon-text label="Origen" value="{{$case->origin}}"/>
-                    <x-colon-text label="Etiquetas" value="aux"/>
+{{--                    <x-colon-text label="Etiquetas" value="aux"/>--}}
+                    <div class="mb-3 flex items-center">
+                        <p class="text-gray-700 font-extrabold mr-3">Etiquetas:</p>
+                        <div class="flex flex-wrap gap-1">
+                            @foreach ($case->tags as $tag)
+                                <a  href="{{ route('cases.showByTag', $tag->id) }}"
+                                    class="bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                                    {{ $tag->name }}
+                                </a>
+                            @endforeach
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
-
-
-{{--            <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">--}}
-{{--                <ul class="flex flex-wrap -mb-px">--}}
-{{--                    <li class="me-2">--}}
-{{--                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Profile</a>--}}
-{{--                    </li>--}}
-{{--                    <li class="me-2">--}}
-{{--                        <a href="#" class="inline-block p-4 text-red-650 border-b-2 border-red-650 rounded-t-lg active" aria-current="page">Dashboard</a>--}}
-{{--                    </li>--}}
-{{--                    <li class="me-2">--}}
-{{--                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Settings</a>--}}
-{{--                    </li>--}}
-{{--                    <li class="me-2">--}}
-{{--                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-red-650 hover:border-red-300">Contacts</a>--}}
-{{--                    </li>--}}
-{{--                </ul>--}}
-{{--            </div>--}}
 
             <div class="mb-4 border-b border-gray-200">
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist"

@@ -13,6 +13,9 @@ class LegalCaseSeeder extends Seeder
      */
     public function run(): void
     {
-        LegalCase::factory()->count(50)->create();
+        LegalCase::factory()
+            ->count(50)
+            ->withTags()
+            ->create();
     }
 }
