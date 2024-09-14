@@ -13,7 +13,7 @@ class CaseController extends Controller
         $cases = LegalCase::where('trial_id',$trial_id)->paginate(5);
         $trial = Trial::where('id',$trial_id)->first();
         $trial_name = $trial->name;
-        return view('cases.byTrial', compact('cases','trial_name'));
+        return view('cases.byTrial', compact('cases','trial','trial_name'));
     }
 
     public function show($id){
@@ -21,6 +21,22 @@ class CaseController extends Controller
         $case = LegalCase::where('id', $id)->first();
         return view('cases.show', compact('case'));
 
+    }
+
+    public function showCaseByTrial($id){
+
+        $case = LegalCase::where('id', $id)->first();
+        $accessedBy = 'trial';
+        return view('cases.show', compact('case', 'accessedBy'));
+
+    }
+
+    public function showCaseByTag($id, $tag)
+    {
+        $case = LegalCase::findOrFail($id); // Using findOrFail for better error handling.
+        $accessedBy = 'tag';
+
+        return view('cases.show', compact('case', 'tag', 'accessedBy'));
     }
 
     public function list(){
@@ -34,7 +50,7 @@ class CaseController extends Controller
         $tag_name = $tag->name;
         $cases = LegalCase::withAnyTags([$tag_name])->paginate(10);
 
-        return view('cases.byTag', compact('cases','tag_name'));
+        return view('cases.byTag', compact('cases','tag','tag_name'));
     }
 
 }

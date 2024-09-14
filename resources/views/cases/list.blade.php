@@ -1,8 +1,10 @@
 <x-app-layout>
 
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
-        <h2 class="text-4xl mr-2 font-extrabold mb-8">Todos los casos</h2>
-
+        <div class="flex items-center flex-wrap mb-8">
+            <x-go-back/>
+            <h2 class="text-4xl mr-2 font-extrabold">Todos los casos</h2>
+        </div>
         <div class="flex-grow">
             @if(count($cases)== 0)
                 <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">

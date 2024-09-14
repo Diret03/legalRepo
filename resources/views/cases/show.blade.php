@@ -1,9 +1,15 @@
 <x-app-layout>
 
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
-
-        <h2 class="text-4xl font-extrabold  mb-8">{{$case->title}}</h2>
-
+        @if ($accessedBy === 'trial')
+            {{ Breadcrumbs::render('caseByTrial', $case) }}
+        @elseif ($accessedBy === 'tag')
+            {{ Breadcrumbs::render('caseByTag', $case, $tag) }}
+        @endif
+        <div class="flex items-center flex-wrap mb-8">
+            <x-go-back/>
+            <h2 class="text-4xl font-extrabold">{{$case->title}}</h2>
+        </div>
         <div class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4">
 
             <div class="flex flex-col lg:flex-row">

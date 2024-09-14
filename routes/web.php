@@ -8,28 +8,37 @@ use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('prueba');
 });
 
 //Route::get('/registros-materias', function () {
 //    return view('subjects');
 //})->name('subjects.index');
 
+Route::get('/go-back', function() {
+    return back();
+})->name('goBack');
+
 Route::get('/materias',  [SubjectController::class, 'list'])->name('subjects.list');
 
-Route::get('/juicios-materia/{id}',  [TrialController::class, 'showTrials'])->name('subjects.show');
+Route::get('/materia/juicio/{id}',  [TrialController::class, 'showTrials'])->name('trials.bySubject');
 
-Route::get('/casos-juicio/{id}',  [CaseController::class, 'showCasesbyTrial'])->name('cases.showByTrial');
+Route::get('/materia/juicio/casos/{id}',  [CaseController::class, 'showCasesbyTrial'])->name('cases.showByTrial');
 
-Route::get('/caso/{id}', [CaseController::class, 'show'])->name('cases.show');
+//Route::get('/caso/{id}', [CaseController::class, 'show'])->name('cases.show');
+Route::get('/tags/caso/{id}/{tag}', [CaseController::class, 'showCaseByTag'])->name('tag.cases.show');
+Route::get('/juicio/caso/{id}', [CaseController::class, 'showCaseByTrial'])->name('trial.cases.show');
+
+
 Route::get('/casos', [CaseController::class, 'list'])->name('cases.list');
 Route::get('/casos-etiqueta/{id}',[CaseController::class,'showByTag'])->name('cases.showByTag');
 
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
-Route::get('/prueba', function () {
+
+Route::get('/inicio', function () {
     return view('prueba');
-})->name('prueba');
+})->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

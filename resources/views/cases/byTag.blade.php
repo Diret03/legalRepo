@@ -1,8 +1,12 @@
 <x-app-layout>
 
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
-
+{{--        @php--}}
+{{--            dd($tag->name);--}}
+{{--        @endphp--}}
+        {{ Breadcrumbs::render('casesByTagDef', $tag) }}
         <div class="flex items-center flex-wrap mb-8">
+            <x-go-back/>
             <h2 class="text-4xl mr-2">Casos de etiqueta:</h2>
             <h2 class="text-4xl font-extrabold underline underline-offset-3 decoration-8 decoration-blue-400">
                 {{$tag_name}}
@@ -24,7 +28,10 @@
                 @foreach($cases as $case)
                     <div class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4">
 
-                        <a href="{{route('cases.show',$case->id)}}">
+{{--                        @php--}}
+{{--                            dd($tag->name);--}}
+{{--                        @endphp--}}
+                        <a href="{{route('tag.cases.show', ['id' => $case->id, 'tag' => $tag])}}">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 underline">{{$case->title}}</h5>
                         </a>
                         <div class="mb-1 flex items-center">
@@ -40,7 +47,7 @@
                             <p class="font-normal text-gray-700">{{$case->trial->subject->name}}</p>
                         </div>
 
-                        <a href="{{route('cases.show',$case->id)}}"
+                        <a href="{{route('tag.cases.show', ['id' => $case->id, 'tag' => $tag])}}"
                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-stone-700 rounded-lg hover:bg-stone-400 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300">
                             Ver más
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"

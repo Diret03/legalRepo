@@ -1,10 +1,13 @@
 <x-app-layout>
 {{--    <x-breadcrumbs/>--}}
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
+        {{ Breadcrumbs::render('trials', $subject) }}
         <div class="flex items-center flex-wrap mb-8">
+
+            <x-go-back/>
             <h2 class="text-4xl mr-2">Juicios de</h2>
             <h2 class="text-4xl font-extrabold underline underline-offset-3 decoration-8 decoration-blue-400">
-                {{$trials[0]->subject->name}}
+                {{$subject->name}}
             </h2>
         </div>
 

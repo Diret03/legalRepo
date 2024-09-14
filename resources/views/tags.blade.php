@@ -1,7 +1,10 @@
 <x-app-layout>
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
-        <h2 class="text-4xl font-extrabold mb-8">Etiquetas</h2>
-
+{{--        {{ Breadcrumbs::render('tags') }}--}}
+        <div class="flex items-center flex-wrap mb-8">
+{{--            <x-go-back/>--}}
+            <h2 class="text-4xl font-extrabold">Etiquetas</h2>
+        </div>
         <div class="py-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-200 rounded-lg shadow mb-4">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 @foreach($paginatedTags as $letter => $groupedTags)
