@@ -21,35 +21,4 @@
     </div>
 </x-app-layout>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let sidebarExpanded = true;
-        const toggleImg = document.getElementById("toggle-img");
-        const sidebar = document.querySelector(".sidebar");
-        const titles = document.querySelectorAll(".title-nav");
 
-        function updateSidebarState() {
-            if (sidebarExpanded) {
-                toggleImg.src = '{{ asset('svg/toggle-on.svg') }}';
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
-                titles.forEach(element => element.classList.remove('hidden'));
-            } else {
-                toggleImg.src = '{{ asset('svg/toggle-off.svg') }}';
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-                titles.forEach(element => element.classList.add('hidden'));
-            }
-        }
-
-        // Set initial state
-        updateSidebarState();
-
-        // Toggle function
-        window.toggleSidebar = function() {
-            sidebarExpanded = !sidebarExpanded;
-            updateSidebarState();
-        }
-    });
-
-</script>
