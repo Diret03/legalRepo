@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 pb-10">
             {{ $paginatedTags->links() }}
         </div>
     </div>

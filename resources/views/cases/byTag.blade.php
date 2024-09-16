@@ -6,7 +6,7 @@
 {{--        @endphp--}}
         {{ Breadcrumbs::render('casesByTagDef', $tag) }}
         <div class="flex items-center flex-wrap mb-8">
-            <x-go-back/>
+            <x-go-back route="{{ route('tags.list')}}" />
             <h2 class="text-4xl mr-2">Casos de etiqueta:</h2>
             <h2 class="text-4xl font-extrabold underline underline-offset-3 decoration-8 decoration-blue-400">
                 {{$tag_name}}

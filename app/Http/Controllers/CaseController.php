@@ -16,10 +16,11 @@ class CaseController extends Controller
         return view('cases.byTrial', compact('cases','trial','trial_name'));
     }
 
-    public function show($id){
+    public function showAll($id){
 
         $case = LegalCase::where('id', $id)->first();
-        return view('cases.show', compact('case'));
+        $accessedBy = 'all';
+        return view('cases.show', compact('case','accessedBy'));
 
     }
 
@@ -33,9 +34,9 @@ class CaseController extends Controller
 
     public function showCaseByTag($id, $tag)
     {
-        $case = LegalCase::findOrFail($id); // Using findOrFail for better error handling.
+        $case = LegalCase::findOrFail($id);
         $accessedBy = 'tag';
-
+//        dd($tag);
         return view('cases.show', compact('case', 'tag', 'accessedBy'));
     }
 

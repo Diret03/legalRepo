@@ -7,7 +7,15 @@
             {{ Breadcrumbs::render('caseByTag', $case, $tag) }}
         @endif
         <div class="flex items-center flex-wrap mb-8">
-            <x-go-back/>
+            @if ($accessedBy === 'trial')
+                <x-go-back route="{{ route('cases.showByTrial',$case->trial->id) }}" />
+            @elseif ($accessedBy === 'tag')
+{{--                <x-go-back route="{{ route('cases.showByTag', [$case->id, $tag]) }}" />--}}
+                <x-go-back route="{{ url()->previous() }}" />
+            @else
+                <x-go-back route="{{ url()->previous() }}" />
+            @endif
+
             <h2 class="text-4xl font-extrabold">{{$case->title}}</h2>
         </div>
         <div class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4">

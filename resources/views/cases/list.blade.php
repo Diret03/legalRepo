@@ -2,7 +2,7 @@
 
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
         <div class="flex items-center flex-wrap mb-8">
-            <x-go-back/>
+            <x-go-back route="{{route('home')}}"/>
             <h2 class="text-4xl mr-2 font-extrabold">Todos los casos</h2>
         </div>
         <div class="flex-grow">

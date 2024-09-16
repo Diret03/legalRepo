@@ -4,7 +4,7 @@
         {{ Breadcrumbs::render('trials', $subject) }}
         <div class="flex items-center flex-wrap mb-8">
 
-            <x-go-back/>
+            <x-go-back route="{{ route('subjects.list')}}" />
             <h2 class="text-4xl mr-2">Juicios de</h2>
             <h2 class="text-4xl font-extrabold underline underline-offset-3 decoration-8 decoration-blue-400">
                 {{$subject->name}}
@@ -19,6 +19,7 @@
                     </a>
                     <p class="mb-3 font-normal text-gray-700">{{$trial->description}}</p>
                     <a href="{{route('cases.showByTrial',$trial->id)}}"
+
                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-stone-700 rounded-lg hover:bg-stone-400 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300">
                         Ver casos
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"

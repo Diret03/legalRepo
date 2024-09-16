@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
         {{ Breadcrumbs::render('casesByTrial', $trial) }}
         <div class="flex items-center flex-wrap mb-8">
-            <x-go-back/>
+            <x-go-back route="{{route('trials.bySubject',$trial->subject->id)}}" />
             <h2 class="text-4xl mr-2">Casos de</h2>
             <h2 class="text-4xl font-extrabold underline underline-offset-3 decoration-8 decoration-blue-400">
                 {{$trial_name}}
