@@ -44,7 +44,6 @@ class CaseController extends Controller
         $cases = LegalCase::paginate(10);
         return view('cases.list',compact('cases'));
     }
-
     public function showByTag($id){
 
         $tag = Tag::where('id', $id)->first();
