@@ -29,7 +29,7 @@
             <img src="{{ asset('svg/trials.svg') }}" class="size-5 mr-4" alt="juicios icon"  style="filter: brightness(0) invert(1);">
             <p class="title-nav transition-opacity duration-300 ease-in-out">Juicios</p>
         </a>
-        <a role="button" href="#"
+        <a role="button" href="{{route('users.index')}}"
            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
             <img src="{{ asset('svg/users.svg') }}" class="size-5 mr-4" alt="usuarios icon" style="filter: brightness(0) invert(1);">
             <p class="title-nav transition-opacity duration-300 ease-in-out">Usuarios</p>

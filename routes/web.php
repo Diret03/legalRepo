@@ -5,6 +5,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TrialController;
 use App\Http\Controllers\CaseController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,7 @@ Route::get('/casos-etiqueta/{id}',[CaseController::class,'showByTag'])->name('ca
 
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
+Route::resource('/dashboard/users', UserController::class);
 
 Route::get('/inicio', function () {
     return view('prueba');
