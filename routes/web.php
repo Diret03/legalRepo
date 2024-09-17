@@ -37,6 +37,7 @@ Route::get('/casos-etiqueta/{id}',[CaseController::class,'showByTag'])->name('ca
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
 Route::resource('/dashboard/users', UserController::class);
+Route::get("search",[UserController::class,'search'])->name('users.search');
 
 Route::get('/inicio', function () {
     return view('prueba');

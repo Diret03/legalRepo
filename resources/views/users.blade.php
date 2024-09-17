@@ -5,7 +5,6 @@
 
         <!-- Main Content -->
 
-        {{--            <x-table></x-table>--}}
 
 
         <div class="flex-1 m-10 relative overflow-x-auto border-t rounded-lg">
@@ -27,35 +26,69 @@
                     </div>
             @endif
             <div class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-                <div>
-                    <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                            class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
-                            type="button">
-                        <span class="sr-only">Action button</span>
-                        Acción
-                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                             fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                  stroke-width="2" d="m1 1 4 4 4-4"/>
-                        </svg>
-                    </button>
-                    <!-- Dropdown menu -->
-                    <div id="dropdownAction"
-                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                            aria-labelledby="dropdownActionButton">
-                            <li>
-                                <a href="#"
-                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
-                            </li>
-                        </ul>
 
+                <div class="flex items-center">
+                    <div>
+                        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
+                                type="button">
+                            <span class="sr-only">Action button</span>
+                            Acción
+                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="m1 1 4 4 4-4"/>
+                            </svg>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div id="dropdownAction"
+                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="dropdownActionButton">
+                                <li>
+                                    <a href="#"
+                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
+                                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
+                                type="button">
+                            <span class="sr-only">Action button</span>
+                            Ordenar
+                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="m1 1 4 4 4-4"/>
+                            </svg>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div id="dropdownAction2"
+                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="dropdownActionButton2">
+                                <li>
+                                    <a href="{{route('users.index')}}?sort=created_at&direction=desc"
+                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más recientes</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('users.index')}}?sort=created_at&direction=asc"
+                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más antiguos</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+
+
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="flex items-center">
 
@@ -75,7 +108,7 @@
                                       stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                             </svg>
                         </div>
-                        <input type="text" id="table-search-users"
+                        <input type="text" id="search" name="search"
                                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                placeholder="Buscar usuarios">
                     </div>
@@ -97,6 +130,9 @@
                         Nombre
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Apellido
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Correo
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -107,7 +143,7 @@
                     </th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="users-data">
                 @foreach($users as $user)
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="w-4 p-4">
@@ -117,14 +153,12 @@
                                 <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
                             </div>
                         </td>
-                        <th scope="row"
-                            class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-
-                            <div class="ps-0">
-                                <div class="text-base font-semibold">{{$user->name}} {{$user->last_name}}</div>
-
-                            </div>
-                        </th>
+                        <td class="px-6 py-4">
+                            {{$user->name}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{$user->last_name}}
+                        </td>
                         <td class="px-6 py-4">
                             {{$user->email}}
                         </td>
@@ -147,9 +181,11 @@
                     </tr>
                 @endforeach
 
-
                 </tbody>
             </table>
+                <div class="pagination mt-4 pb-10">
+                    {{ $users->links() }}
+                </div>
         </div>
 
     </div>
@@ -179,31 +215,42 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <form class="space-y-4" action="{{route('users.store')}}" method="POST">
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <strong class="font-bold">Oops!</strong>
+                        <span class="block sm:inline">Please correct the following errors:</span>
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form class="space-y-4" action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
                         <input type="text" name="name" id="name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe tu nombre" required/>
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('name') border-red-500 @enderror"
+                               placeholder="Escribe tu nombre" required value="{{ old('name') }}"/>
                     </div>
                     <div>
                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
                         <input type="text" name="last_name" id="last_name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe tu apellido" required/>
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('last_name') border-red-500 @enderror"
+                               placeholder="Escribe tu apellido" required value="{{ old('last_name') }}"/>
                     </div>
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo electrónico</label>
                         <input type="email" name="email" id="email"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe tu correo electrónico" required/>
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('email') border-red-500 @enderror"
+                               placeholder="Escribe tu correo electrónico" required value="{{ old('email') }}"/>
                     </div>
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Contraseña</label>
                         <input type="password" name="password" id="password" placeholder="••••••••"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('password') border-red-500 @enderror"
                                required/>
                     </div>
 
@@ -217,4 +264,35 @@
     </div>
 </div>
 
+<script>
 
+    $(document).ready(function(){
+        $('#search').on('keyup', function (){
+
+            let query = $(this).val();
+
+            if(query.length > 0) {
+                // hide pagination links container
+                $('.pagination').hide();
+            } else {
+                // show pagination links container when input is empty
+                $('.pagination').show();
+            }
+
+            $.ajax({
+                url: "{{ route('users.search') }}",
+                type: "GET",
+                data: { 'search': query },
+                success: function(data){
+                    $('#users-data').html(data);
+                },
+                error: function(){
+                    console.log("Error fetching data");
+                }
+            });
+
+        });
+    });
+
+
+</script>
