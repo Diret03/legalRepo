@@ -58,12 +58,22 @@ class UserController extends Controller
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                 <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5"
+                                   data-modal-target="edit-modal" data-modal-toggle="edit-modal"
+                                   data-user-id='.$row->id.'
+                                   data-user-name='.$row->name.'
+                                   data-user-last-name='.$row->last_name.'
+                                   data-user-email='.$row->email.'>
                                     <img src="' . asset('svg/edit.svg') . '" class="size-7" alt="Editar icon">
                                 </a>
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                    <img src="' . asset('svg/delete.svg') . '" class="size-7" alt="Editar icon">
-                                </a>
+                                <form action="' . route('users.destroy', $row->id) . '" method="POST">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                            onclick="return confirm(\'¿Estás seguro de que deseas eliminar este registro?\')">
+                                        <img src="' . asset('svg/delete.svg') . '" class="size-7" alt="Borrar icon">
+                                    </button>
+                                 </form>
                             </div>
                         </td>
                     </tr>';
@@ -99,6 +109,29 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');
 
     }
+
+    public function update(Request $request, $id){
+
+        $user = User::findOrFail($id);
+
+        $validated_data = $request->validate([
+            'name' => 'required|alpha:ascii',
+            'last_name' => 'required|alpha:ascii',
+            'email' =>  ['required', 'max:255', 'email'],
+            'password' => 'required|string',
+        ]);
+
+        $user ->update([
+            'name' => $validated_data['name'],
+            'last_name' => $validated_data['last_name'],
+            'email' => $validated_data['email'],
+            'password' => Hash::make($validated_data['password']),
+        ]);
+
+        return redirect()->back()->with('success', 'Usuario actualizado exitosamente.');
+
+    }
+
 
     public function deleteSelected(Request $request){
 

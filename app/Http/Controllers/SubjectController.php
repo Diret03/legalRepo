@@ -82,6 +82,7 @@ class SubjectController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+
         $path = NULL;
         $filename = NULL;
 
@@ -100,6 +101,37 @@ class SubjectController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Materia creada exitosamente.');
+
+    }
+
+    public function update(Request $request, $id){
+
+        $subject = Subject::findOrFail($id);
+
+        $validated_data = $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $path = NULL;
+        $filename = NULL;
+
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $extension = $image->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $path = 'uploads/subjects/';
+            $image->move($path, $filename);
+        }
+
+        $subject->update([
+            'name' => $validated_data['name'],
+            'description' => $validated_data['description'],
+            'image' => $path.$filename,
+        ]);
+
+        return redirect()->back()->with('success', 'Materia actualizada exitosamente.');
 
     }
 

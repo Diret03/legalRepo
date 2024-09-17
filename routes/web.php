@@ -36,15 +36,19 @@ Route::get('/casos-etiqueta/{id}',[CaseController::class,'showByTag'])->name('ca
 
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
-// User routes
-Route::resource('/dashboard/users', UserController::class);
-Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
-Route::delete("/dashboard/users/selected", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
 
-// Subject routes
-Route::resource('/dashboard/subjects', SubjectController::class);
-Route::get("/dashboard/materias/search", [SubjectController::class, 'search'])->name('subjects.search');
-Route::delete("/dashboard/materias/selected", [SubjectController::class, 'deleteSelected'])->name('subjects.deleteSelected');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // User routes
+    Route::resource('/dashboard/users', UserController::class);
+    Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+    Route::delete("/dashboard/users/selected", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
+
+    // Subject routes
+    Route::resource('/dashboard/subjects', SubjectController::class);
+    Route::get("/dashboard/materias/search", [SubjectController::class, 'search'])->name('subjects.search');
+    Route::delete("/dashboard/materias/selected", [SubjectController::class, 'deleteSelected'])->name('subjects.deleteSelected');
+});
+
 
 
 Route::get('/inicio', function () {
