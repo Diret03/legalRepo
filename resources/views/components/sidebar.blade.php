@@ -19,7 +19,7 @@
             <img src="{{ asset('svg/cases.svg') }}" class="size-5 mr-4" alt="casos icon"  style="filter: brightness(0) invert(1);">
             <p class="title-nav transition-opacity duration-300 ease-in-out">Casos</p>
         </a>
-        <a role="button" href="#"
+        <a role="button" href="{{route('subjects.index')}}"
            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
             <img src="{{ asset('svg/subjects.svg') }}" class="size-5 mr-4" alt="materias icon"  style="filter: brightness(0) invert(1);">
             <p class="title-nav transition-opacity duration-300 ease-in-out">Materias</p>

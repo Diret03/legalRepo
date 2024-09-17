@@ -13,6 +13,7 @@ class Subject extends Model
     protected $fillable = [
         'name',
         'description',
+        'image'
     ];
 
     public function trials(){

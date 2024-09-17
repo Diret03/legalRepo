@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('subject_id');
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
 
             //constraints
             $table->foreign('subject_id')->references('id')->on('subjects')->onUpdate('cascade');

@@ -39,12 +39,12 @@ class UserController extends Controller
             if (count($data) > 0) {
                 foreach($data as $row){
                     $output .= '
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <tr id="user_ids'.$row->id.'" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="w-4 p-4">
                             <div class="flex items-center">
-                                <input id="checkbox-table-search-1" type="checkbox"
-                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                <input name="ids" type="checkbox" value='.$row->id.'
+                                       class="checkbox_ids w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="checkbox_ids " class="sr-only">checkbox</label>
                             </div>
                         </td>
                         <td class="px-6 py-4">' . $row->name . '</td>
@@ -98,5 +98,21 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');
 
+    }
+
+    public function deleteSelected(Request $request){
+
+        $ids = $request->ids;
+        User::whereIn('id',$ids)->delete();
+        return response()->json(['success'=>'Usuarios eliminados correctamente.']);
+
+    }
+
+    public function destroy($id)
+    {
+        $project = User::findOrFail($id);
+        $project->delete();
+
+        return redirect()->back()->with('success', 'Usuario eliminado exitosamente.');
     }
 }

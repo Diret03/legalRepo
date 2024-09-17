@@ -76,12 +76,12 @@
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="dropdownActionButton2">
                                 <li>
-                                    <a href="{{route('users.index')}}?sort=created_at&direction=desc"
+                                    <a href="{{route('subjects.index')}}?sort=created_at&direction=desc"
                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                         recientes</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('users.index')}}?sort=created_at&direction=asc"
+                                    <a href="{{route('subjects.index')}}?sort=created_at&direction=asc"
                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                         antiguos</a>
                                 </li>
@@ -96,8 +96,8 @@
 
                     <a href="#" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
                        class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
-                        <img src="{{asset('svg/add-user.svg')}}" class="size-7 mr-3" alt="Agregar usuario icon">
-                        <p>Agregar Usuario</p>
+                        <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
+                        <p>Agregar Materia</p>
                     </a>
 
 
@@ -113,7 +113,7 @@
                         </div>
                         <input type="text" id="search" name="search"
                                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               placeholder="Buscar usuarios">
+                               placeholder="Buscar materias">
                     </div>
 
                 </div>
@@ -132,52 +132,52 @@
                     <th scope="col" class="px-6 py-3">
                         Nombre
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Apellido
+                    <th scope="col" class="desc px-6 py-3">
+                        Descripción
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Correo
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Estado
+                    <th scope="col" class="desc px-6 py-3">
+                        Imagen
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Acción
                     </th>
                 </tr>
                 </thead>
-                <tbody id="users-data">
-                @foreach($users as $user)
-                    <tr id="user_ids{{$user->id}}"
+                <tbody id="subjects-data">
+                @foreach($subjects as $subject)
+                    <tr id="subject_ids{{$subject->id}}"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="w-4 p-4">
                             <div class="flex items-center">
-                                <input name="ids" type="checkbox" value="{{$user->id}}"
+                                <input name="ids" type="checkbox" value="{{$subject->id}}"
                                        class="checkbox_ids w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="checkbox_ids" class="sr-only">checkbox</label>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            {{$user->name}}
+                            {{$subject->name}}
                         </td>
                         <td class="px-6 py-4">
-                            {{$user->last_name}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{$user->email}}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-                                Activo
+                            <button
+                                class="toggle-description text-blue-600 hover:underline"
+                                data-project-id="{{ $subject->id }}">
+                                <img src="{{ asset('svg/plus.svg') }}"
+                                     class="w-5 h-5" alt="Agregar icon">
+                            </button>
+{{--                            {{$subject->description}}--}}
+                            <div class="description-content hidden mt-2">
+                                {{ $subject->description }}
                             </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <img src="{{asset($subject->image)}}" class="size-10" alt="Imagen materia">
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
                                     <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
                                 </a>
-                                <form action="{{route('users.destroy',$user->id)}}" method="POST">
+                                <form action="{{route('subjects.destroy',$subject->id)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -185,6 +185,7 @@
                                         <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                     </button>
                                 </form>
+
                             </div>
                         </td>
                     </tr>
@@ -193,14 +194,14 @@
                 </tbody>
             </table>
             <div class="pagination mt-4 pb-10">
-                {{ $users->links() }}
+                {{ $subjects->links() }}
             </div>
         </div>
 
     </div>
 </x-app-layout>
 
-<!-- Add user modal -->
+<!-- Add subject modal -->
 <div id="authentication-modal" tabindex="-1" aria-hidden="true"
      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
@@ -209,7 +210,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Agregar usuario
+                    Agregar materia
                 </h3>
                 <button type="button"
                         class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -224,47 +225,36 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                @if ($errors->any())
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-                         role="alert">
-                        <strong class="font-bold">Oops!</strong>
-                        <span class="block sm:inline">Please correct the following errors:</span>
-                        <ul class="list-disc list-inside">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <form class="space-y-4" action="{{ route('users.store') }}" method="POST">
+                <form class="space-y-4" action="{{ route('subjects.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div>
                         <label for="name"
                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
                         <input type="text" name="name" id="name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('name') border-red-500 @enderror"
-                               placeholder="Escribe tu nombre" required value="{{ old('name') }}"/>
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                               placeholder="Escribir nombre" required value="{{ old('name') }}"/>
                     </div>
                     <div>
-                        <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
-                        <input type="text" name="last_name" id="last_name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('last_name') border-red-500 @enderror"
-                               placeholder="Escribe tu apellido" required value="{{ old('last_name') }}"/>
+                        <label for="description"
+                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
+                        <textarea name="description" id="description"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                               required value="{{ old('description') }}"></textarea>
                     </div>
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
-                            electrónico</label>
-                        <input type="email" name="email" id="email"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('email') border-red-500 @enderror"
-                               placeholder="Escribe tu correo electrónico" required value="{{ old('email') }}"/>
+{{--                        <label for="image"--}}
+{{--                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen</label>--}}
+{{--                        <input type="file" name="image" id="image"--}}
+{{--                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"--}}
+{{--                               placeholder="Escribir nombre" required/>--}}
+
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">Subir imagen</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none" aria-describedby="image_help" id="image" name="image" type="file">
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">JPEG, JPG o PNG.</p>
+
+
                     </div>
-                    <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Contraseña</label>
-                        <input type="password" name="password" id="password" placeholder="••••••••"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('password') border-red-500 @enderror"
-                               required/>
-                    </div>
+
 
                     <button type="submit"
                             class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
@@ -279,6 +269,7 @@
 <script>
 
     $(document).ready(function () {
+
         $('#search').on('keyup', function () {
 
             let query = $(this).val();
@@ -292,20 +283,19 @@
             }
 
             $.ajax({
-                url: "{{ route('users.search') }}",
+                url: "{{ route('subjects.search') }}",
                 type: "GET",
                 data: {'search': query},
                 success: function (data) {
-                    $('#users-data').html(data);
+                    $('#subjects-data').html(data);
                 },
-                error: function (xhr, status, error) {
-                    console.error('Error al buscar:', error);
-                    console.error('Detalles del error:', xhr, status);
-                    // alert('Error al desactivar los elementos seleccionados');
+                error: function () {
+                    console.log("Error fetching data");
                 }
             });
-
         });
+
+
     });
 
     $(function (e) {
@@ -335,10 +325,10 @@
                 all_ids.push($(this).val());
             });
 
-            console.log("IDs to delete: "+all_ids);
+            console.log("IDs to delete: " + all_ids);
 
             $.ajax({
-                url: "{{route('users.deleteSelected')}}",
+                url: "{{route('subjects.deleteSelected')}}",
                 type: "DELETE",
                 data: {
                     ids: all_ids,
@@ -346,13 +336,28 @@
                 },
                 success: function (response) {
                     $.each(all_ids, function (key, val) {
-                        $('user_ids' + val).remove();
+                        $('subject_ids' + val).remove();
                     })
                 }
 
             });
 
 
+        });
+    });
+
+    // Toggle description visibility
+    document.querySelectorAll('.toggle-description').forEach(button => {
+        button.addEventListener('click', function() {
+            const descriptionContent = this.nextElementSibling;
+            if (descriptionContent.classList.contains('hidden')) {
+                descriptionContent.classList.remove('hidden');
+                this.querySelector('img').src =
+                    '{{ asset('svg/minus.svg') }}';
+            } else {
+                descriptionContent.classList.add('hidden');
+                this.querySelector('img').src = '{{ asset('svg/plus.svg') }}';
+            }
         });
     });
 
