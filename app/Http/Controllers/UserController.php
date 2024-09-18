@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -117,26 +118,34 @@ class UserController extends Controller
 
     }
 
-    public function update(Request $request, $id){
+    public function edit($id){
 
+        $user = User::findOrFail($id);
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
         $user = User::findOrFail($id);
 
         $validated_data = $request->validate([
             'name' => 'required|alpha:ascii',
             'last_name' => 'required|alpha:ascii',
-            'email' =>  ['required', 'max:255', 'email'],
-            'password' => 'required|string',
+            'email' => ['required', 'max:255', 'email', Rule::unique('users')->ignore($user->id)],
+            'password' => 'nullable|string|min:8',
         ]);
 
-        $user ->update([
-            'name' => $validated_data['name'],
-            'last_name' => $validated_data['last_name'],
-            'email' => $validated_data['email'],
-            'password' => Hash::make($validated_data['password']),
-        ]);
+        $user->name = $validated_data['name'];
+        $user->last_name = $validated_data['last_name'];
+        $user->email = $validated_data['email'];
 
-        return redirect()->back()->with('success', 'Usuario actualizado exitosamente.');
+        if (!empty($validated_data['password'])) {
+            $user->password = Hash::make($validated_data['password']);
+        }
 
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 
 

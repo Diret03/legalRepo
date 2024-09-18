@@ -177,13 +177,8 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center">
 
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5"
-                                   data-modal-target="edit-modal" data-modal-toggle="edit-modal"
-                                   data-user-id="{{ $user->id }}"
-                                   data-user-name="{{ $user->name }}"
-                                   data-user-last-name="{{ $user->last_name }}"
-                                   data-user-email="{{ $user->email }}">
-                                    <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
+                                <a href="{{route('users.edit',$user->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                        <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
                                 </a>
                                 <form action="{{route('users.destroy',$user->id)}}" method="POST">
                                     @csrf

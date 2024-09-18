@@ -41,6 +41,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User routes
     Route::resource('/dashboard/users', UserController::class);
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+//    Route::get('/dashboard/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+//    Route::put('/dashboard/users/{id}/u', [UserController::class, 'edit'])->name('users.edit');
     Route::delete("/dashboard/users/selected", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
 
     // Subject routes
