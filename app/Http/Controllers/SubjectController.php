@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\Trial;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class SubjectController extends Controller
@@ -27,10 +29,15 @@ class SubjectController extends Controller
             $query = $request->input('search');
 
             if ($query != '') {
-                // Perform case-insensitive search by converting both to lower case
-                $data = Subject::whereRaw('LOWER(id) LIKE ?', ['%' . strtolower($query) . '%'])
-                    ->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
-                    ->orWhereRaw('LOWER(description) LIKE ?', ['%' . strtolower($query) . '%'])
+                $dbDriver = DB::getDriverName();
+
+                // Use ILIKE for PostgreSQL and LIKE for others
+                $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
+
+                // Perform search query
+                $data = Subject::where('id', $likeOperator, '%' . $query . '%')
+                    ->orWhere('name', $likeOperator, '%' . $query . '%')
+                    ->orWhere('description', $likeOperator, '%' . $query . '%')
                     ->get();
             } else {
 
@@ -50,11 +57,24 @@ class SubjectController extends Controller
                             </div>
                         </td>
                         <td class="px-6 py-4">' . $row->name . '</td>
-                        <td class="px-6 py-4">' . $row->description . '</td>
+                        <td class="px-6 py-4">
+                           <button
+                                class="toggle-description text-blue-600 hover:underline"
+                                data-project-id="{{ $subject->id }}">
+                                <img src="' .asset('svg/plus.svg').'"
+                                     class="w-5 h-5" alt="Agregar icon">
+                            </button>
+                           <div class="description-content hidden mt-2">
+                                '.$row->description.'
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <img src="'.asset($row->image).'" class="size-10" alt="Imagen materia">
+                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                                    <img src="' . asset('svg/edit.svg') . '" class="size-7" alt="Editar icon">
+                                <a href="'.route('subjects.edit',$row->id).'" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                        <img src="' . asset('svg/edit.svg') . '" class="size-7" alt="Editar icon">
                                 </a>
                                 <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                     <img src="' . asset('svg/delete.svg') . '" class="size-7" alt="Borrar icon">
@@ -104,6 +124,13 @@ class SubjectController extends Controller
 
     }
 
+    public function edit($id){
+
+        $subject = Subject::findOrFail($id);
+        return view('subjects.edit', compact('subject'));
+    }
+
+
     public function update(Request $request, $id){
 
         $subject = Subject::findOrFail($id);
@@ -134,7 +161,7 @@ class SubjectController extends Controller
             'description' => $validated_data['description'],
         ]);
 
-        return redirect()->back()->with('success', 'Materia actualizada exitosamente.');
+        return redirect()->route('subjects.index')->with('success', 'Materia actualizada exitosamente.');
 
     }
 
