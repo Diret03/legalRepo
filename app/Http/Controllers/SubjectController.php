@@ -27,10 +27,10 @@ class SubjectController extends Controller
             $query = $request->input('search');
 
             if ($query != '') {
-                // Perform search query with wildcards for matching substrings
-                $data = Subject::where('id', 'like', '%' . $query . '%')
-                    ->orWhere('name', 'like', '%' . $query . '%')
-                    ->orWhere('description', 'like', '%' . $query . '%')
+                // Perform case-insensitive search by converting both to lower case
+                $data = Subject::whereRaw('LOWER(id) LIKE ?', ['%' . strtolower($query) . '%'])
+                    ->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
+                    ->orWhereRaw('LOWER(description) LIKE ?', ['%' . strtolower($query) . '%'])
                     ->get();
             } else {
 
@@ -123,12 +123,15 @@ class SubjectController extends Controller
             $filename = time() . '.' . $extension;
             $path = 'uploads/subjects/';
             $image->move($path, $filename);
+
+            $subject->update([
+                'image' => $path.$filename,
+            ]);
         }
 
         $subject->update([
             'name' => $validated_data['name'],
             'description' => $validated_data['description'],
-            'image' => $path.$filename,
         ]);
 
         return redirect()->back()->with('success', 'Materia actualizada exitosamente.');

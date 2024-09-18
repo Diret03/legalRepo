@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -15,7 +16,7 @@ class UserController extends Controller
 
         $users = User::orderBy($sortField, $sortDirection)->paginate(10);
 
-        return view('users', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     public function search(Request $request){
@@ -24,12 +25,18 @@ class UserController extends Controller
             $query = $request->input('search');
 
             if ($query != '') {
-                // Perform search query with wildcards for matching substrings
-                $data = User::where('id', 'like', '%' . $query . '%')
-                    ->orWhere('name', 'like', '%' . $query . '%')
-                    ->orWhere('last_name', 'like', '%' . $query . '%')
-                    ->orWhere('email', 'like', '%' . $query . '%')
+                $dbDriver = DB::getDriverName();
+
+                // Use ILIKE for PostgreSQL and LIKE for others
+                $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
+
+                // Perform search query
+                $data = User::where('id', $likeOperator, '%' . $query . '%')
+                    ->orWhere('name', $likeOperator, '%' . $query . '%')
+                    ->orWhere('last_name', $likeOperator, '%' . $query . '%')
+                    ->orWhere('email', $likeOperator, '%' . $query . '%')
                     ->get();
+
             } else {
                 // If search query is empty, return all users
                 $data = User::paginate(10);
