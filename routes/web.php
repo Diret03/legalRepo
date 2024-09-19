@@ -52,6 +52,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/dashboard/trials', TrialController::class);
     Route::get("/trials/search", [TrialController::class, 'search'])->name('trials.search');
     Route::delete("/dashboard/selected-trials", [TrialController::class, 'deleteSelected'])->name('trials.delete');
+
+    // Cases routes
+    Route::resource('/dashboard/cases', CaseController::class);
+    Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.search');
+    Route::delete("/dashboard/selected-cases", [CaseController::class, 'deleteSelected'])->name('cases.delete');
 });
 
 

@@ -19,6 +19,7 @@ class LegalCase extends Model
         'context',
         'analysis',
         'resolution',
+        'note',
         'trial_id'
     ];
 

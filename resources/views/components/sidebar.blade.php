@@ -15,7 +15,7 @@
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
 
-        <x-dash-link href="{{ route('cases.list') }}" icon="svg/cases.svg" title="Casos" activeRoute="cases.index"/>
+        <x-dash-link href="{{ route('cases.index') }}" icon="svg/cases.svg" title="Casos" activeRoute="cases.index"/>
 
         <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>
 

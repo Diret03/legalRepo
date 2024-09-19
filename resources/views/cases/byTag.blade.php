@@ -40,7 +40,7 @@
                         </div>
                         <div class="mb-1 flex items-center">
                             <p class="text-gray-700 font-extrabold">Fecha:</p>
-                            <p class="font-normal text-gray-700">{{$case->date}}</p>
+                            <p class="font-normal text-gray-700">{{\Carbon\Carbon::parse($case->date)->format('d/m/Y')}}</p>
                         </div>
                         <div class="mb-3 flex items-center">
                             <p class="text-gray-700 font-extrabold">Materia:</p>
