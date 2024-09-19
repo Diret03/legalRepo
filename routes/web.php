@@ -41,14 +41,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User routes
     Route::resource('/dashboard/users', UserController::class);
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
-//    Route::get('/dashboard/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-//    Route::put('/dashboard/users/{id}/u', [UserController::class, 'edit'])->name('users.edit');
     Route::delete("/dashboard/users/selected", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
 
     // Subject routes
     Route::resource('/dashboard/subjects', SubjectController::class);
     Route::get("/dashboard/materias/search", [SubjectController::class, 'search'])->name('subjects.search');
     Route::delete("/dashboard/materias/selected", [SubjectController::class, 'deleteSelected'])->name('subjects.deleteSelected');
+
+    // Trials routes
+    Route::resource('/dashboard/trials', TrialController::class);
+    Route::get("/trials/search", [TrialController::class, 'search'])->name('trials.search');
+    Route::delete("/dashboard/selected-trials", [TrialController::class, 'deleteSelected'])->name('trials.delete');
 });
 
 

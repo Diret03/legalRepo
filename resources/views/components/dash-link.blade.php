@@ -1,11 +1,8 @@
-@props(['active'])
+@props(['href', 'icon', 'title', 'activeRoute'])
 
-@php
-    $classes = ($active ?? false)
-                ? 'inline-flex items-center px-1 pt-1 border-b-4 border-red-900 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-red-900 transition duration-150 ease-in-out'
-                : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-slate-50 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out';
-@endphp
-
-<a {{ $attributes->merge(['class' => $classes]) }}>
-    {{ $slot }}
+<a href="{{ $href }}"
+   class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start
+   {{ Route::is($activeRoute) ? 'bg-zinc-100 bg-opacity-80 text-black' : '' }} hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
+    <img src="{{ asset($icon) }}" class="size-5 mr-4" alt="{{ $title }} icon" style="filter: brightness(0) invert(1);">
+    <p class="title-nav transition-opacity duration-300 ease-in-out">{{ $title }}</p>
 </a>

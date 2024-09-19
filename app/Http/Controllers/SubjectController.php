@@ -69,16 +69,22 @@ class SubjectController extends Controller
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <img src="'.asset($row->image).'" class="size-10" alt="Imagen materia">
+                            <img src="' . ($row->image ? asset($row->image) : asset('svg/no-image.svg')) . '"
+                            class="size-16" alt="Imagen materia">
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <a href="'.route('subjects.edit',$row->id).'" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
                                         <img src="' . asset('svg/edit.svg') . '" class="size-7" alt="Editar icon">
                                 </a>
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                    <img src="' . asset('svg/delete.svg') . '" class="size-7" alt="Borrar icon">
-                                </a>
+                                <form action="' . route('subjects.destroy', $row->id) . '" method="POST">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                            onclick="return confirm(\'¿Estás seguro de que deseas eliminar este registro?\')">
+                                        <img src="' . asset('svg/delete.svg') . '" class="size-7" alt="Borrar icon">
+                                    </button>
+                                 </form>
                             </div>
                         </td>
                     </tr>';

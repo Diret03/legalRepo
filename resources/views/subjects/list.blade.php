@@ -5,8 +5,11 @@
 
                 <div class="bg-white border border-gray-200 rounded-lg shadow">
                     <a href="{{route('trials.bySubject',$subject->id)}}">
-                        <img class="rounded-t-lg w-full h-48 object-cover" src="{{asset('img/derecho.jpg')}}"
-                             alt="placeholder"/>
+
+                        <img class="rounded-t-lg w-full h-52 object-cover"
+                             src="{{ $subject->image ? asset($subject->image) : asset('img/default.png') }}"
+                             alt="Materia imagen"/>
+
                     </a>
                     <div class="p-5">
                         <a href="#">

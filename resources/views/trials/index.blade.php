@@ -72,12 +72,12 @@
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="dropdownActionButton2">
                                 <li>
-                                    <a href="{{route('subjects.index')}}?sort=created_at&direction=desc"
+                                    <a href="{{route('trials.index')}}?sort=created_at&direction=desc"
                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                         recientes</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('subjects.index')}}?sort=created_at&direction=asc"
+                                    <a href="{{route('trials.index')}}?sort=created_at&direction=asc"
                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                         antiguos</a>
                                 </li>
@@ -93,7 +93,7 @@
                     <a href="#" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
                        class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
                         <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
-                        <p>Agregar Materia</p>
+                        <p>Agregar Juicio</p>
                     </a>
 
 
@@ -128,59 +128,57 @@
                     <th scope="col" class="px-6 py-3">
                         Nombre
                     </th>
-                    <th scope="col" class="desc px-6 py-3">
-                        Descripción
+                    <th scope="col" class="px-6 py-3">
+                        Materia
                     </th>
                     <th scope="col" class="desc px-6 py-3">
-                        Imagen
+                        Descripción
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Acción
                     </th>
                 </tr>
                 </thead>
-                <tbody id="subjects-data">
-                @foreach($subjects as $subject)
-                    <tr id="subject_ids{{$subject->id}}"
+                <tbody id="trials-data">
+                @foreach($trials as $trial)
+                    <tr id="trial_ids{{$trial->id}}"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="w-4 p-4">
                             <div class="flex items-center">
-                                <input name="ids" type="checkbox" value="{{$subject->id}}"
+                                <input name="ids" type="checkbox" value="{{$trial->id}}"
                                        class="checkbox_ids w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="checkbox_ids" class="sr-only">checkbox</label>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            {{$subject->name}}
+                            {{$trial->name}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{$trial->subject->name}}
                         </td>
                         <td class="px-6 py-4">
                             <button
                                 class="toggle-description text-blue-600 hover:underline"
-                                data-project-id="{{ $subject->id }}">
+                                data-project-id="{{ $trial->id }}">
                                 <img src="{{ asset('svg/plus.svg') }}"
                                      class="w-5 h-5" alt="Agregar icon">
                             </button>
-{{--                            {{$subject->description}}--}}
+
                             <div class="description-content hidden mt-2">
-                                {{ $subject->description }}
+                                {{ $trial->description }}
                             </div>
                         </td>
                         <td class="px-6 py-4">
-{{--                            <img src="{{asset($subject->image)}}" class="size-16" alt="Imagen materia">--}}
-                            <img class="size-16"
-                                 src="{{ $subject->image ? asset($subject->image) : asset('svg/no-image.svg') }}"
-                                 alt="Materia imagen"/>
-
-                        </td>
-                        <td class="px-6 py-4">
                             <div class="flex items-center">
-                                <a href="{{route('subjects.edit',$subject->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                <a href="{{route('trials.edit',$trial->id)}}"
+                                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
                                     <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
                                 </a>
-                                <form action="{{route('subjects.destroy',$subject->id)}}" method="POST">
+                                <form action="{{route('trials.destroy',$trial->id)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                    <button type="submit"
+                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                             onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
                                         <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                     </button>
@@ -194,14 +192,14 @@
                 </tbody>
             </table>
             <div class="pagination mt-4 pb-10">
-                {{ $subjects->links() }}
+                {{ $trials->links() }}
             </div>
         </div>
 
     </div>
 </x-app-layout>
 
-<!-- Add subject modal -->
+<!-- Add trial modal -->
 <div id="authentication-modal" tabindex="-1" aria-hidden="true"
      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
@@ -210,7 +208,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Agregar materia
+                    Agregar juicio
                 </h3>
                 <button type="button"
                         class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -225,7 +223,8 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <form class="space-y-4" action="{{ route('subjects.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="space-y-4" action="{{ route('trials.store') }}" method="POST"
+                     >
                     @csrf
                     <div>
                         <label for="name"
@@ -235,17 +234,22 @@
                                placeholder="Escribir nombre" required value="{{ old('name') }}"/>
                     </div>
                     <div>
+                        <label for="subject_id"
+                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Materia</label>
+                        <select name="subject_id" id="subject_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            @foreach($subjects as $subject)
+                                <option value="{{$subject->id}}">{{$subject->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
                         <label for="description"
                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
                         <textarea name="description" id="description"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               required value="{{ old('description') }}"></textarea>
+                                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                  required >{{ old('description') }}</textarea>
                     </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">Subir imagen</label>
-                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none" aria-describedby="image_help" id="image" name="image" type="file">
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">JPEG, JPG o PNG.</p>
-                    </div>
+
 
                     <button type="submit"
                             class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
@@ -262,7 +266,7 @@
 
     function setupToggleDescriptionListeners() {
         document.querySelectorAll('.toggle-description').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const descriptionContent = this.nextElementSibling;
                 if (descriptionContent.classList.contains('hidden')) {
                     descriptionContent.classList.remove('hidden');
@@ -290,11 +294,11 @@
             }
 
             $.ajax({
-                url: "{{ route('subjects.search') }}",
+                url: "{{ route('trials.search') }}",
                 type: "GET",
                 data: {'search': query},
                 success: function (data) {
-                    $('#subjects-data').html(data)
+                    $('#trials-data').html(data)
                     setupToggleDescriptionListeners();
                 },
                 error: function (xhr, status, error) {
@@ -309,24 +313,13 @@
 
         $("#select_all_ids").click(function () {
             $('.checkbox_ids').prop('checked', $(this).prop('checked'));
-
         });
-
         $('#deleteAll').click(function (e) {
-
             e.preventDefault();
-
-
             if (!confirm("¿Estás seguro de que deseas eliminar los registros seleccionados?")) {
                 return;
             }
-
             const all_ids = [];
-
-            // if (all_ids.length === 0) {
-            //     return;
-            // }
-
 
             $('input:checkbox[name=ids]:checked').each(function () {
                 all_ids.push($(this).val());
@@ -335,7 +328,7 @@
             console.log("IDs to delete: " + all_ids);
 
             $.ajax({
-                url: "{{route('subjects.deleteSelected')}}",
+                url: "{{route('trials.delete')}}",
                 type: "DELETE",
                 data: {
                     ids: all_ids,
@@ -343,13 +336,14 @@
                 },
                 success: function (response) {
                     $.each(all_ids, function (key, val) {
-                        $('subject_ids' + val).remove();
+                        $('trial_ids' + val).remove();
                     })
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al buscar:', error);
+                    console.error('Detalles del error:', xhr, status);
                 }
-
             });
-
-
         });
     });
 

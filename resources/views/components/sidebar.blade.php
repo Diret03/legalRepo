@@ -14,26 +14,19 @@
         </button>
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
-        <a role="button" href="#"
-             class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
-            <img src="{{ asset('svg/cases.svg') }}" class="size-5 mr-4" alt="casos icon"  style="filter: brightness(0) invert(1);">
-            <p class="title-nav transition-opacity duration-300 ease-in-out">Casos</p>
-        </a>
-        <a role="button" href="{{route('subjects.index')}}"
-           class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
-            <img src="{{ asset('svg/subjects.svg') }}" class="size-5 mr-4" alt="materias icon"  style="filter: brightness(0) invert(1);">
-            <p class="title-nav transition-opacity duration-300 ease-in-out">Materias</p>
-        </a>
-        <a role="button" href="#"
-           class="flex items-center w-full p-3 leading-tight tranysition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
-            <img src="{{ asset('svg/trials.svg') }}" class="size-5 mr-4" alt="juicios icon"  style="filter: brightness(0) invert(1);">
-            <p class="title-nav transition-opacity duration-300 ease-in-out">Juicios</p>
-        </a>
-        <a role="button" href="{{route('users.index')}}"
-           class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
-            <img src="{{ asset('svg/users.svg') }}" class="size-5 mr-4" alt="usuarios icon" style="filter: brightness(0) invert(1);">
-            <p class="title-nav transition-opacity duration-300 ease-in-out">Usuarios</p>
-        </a>
+
+        <x-dash-link href="{{ route('cases.list') }}" icon="svg/cases.svg" title="Casos" activeRoute="cases.index"/>
+
+        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>
+
+        <x-dash-link href="{{ route('trials.index') }}" icon="svg/trials.svg" title="Juicios" activeRoute="trials.index"/>
+{{--        <a role="button" href="{{route('users.index')}}"--}}
+{{--           class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">--}}
+{{--            <img src="{{ asset('svg/users.svg') }}" class="size-5 mr-4" alt="usuarios icon" style="filter: brightness(0) invert(1);">--}}
+{{--            <p class="title-nav transition-opacity duration-300 ease-in-out">Usuarios</p>--}}
+{{--        </a>--}}
+        <x-dash-link href="{{ route('users.index') }}" icon="svg/users.svg" title="Usuarios" activeRoute="users.index"/>
+
 {{--        <div role="button"--}}
 {{--             class="flex items-center  p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">--}}
 {{--            <div class="grid mr-4 place-items-center">--}}
