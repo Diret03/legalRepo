@@ -29,19 +29,20 @@ class CaseController extends Controller
     public function store(Request $request){
 
         $validated_data = $request->validate([
-            'title' => 'required|alpha:ascii',
+            'title' => 'required|string',
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
-            'description' => 'required|string',
+            'origin' => 'required|string',
         ]);
 
-        $trial = Trial::create([
+        $case = LegalCase::create([
             'title' => $validated_data['title'],
             'trial_id' => $validated_data['trial_id'],
-            'description' => $validated_data['description'],
+            'date' => $validated_data['date'],
+            'origin' => $validated_data['origin'],
         ]);
 
-        return redirect()->back()->with('success', 'Juicio creado exitosamente.');
+        return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');
 
     }
 

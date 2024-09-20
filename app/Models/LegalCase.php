@@ -11,7 +11,6 @@ class LegalCase extends Model
     use HasFactory, HasTags;
 
     protected $table = 'cases';
-
     protected $fillable = [
         'title',
         'date',
@@ -26,7 +25,4 @@ class LegalCase extends Model
     public function trial(){
         return $this->belongsTo(Trial::class);
     }
-
-
-
 }
