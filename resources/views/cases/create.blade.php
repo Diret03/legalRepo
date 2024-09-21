@@ -17,10 +17,11 @@
                     <h3 class="text-3xl font-semibold text-gray-900 dark:text-white">
                         Crear caso
                     </h3>
-                    <x-go-back route="{{ route('cases.index') }}" />
+                    <x-go-back route="{{ route('cases.index') }}"/>
                 </div>
                 <div class="p-4 md:p-5">
-                    <form id="edit-user-form" class="space-y-4" method="POST" action="{{ route('cases.store') }}" enctype="multipart/form-data">
+                    <form id="edit-user-form" class="space-y-4" method="POST" action="{{ route('cases.store') }}"
+                          enctype="multipart/form-data">
                         @csrf
                         @method('POST')
 
@@ -50,7 +51,8 @@
                         <div>
                             <label for="trial_id"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Juicio</label>
-                            <select name="trial_id" id="trial_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
+                            <select name="trial_id" id="trial_id"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
                                 @foreach($trials as $trial)
                                     <option value="{{ $trial->id }}">{{ $trial->name }}</option>
                                 @endforeach
@@ -58,40 +60,60 @@
                         </div>
 
                         <div class="mb-4 border-b border-gray-200">
-                            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist"
+                            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab"
+                                data-tabs-toggle="#default-tab-content" role="tablist"
                                 data-tabs-active-classes="text-red-650 border-red-650"
                                 data-tabs-inactive-classes="text-gray-500 hover:text-gray-650 dark:text-gray-400 border-gray-100 hover:border-gray-300">
                                 <li class="me-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="context-tab" data-tabs-target="#context" type="button" role="tab" aria-controls="context" aria-selected="false">Contexto</button>
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="context-tab"
+                                            data-tabs-target="#context" type="button" role="tab" aria-controls="context"
+                                            aria-selected="false">Contexto
+                                    </button>
                                 </li>
                                 <li class="me-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="analysis-tab" data-tabs-target="#analysis" type="button" role="tab" aria-controls="analysis" aria-selected="false">Análisis Jurídico</button>
+                                    <button
+                                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300"
+                                        id="analysis-tab" data-tabs-target="#analysis" type="button" role="tab"
+                                        aria-controls="analysis" aria-selected="false">Análisis Jurídico
+                                    </button>
                                 </li>
                                 <li class="me-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="resolution-tab" data-tabs-target="#resolution" type="button" role="tab" aria-controls="resolution" aria-selected="false">Resolución</button>
+                                    <button
+                                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300"
+                                        id="resolution-tab" data-tabs-target="#resolution" type="button" role="tab"
+                                        aria-controls="resolution" aria-selected="false">Resolución
+                                    </button>
                                 </li>
                                 <li role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="note-tab" data-tabs-target="#note" type="button" role="tab" aria-controls="note" aria-selected="false">Nota</button>
+                                    <button
+                                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                        id="note-tab" data-tabs-target="#note" type="button" role="tab"
+                                        aria-controls="note" aria-selected="false">Nota
+                                    </button>
                                 </li>
                             </ul>
                         </div>
                         <div id="default-tab-content">
-                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel"  id="context" aria-labelledby="context-tab">
+                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel" id="context"
+                                 aria-labelledby="context-tab">
                                 <div>
-                                    <textarea class="editor" name="context" ></textarea>
+                                    <textarea class="editor" name="context"></textarea>
                                 </div>
                             </div>
-                            <div class="hidden p-4 rounded-lg bg-gray-50"  role="tabpanel" id="analysis" aria-labelledby="analysis-tab">
+                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel" id="analysis"
+                                 aria-labelledby="analysis-tab">
                                 <div>
                                     <textarea class="editor" name="analysis" id="analysis"></textarea>
                                 </div>
                             </div>
-                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel" id="resolution" aria-labelledby="resolution-tab">
+                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel" id="resolution"
+                                 aria-labelledby="resolution-tab">
                                 <div>
                                     <textarea class="editor" name="resolution" id="resolution"></textarea>
                                 </div>
                             </div>
-                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="note" role="tabpanel" aria-labelledby="note-tab">
+                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="note" role="tabpanel"
+                                 aria-labelledby="note-tab">
                                 <div>
                                     <textarea class="editor" name="note" id="note"></textarea>
                                 </div>

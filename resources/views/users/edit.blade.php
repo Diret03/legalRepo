@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex flex-col md:flex-row">
+    <div class="flex md:flex-row">
         <x-sidebar/>
         <div class="flex-1 p-4 md:p-10">
             @if ($errors->any())

@@ -15,35 +15,40 @@
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
 
-        <x-dash-link href="{{ route('cases.index') }}" icon="svg/cases.svg" title="Casos" activeRoute="cases.index"/>
+        <x-dash-link
+            href="{{ route('cases.index') }}"
+            icon="svg/cases.svg"
+            title="Casos"
+            :activeRoutes="['cases.index', 'cases.create', 'cases.edit']"
+        />
+        <x-dash-link
+            href="{{ route('subjects.index') }}"
+            icon="svg/subjects.svg"
+            title="Materias"
+            :activeRoutes="['subjects.index', 'subjects.create', 'subjects.edit']"
+        />
+        <x-dash-link
+            href="{{ route('trials.index') }}"
+            icon="svg/trials.svg"
+            title="Juicios"
+            :activeRoutes="['trials.index', 'trials.create', 'trials.edit']"
+        />
+        <x-dash-link
+            href="{{ route('users.index') }}"
+            icon="svg/users.svg"
+            title="Usuarios"
+            :activeRoutes="['users.index', 'users.create', 'users.edit']"
+        />
+{{--        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>--}}
 
-        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>
-
-        <x-dash-link href="{{ route('trials.index') }}" icon="svg/trials.svg" title="Juicios" activeRoute="trials.index"/>
-{{--        <a role="button" href="{{route('users.index')}}"--}}
-{{--           class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">--}}
-{{--            <img src="{{ asset('svg/users.svg') }}" class="size-5 mr-4" alt="usuarios icon" style="filter: brightness(0) invert(1);">--}}
-{{--            <p class="title-nav transition-opacity duration-300 ease-in-out">Usuarios</p>--}}
-{{--        </a>--}}
-        <x-dash-link href="{{ route('users.index') }}" icon="svg/users.svg" title="Usuarios" activeRoute="users.index"/>
-
-{{--        <div role="button"--}}
-{{--             class="flex items-center  p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">--}}
-{{--            <div class="grid mr-4 place-items-center">--}}
-{{--                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"--}}
-{{--                     class="w-5 h-5">--}}
-{{--                    <path fill-rule="evenodd"--}}
-{{--                          d="M12 2.25a.75.75 0 01.75.75v9a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM6.166 5.106a.75.75 0 010 1.06 8.25 8.25 0 1011.668 0 .75.75 0 111.06-1.06c3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788a.75.75 0 011.06 0z"--}}
-{{--                          clip-rule="evenodd"></path>--}}
-{{--                </svg>--}}
-{{--            </div>--}}
-{{--            <p class="title-nav transition-opacity duration-300 ease-in-out">Log Out</p>--}}
-{{--        </div>--}}
+{{--        <x-dash-link href="{{ route('trials.index') }}" icon="svg/trials.svg" title="Juicios" activeRoute="trials.index"/>--}}
     </nav>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let sidebarExpanded = true;
+
+        // check if the screen width is less than or equal to 768px (
+        let sidebarExpanded = !window.matchMedia("(max-width: 768px)").matches;
         const toggleImg = document.getElementById("toggle-img");
         const sidebar = document.querySelector(".sidebar");
         const titles = document.querySelectorAll(".title-nav");
