@@ -39,7 +39,7 @@
                         </div>
                         <div>
                             <label for="edit-description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
-                            <textarea name="description" id="edit-description"
+                            <textarea name="description" id="edit-description" rows="10"
                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             >{{$trial->description}}</textarea>
                         </div>

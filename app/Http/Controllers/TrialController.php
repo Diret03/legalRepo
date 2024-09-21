@@ -132,8 +132,8 @@ class TrialController extends Controller
     public function edit($id){
 
         $trial = Trial::findOrFail($id);
-
-        return view('trials.edit', compact('trial'));
+        $subjects = Subject::all();
+        return view('trials.edit', compact('trial','subjects'));
     }
 
     public function update(Request $request, $id){

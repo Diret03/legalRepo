@@ -53,6 +53,42 @@ class CaseController extends Controller
 
     }
 
+    public function edit($id){
+
+        $case = LegalCase::findOrFail($id);
+        $trials = Trial::all();
+        return view('cases.edit', compact('case','trials'));
+    }
+
+    public function update(Request $request, $id) {
+        $validated_data = $request->validate([
+            'title' => 'required|string',
+            'trial_id' => 'required|exists:trials,id',
+            'date' => 'required|date',
+            'origin' => 'required|string',
+            'context' => 'required|string',
+            'analysis' => 'required|string',
+            'resolution' => 'required|string',
+            'note' => 'nullable|string'
+        ]);
+
+        $case = LegalCase::findOrFail($id);
+        $case->update([
+            'title' => $validated_data['title'],
+            'trial_id' => $validated_data['trial_id'],
+            'date' => $validated_data['date'],
+            'origin' => $validated_data['origin'],
+            'context' => $validated_data['context'],
+            'analysis' => $validated_data['analysis'],
+            'resolution' => $validated_data['resolution'],
+            'note' => $validated_data['note'],
+        ]);
+
+        return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
+    }
+
+
+
     public function search(Request $request){
 
         if($request->ajax()){
@@ -172,7 +208,7 @@ class CaseController extends Controller
         return view('cases.byTrial', compact('cases','trial','trial_name'));
     }
 
-    public function showAll($id){
+    public function show($id){
 
         $case = LegalCase::where('id', $id)->first();
         $accessedBy = 'all';

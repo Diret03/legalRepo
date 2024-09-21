@@ -67,16 +67,16 @@
             </div>
             <div id="default-tab-content">
                 <div class="hidden p-4 rounded-lg bg-gray-50" id="context" role="tabpanel" aria-labelledby="context-tab">
-                    <p class="text-sm text-gray-500 ">{{$case->context}}</p>
+                    {!! $case->context !!}
                 </div>
                 <div class="hidden p-4 rounded-lg bg-gray-50" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
-                    <p class="text-sm text-gray-500 ">{{$case->analysis}}</p>
+                       {!! $case->analysis!!}
                 </div>
                 <div class="hidden p-4 rounded-lg bg-gray-50" id="resolution" role="tabpanel" aria-labelledby="resolution-tab">
-                    <p class="text-sm text-gray-500">{{$case->resolution}}</p>
+                       {!! $case->resolution !!}
                 </div>
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="note" role="tabpanel" aria-labelledby="note-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{$case->note}}</p>
+                     {!! $case->note !!}
                 </div>
             </div>
 
@@ -88,3 +88,12 @@
     </div>
 
 </x-app-layout>
+
+<script src="{{asset('js/renderTiny.js')}}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        applyTailwindStyles('default-tab-content');
+
+    });
+
+</script>

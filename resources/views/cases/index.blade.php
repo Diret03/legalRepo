@@ -231,8 +231,19 @@
 
 </x-app-layout>
 
-
+<script src="{{asset('js/renderTiny.js')}}"></script>
 <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-modal-target]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal-target');
+
+                // Call the function and pass the modalId
+                applyTailwindStyles(modalId);
+            });
+        });
+    });
 
     $(document).ready(function () {
         // setupToggleDescriptionListeners();
