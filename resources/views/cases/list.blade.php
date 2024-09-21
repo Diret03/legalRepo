@@ -24,15 +24,15 @@
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 underline">{{$case->title}}</h5>
                         </a>
                         <div class="mb-1 flex items-center">
-                            <p class="text-gray-700 font-extrabold">Caso:</p>
+                            <p class="text-gray-700 font-extrabold mr-1">Caso:</p>
                             <p class="font-normal text-gray-700">{{$case->id}}</p>
                         </div>
                         <div class="mb-1 flex items-center">
-                            <p class="text-gray-700 font-extrabold">Fecha:</p>
+                            <p class="text-gray-700 font-extrabold mr-1">Fecha:</p>
                             <p class="font-normal text-gray-700">{{\Carbon\Carbon::parse($case->date)->format('d/m/Y')}}</p>
                         </div>
                         <div class="mb-3 flex items-center">
-                            <p class="text-gray-700 font-extrabold">Materia:</p>
+                            <p class="text-gray-700 font-extrabold mr-1">Materia:</p>
                             <p class="font-normal text-gray-700">{{$case->trial->subject->name}}</p>
                         </div>
 

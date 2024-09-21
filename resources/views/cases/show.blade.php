@@ -66,17 +66,17 @@
                 </ul>
             </div>
             <div id="default-tab-content">
-                <div class="hidden p-4 rounded-lg bg-gray-50" id="context" role="tabpanel" aria-labelledby="context-tab">
-                    {!! $case->context !!}
+                <div class="hidden" id="context" role="tabpanel" aria-labelledby="context-tab">
+                    <textarea class="editor-display" name="context">{{$case->context}}</textarea>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
-                       {!! $case->analysis!!}
+                <div class="hidden" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
+                    <textarea class="editor-display" name="context">{{$case->analysis}}</textarea>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50" id="resolution" role="tabpanel" aria-labelledby="resolution-tab">
-                       {!! $case->resolution !!}
+                <div class="hidden" id="resolution" role="tabpanel" aria-labelledby="resolution-tab">
+                    <textarea class="editor-display" name="context">{{$case->resolution}}</textarea>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="note" role="tabpanel" aria-labelledby="note-tab">
-                     {!! $case->note !!}
+                <div class="hidden" id="note" role="tabpanel" aria-labelledby="note-tab">
+                    <textarea class="editor-display" name="context">{{$case->note}}</textarea>
                 </div>
             </div>
 
