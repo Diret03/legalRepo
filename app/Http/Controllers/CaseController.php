@@ -27,12 +27,15 @@ class CaseController extends Controller
     }
 
     public function store(Request $request){
-
         $validated_data = $request->validate([
             'title' => 'required|string',
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
             'origin' => 'required|string',
+            'context' => 'required|string',
+            'analysis' => 'required|string',
+            'resolution' => 'required|string',
+            'note' => 'nullable|string'
         ]);
 
         $case = LegalCase::create([
@@ -40,6 +43,10 @@ class CaseController extends Controller
             'trial_id' => $validated_data['trial_id'],
             'date' => $validated_data['date'],
             'origin' => $validated_data['origin'],
+            'context' => $validated_data['context'],
+            'analysis' => $validated_data['analysis'],
+            'resolution' => $validated_data['resolution'],
+            'note' => $validated_data['note'],
         ]);
 
         return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');

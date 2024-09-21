@@ -57,6 +57,52 @@
                             </select>
                         </div>
 
+                        <div class="mb-4 border-b border-gray-200">
+                            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist"
+                                data-tabs-active-classes="text-red-650 border-red-650"
+                                data-tabs-inactive-classes="text-gray-500 hover:text-gray-650 dark:text-gray-400 border-gray-100 hover:border-gray-300">
+                                <li class="me-2" role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="context-tab" data-tabs-target="#context" type="button" role="tab" aria-controls="context" aria-selected="false">Contexto</button>
+                                </li>
+                                <li class="me-2" role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="analysis-tab" data-tabs-target="#analysis" type="button" role="tab" aria-controls="analysis" aria-selected="false">Análisis Jurídico</button>
+                                </li>
+                                <li class="me-2" role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="resolution-tab" data-tabs-target="#resolution" type="button" role="tab" aria-controls="resolution" aria-selected="false">Resolución</button>
+                                </li>
+                                <li role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="note-tab" data-tabs-target="#note" type="button" role="tab" aria-controls="note" aria-selected="false">Nota</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="default-tab-content">
+                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel"  id="context" aria-labelledby="context-tab">
+                                <div>
+                                    <textarea class="editor" name="context" ></textarea>
+                                </div>
+                            </div>
+                            <div class="hidden p-4 rounded-lg bg-gray-50"  role="tabpanel" id="analysis" aria-labelledby="analysis-tab">
+                                <div>
+                                    <textarea class="editor" name="analysis" id="analysis"></textarea>
+                                </div>
+                            </div>
+                            <div class="hidden p-4 rounded-lg bg-gray-50" role="tabpanel" id="resolution" aria-labelledby="resolution-tab">
+                                <div>
+                                    <textarea class="editor" name="resolution" id="resolution"></textarea>
+                                </div>
+                            </div>
+                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="note" role="tabpanel" aria-labelledby="note-tab">
+                                <div>
+                                    <textarea class="editor" name="note" id="note"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
 
                         <!-- Submit Button -->
                         <div class="flex justify-center">
