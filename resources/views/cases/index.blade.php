@@ -1,5 +1,11 @@
-<x-app-layout>
 
+<x-app-layout>
+    <style>
+        .modal-body {
+            max-height: calc(100vh - 210px);
+            overflow-y: auto;
+        }
+    </style>
     <div class="flex">
         <x-sidebar/>
 
@@ -153,7 +159,7 @@
                                 Ver
                             </button>
                             <div id="case-modal-{{$case->id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                <div class="relative p-4 w-full max-w-5xl max-h-full">
                                     <!-- Modal content -->
                                     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                         <!-- Modal header -->
@@ -169,30 +175,22 @@
                                             </button>
                                         </div>
                                         <!-- Modal body -->
-                                        <div class="p-4 md:p-5 space-y-4">
+                                        <div class="modal-body p-4 md:p-5 space-y-4">
                                             <div>
                                                 <h4 class="font-semibold text-gray-900 dark:text-white">Contexto</h4>
-                                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                    {!! $case->context !!}
-                                                </p>
+                                                <textarea class="editor-modal" name="context">{{$case->context}}</textarea>
                                             </div>
                                             <div>
                                                 <h4 class="font-semibold text-gray-900 dark:text-white">Análisis</h4>
-                                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                    {!!$case->analysis!!}
-                                                </p>
+                                                <textarea class="editor-modal" name="context">{{$case->analysis}}</textarea>
                                             </div>
                                             <div>
                                                 <h4 class="font-semibold text-gray-900 dark:text-white">Resolución</h4>
-                                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                    {!!$case->resolution!!}
-                                                </p>
+                                                <textarea class="editor-modal" name="context">{{$case->resolution}}</textarea>
                                             </div>
                                             <div>
                                                 <h4 class="font-semibold text-gray-900 dark:text-white">Notas</h4>
-                                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                    {!!$case->note !!}
-                                                </p>
+                                                <textarea class="editor-modal" name="context">{{$case->note}}</textarea>
                                             </div>
                                         </div>
                                     </div>
