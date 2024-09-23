@@ -57,6 +57,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/dashboard/cases', CaseController::class);
     Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.search');
     Route::delete("/dashboard/selected-cases", [CaseController::class, 'deleteSelected'])->name('cases.delete');
+    Route::get('/cases/tags', [CaseController::class, 'getAllTags']);
+    Route::get('/cases/{id}/tags', [CaseController::class, 'getTags']);
+
 });
 
 

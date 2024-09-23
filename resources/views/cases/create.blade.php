@@ -20,7 +20,7 @@
                     <x-go-back route="{{ route('cases.index') }}"/>
                 </div>
                 <div class="p-4 md:p-5">
-                    <form id="edit-user-form" class="space-y-4" method="POST" action="{{ route('cases.store') }}"
+                    <form id="case-form" class="space-y-4" method="POST" action="{{ route('cases.store') }}"
                           enctype="multipart/form-data">
                         @csrf
                         @method('POST')
@@ -58,7 +58,13 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div>
+                            <label for="tags" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Etiquetas</label>
+                            <div id="tags-input"></div>
+                            <input type="hidden" id="tags-hidden-input" name="tags">
+{{--                            <button class="btn btn-blue" id="tag-btn">HOLA</button>--}}
 
+                        </div>
                         <div class="mb-4 border-b border-gray-200">
                             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab"
                                 data-tabs-toggle="#default-tab-content" role="tablist"
@@ -131,4 +137,78 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            let myData = [];
+            let instance = null;
+
+            // AJAX request to get tags
+            $.ajax({
+                url: '/cases/tags',
+                method: 'GET',
+                success: function(response) {
+                    myData = response.tags;
+
+                    console.log("tags: " + myData);
+
+                    // Initialize MagicSuggest only after data is received
+                    instance = $('#tags-input').magicSuggest({
+                        data: myData,
+                        allowFreeEntries: true
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching tags:", error);
+                }
+            });
+
+            $("#case-form").submit(function() {
+                let tags = instance.getSelection(); // Get selected tags
+                let tagNames = tags.map(tag => tag.name); // Extract the tag names
+
+                // Set the hidden input value to the JSON string of selected tags
+                $('#tags-hidden-input').val(JSON.stringify(tagNames));
+
+                // Form will be submitted normally
+            });
+
+
+            {{--$("#case-form").submit(function(e) {--}}
+            {{--    e.preventDefault(); // Prevent default form submission--}}
+
+            {{--    let formData = new FormData(this);--}}
+            {{--    console.log(formData);--}}
+            {{--    let tags = instance.getSelection();--}}
+            {{--    console.log(JSON.stringify(tags));--}}
+            {{--    let tagNames = tags.map(tag => tag.name);--}}
+            {{--    console.log(tagNames);--}}
+            {{--    formData.append('tags', JSON.stringify(tagNames));--}}
+
+            {{--    $.ajax({--}}
+            {{--        type: "POST",--}}
+            {{--        url: "{{ route('cases.store') }}",--}}
+            {{--        data: formData,--}}
+            {{--        processData: false, // Important to prevent jQuery from processing the data--}}
+            {{--        contentType: false, // Important to send formData correctly--}}
+            {{--        headers: {--}}
+            {{--            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
+            {{--        },--}}
+            {{--        success: function(response) {--}}
+            {{--            if (response.success) {--}}
+            {{--                // Redirect to the cases.index page--}}
+            {{--                window.location.href = response.redirect_url;--}}
+            {{--            }--}}
+            {{--        },--}}
+            {{--        error: function(xhr, status, error) {--}}
+            {{--            console.error("Error:", xhr.responseText);--}}
+            {{--        }--}}
+            {{--    });--}}
+            {{--});--}}
+        });
+
+
+
+    </script>
+
 </x-app-layout>

@@ -27,6 +27,7 @@ class CaseController extends Controller
     }
 
     public function store(Request $request){
+
         $validated_data = $request->validate([
             'title' => 'required|string',
             'trial_id' => 'required|exists:trials,id',
@@ -35,7 +36,8 @@ class CaseController extends Controller
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
-            'note' => 'nullable|string'
+            'note' => 'nullable|string',
+            'tags' => 'nullable'
         ]);
 
         $case = LegalCase::create([
@@ -49,8 +51,20 @@ class CaseController extends Controller
             'note' => $validated_data['note'],
         ]);
 
-        return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');
 
+        if (!empty($validated_data['note'])) {
+            $case->note = $validated_data['note'];
+            $case->save(); // Save the updated note to the case
+        }
+
+        if (!empty($validated_data['tags'])) {
+            $tags = json_decode($validated_data['tags']);
+            if (!empty($tags)) {
+                $case->syncTags($tags);
+            }
+        }
+
+        return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');
     }
 
     public function edit($id){
@@ -69,7 +83,7 @@ class CaseController extends Controller
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
-            'note' => 'nullable|string'
+            'note' => 'nullable|string',
         ]);
 
         $case = LegalCase::findOrFail($id);
@@ -83,6 +97,7 @@ class CaseController extends Controller
             'resolution' => $validated_data['resolution'],
             'note' => $validated_data['note'],
         ]);
+
 
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
     }
@@ -197,6 +212,24 @@ class CaseController extends Controller
 
             return $output;
         }
+    }
+
+    public function getAllTags(){
+        $orderedTags = Tag::all();
+        return response()->json(['tags' => $orderedTags->pluck('name')]);
+    }
+
+    public function getTags($id){
+        $case = LegalCase::findOrFail($id);
+//        $tags = [];
+//        foreach ($case->tags as $tag){
+//
+//            $tags[] = [
+//                'id' =>$tag->id,
+//                'name'=>$tag->name
+//            ];
+//        }
+        return response()->json(['tags' => $case->tags->pluck('name')]);
     }
 
 

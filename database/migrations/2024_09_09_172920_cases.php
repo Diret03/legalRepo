@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('context');
             $table->text('analysis');
             $table->text('resolution');
-            $table->text('note');
+            $table->text('note')->nullable();
 //            $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('trial_id');
 
