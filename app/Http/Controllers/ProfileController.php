@@ -16,8 +16,23 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $roles = $request->user()->getRoleNames();
+        $roles_string = "";
+
+        for ($i = 0; $i < count($roles); $i++) {
+            if ($i < count($roles) - 1){
+                $roles_string .= ucfirst($roles[$i]) . ", ";
+            }
+            else{
+                $roles_string .= ucfirst($roles[$i]);
+            }
+        }
+
+//        dd($roles);
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'roles' => $roles_string
         ]);
     }
 

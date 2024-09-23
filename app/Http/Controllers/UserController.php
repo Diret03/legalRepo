@@ -128,7 +128,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-//        dd($request->all());
         $validated_data = $request->validate([
             'name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
             'last_name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
