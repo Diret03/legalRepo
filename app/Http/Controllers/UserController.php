@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index(Request $request){
 
-        $sortField = $request->query('sort', 'created_at'); // default sort field
+        $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
         $users = User::orderBy($sortField, $sortDirection)->paginate(10);
@@ -96,10 +96,14 @@ class UserController extends Controller
     public function store(Request $request){
 
         $validated_data = $request->validate([
-            'name' => 'required|alpha:ascii',
-            'last_name' => 'required|alpha:ascii',
+            'name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
+            'last_name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
             'email' =>  ['required', 'unique:users', 'max:255', 'email'],
             'password' => 'required|string',
+            'status' => 'required|boolean',
+        ],[
+            'name.regex' => 'El nombre solo debe contener letras.',
+            'last_name.regex' => 'El apellido solo debe contener letras.',
         ]);
 
         $user = User::create([
@@ -107,6 +111,7 @@ class UserController extends Controller
             'last_name' => $validated_data['last_name'],
             'email' => $validated_data['email'],
             'password' => Hash::make($validated_data['password']),
+            'status' => $validated_data['status'],
         ]);
 
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');
@@ -123,16 +128,22 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+//        dd($request->all());
         $validated_data = $request->validate([
-            'name' => 'required|alpha:ascii',
-            'last_name' => 'required|alpha:ascii',
+            'name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
+            'last_name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
             'email' => ['required', 'max:255', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
+            'status' => 'required|boolean',
+        ],[
+            'name.regex' => 'El nombre solo debe contener letras.',
+            'last_name.regex' => 'El apellido solo debe contener letras.',
         ]);
 
         $user->name = $validated_data['name'];
         $user->last_name = $validated_data['last_name'];
         $user->email = $validated_data['email'];
+        $user->status = $validated_data['status'];
 
         if (!empty($validated_data['password'])) {
             $user->password = Hash::make($validated_data['password']);

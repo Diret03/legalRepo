@@ -76,12 +76,12 @@
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="dropdownActionButton2">
                                 <li>
-                                    <a href="{{route('users.index')}}?sort=created_at&direction=desc"
+                                    <a href="{{route('users.index')}}?sort=updated_at&direction=desc"
                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                         recientes</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('users.index')}}?sort=created_at&direction=asc"
+                                    <a href="{{route('users.index')}}?sort=updated_at&direction=asc"
                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                         antiguos</a>
                                 </li>
@@ -114,7 +114,7 @@
                         <input type="text" id="search" name="search"
                                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                placeholder="Buscar usuarios"
-{{--                               onkeyup="searchTable('search', 'users-table')"--}}
+                            {{--                               onkeyup="searchTable('search', 'users-table')"--}}
                         >
                     </div>
 
@@ -170,20 +170,27 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-                                Activo
+                                @if($user->status)
+                                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                                    Activo
+                                @else
+                                    <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div>
+                                    Inactivo
+                                @endif
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
 
-                                <a href="{{route('users.edit',$user->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                                        <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
+                                <a href="{{route('users.edit',$user->id)}}"
+                                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                    <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
                                 </a>
                                 <form action="{{route('users.destroy',$user->id)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                    <button type="submit"
+                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                             onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
                                         <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                     </button>
@@ -245,21 +252,30 @@
                         <label for="name"
                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
                         <input type="text" name="name" id="name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 @error('name') border-red-500 @enderror"
-                               placeholder="Escribe un nombre" required value="{{ old('name') }}"/>
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                               placeholder="Escribe un nombre" value="{{ old('name') }}"/>
                     </div>
                     <div>
                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
                         <input type="text" name="last_name" id="last_name"
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe un apellido" required value="{{ old('last_name') }}"/>
+                               placeholder="Escribe un apellido" value="{{ old('last_name') }}"/>
                     </div>
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
                             electrónico</label>
                         <input type="email" name="email" id="email"
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe un correo electrónico" required value="{{ old('email') }}"/>
+                               placeholder="Escribe un correo electrónico" value="{{ old('email') }}"/>
+                    </div>
+                    <div>
+                        <label for="status"
+                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
+                        <select name="status" id="status"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
                     </div>
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -278,9 +294,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 
 <script>
@@ -338,7 +351,7 @@
                 all_ids.push($(this).val());
             });
 
-            console.log("IDs to delete: "+all_ids);
+            console.log("IDs to delete: " + all_ids);
 
             $.ajax({
                 url: "{{route('users.deleteSelected')}}",

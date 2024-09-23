@@ -17,10 +17,11 @@
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Editar usuario
                     </h3>
-                    <x-go-back route="{{ route('users.index') }}" />
+                    <x-go-back route="{{ route('users.index') }}"/>
                 </div>
                 <div class="p-4 md:p-5">
-                    <form id="edit-user-form" class="space-y-4" method="POST" action="{{ route('users.update', $user->id) }}">
+                    <form id="edit-user-form" class="space-y-4" method="POST"
+                          action="{{ route('users.update', $user->id) }}">
                         @csrf
                         @method('PUT')
                         <div>
@@ -29,20 +30,41 @@
                                    class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
                         </div>
                         <div>
-                            <label for="edit-last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
+                            <label for="edit-last_name"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
                             <input type="text" name="last_name" id="edit-last_name" value="{{ $user->last_name }}"
                                    class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
                         </div>
                         <div>
-                            <label for="edit-email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo electrónico</label>
+                            <label for="edit-email"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
+                                electrónico</label>
                             <input type="email" name="email" id="edit-email" value="{{ $user->email }}"
                                    class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
                         </div>
                         <div>
-                            <label for="edit_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
+                            <label for="status"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
+                            <select name="status" id="edit_status"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                {{--                                <option value="1">Activo</option>--}}
+                                {{--                                <option value="0">Inactivo</option>--}}
+                                @if($user->status)
+                                    <option value="1" selected>Activo</option>
+                                    <option value="0">Inactivo</option>
+                                @else
+                                    <option value="1">Activo</option>
+                                    <option value="0" selected>Inactivo</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit_password"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
                             <input type="password" name="password" id="edit_password" placeholder="••••••••"
                                    class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Dejar en blanco para mantener la contraseña actual</p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Dejar en blanco para mantener la
+                                contraseña actual</p>
                         </div>
                         <button type="submit"
                                 class="w-full text-white bg-red-650 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
