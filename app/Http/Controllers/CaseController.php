@@ -84,6 +84,7 @@ class CaseController extends Controller
             'analysis' => 'required|string',
             'resolution' => 'required|string',
             'note' => 'nullable|string',
+            'tags' => 'nullable'
         ]);
 
         $case = LegalCase::findOrFail($id);
@@ -97,6 +98,18 @@ class CaseController extends Controller
             'resolution' => $validated_data['resolution'],
             'note' => $validated_data['note'],
         ]);
+
+        if (!empty($validated_data['note'])) {
+            $case->note = $validated_data['note'];
+            $case->save();
+        }
+
+        if (!empty($validated_data['tags'])) {
+            $tags = json_decode($validated_data['tags']);
+            if (!empty($tags)) {
+                $case->syncTags($tags);
+            }
+        }
 
 
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
@@ -221,15 +234,16 @@ class CaseController extends Controller
 
     public function getTags($id){
         $case = LegalCase::findOrFail($id);
-//        $tags = [];
-//        foreach ($case->tags as $tag){
-//
-//            $tags[] = [
-//                'id' =>$tag->id,
-//                'name'=>$tag->name
-//            ];
-//        }
-        return response()->json(['tags' => $case->tags->pluck('name')]);
+        $tags = [];
+
+        foreach ($case->tags as $tag){
+
+            $tags[] = [
+                'id' =>$tag->name,
+                'name'=>$tag->name
+            ];
+        }
+        return response()->json(['tags' => $tags]);
     }
 
 

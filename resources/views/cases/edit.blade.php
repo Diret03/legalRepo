@@ -52,7 +52,11 @@
                                 @endforeach
                             </select>
                         </div>
-
+                        <div>
+                            <label for="tags" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Etiquetas</label>
+                            <div id="tags-input"></div>
+                            <input type="hidden" id="tags-hidden-input" name="tags">
+                        </div>
                         <div class="mb-4 border-b border-gray-200">
                             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist"
                                 data-tabs-active-classes="text-red-650 border-red-650"
@@ -105,4 +109,53 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            let myData = [];
+            let instance = null;
+            let caseId = {{$case->id}};
+
+            // AJAX request to get tags
+            $.ajax({
+                url: '/cases/tags',
+                method: 'GET',
+                success: function(response) {
+                    myData = response.tags;
+
+                    console.log("tags: " + myData);
+
+                    // Initialize MagicSuggest only after data is received
+                    instance = $('#tags-input').magicSuggest({
+                        data: myData,
+                        allowFreeEntries: true
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching tags:", error);
+                }
+            });
+
+            $.ajax({
+                url: '/cases/'+caseId+'/tags',
+                method: 'GET',
+                success: function(response) {
+                    let caseTags = response.tags;
+
+                    console.log(caseTags);
+                    instance.setSelection(caseTags);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching case tags:", error);
+                }
+            });
+
+            $("#edit-case-form").submit(function() {
+                let tags = instance.getSelection(); // Get selected tags
+                let tagNames = tags.map(tag => tag.name); // Extract the tag names
+
+                // Set the hidden input value to the JSON string of selected tags
+                $('#tags-hidden-input').val(JSON.stringify(tagNames));
+            });
+        });
+    </script>
 </x-app-layout>

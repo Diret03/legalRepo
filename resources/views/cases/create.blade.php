@@ -62,8 +62,6 @@
                             <label for="tags" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Etiquetas</label>
                             <div id="tags-input"></div>
                             <input type="hidden" id="tags-hidden-input" name="tags">
-{{--                            <button class="btn btn-blue" id="tag-btn">HOLA</button>--}}
-
                         </div>
                         <div class="mb-4 border-b border-gray-200">
                             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab"
@@ -169,8 +167,6 @@
 
                 // Set the hidden input value to the JSON string of selected tags
                 $('#tags-hidden-input').val(JSON.stringify(tagNames));
-
-                // Form will be submitted normally
             });
 
 
@@ -206,9 +202,6 @@
             {{--    });--}}
             {{--});--}}
         });
-
-
-
     </script>
 
 </x-app-layout>
