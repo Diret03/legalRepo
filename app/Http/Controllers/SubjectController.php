@@ -14,7 +14,7 @@ class SubjectController extends Controller
 
     public function index(Request $request){
 
-        $sortField = $request->query('sort', 'created_at'); // default sort field
+        $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
         $subjects = Subject::orderBy($sortField, $sortDirection)->paginate(10);
