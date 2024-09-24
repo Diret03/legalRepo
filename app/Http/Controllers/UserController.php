@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,8 +17,9 @@ class UserController extends Controller
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
         $users = User::orderBy($sortField, $sortDirection)->paginate(10);
-
-        return view('users.index', compact('users'));
+        $roles = Role::all()->pluck('name');
+//        dd($roles);
+        return view('users.index', compact('users', 'roles'));
     }
 
     public function search(Request $request){
@@ -101,6 +103,8 @@ class UserController extends Controller
             'email' =>  ['required', 'unique:users', 'max:255', 'email'],
             'password' => 'required|string',
             'status' => 'required|boolean',
+            'roles' => 'array',
+            'roles.*' => 'string|exists:roles,name',
         ],[
             'name.regex' => 'El nombre solo debe contener letras.',
             'last_name.regex' => 'El apellido solo debe contener letras.',
@@ -114,6 +118,11 @@ class UserController extends Controller
             'status' => $validated_data['status'],
         ]);
 
+        if($validated_data['roles']){
+            $user->syncRoles($validated_data['roles']);
+            $user->save();
+        }
+
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');
 
     }
@@ -121,7 +130,8 @@ class UserController extends Controller
     public function edit($id){
 
         $user = User::findOrFail($id);
-        return view('users.edit', compact('user'));
+        $roles = Role::all()->pluck('name');
+        return view('users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, $id)
@@ -134,6 +144,8 @@ class UserController extends Controller
             'email' => ['required', 'max:255', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
             'status' => 'required|boolean',
+            'roles' => 'array',
+            'roles.*' => 'string|exists:roles,name',
         ],[
             'name.regex' => 'El nombre solo debe contener letras.',
             'last_name.regex' => 'El apellido solo debe contener letras.',
@@ -148,6 +160,9 @@ class UserController extends Controller
             $user->password = Hash::make($validated_data['password']);
         }
 
+        if($validated_data['roles']){
+            $user->syncRoles($validated_data['roles']);
+        }
         $user->save();
 
         return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');

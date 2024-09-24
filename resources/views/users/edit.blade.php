@@ -43,14 +43,32 @@
                                    class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
                         </div>
                         <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900">Roles</label>
+                            @foreach($roles as $role)
+                                <div class="flex items-center mb-4">
+                                    <input
+                                        id="role_{{$role}}"
+                                        type="checkbox"
+                                        value="{{$role}}"
+                                        name="roles[]"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                        @if(in_array($role, $user->getRoleNames()->toArray()))
+                                            checked
+                                        @endif
+                                    >
+                                    <label for="role_{{$role}}" class="ms-2 text-sm font-medium text-gray-900">
+                                        {{ucfirst($role)}}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div>
                             <label for="status"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
                             <select name="status" id="edit_status"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                {{--                                <option value="1">Activo</option>--}}
-                                {{--                                <option value="0">Inactivo</option>--}}
                                 @if($user->status)
-                                    <option value="1" selected>Activo</option>
+                                    <option value="1">Activo</option>
                                     <option value="0">Inactivo</option>
                                 @else
                                     <option value="1">Activo</option>

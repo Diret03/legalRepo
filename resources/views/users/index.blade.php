@@ -26,7 +26,6 @@
             @endif
             <div
                 class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-
                 <div class="flex items-center">
                     <div>
                         <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
@@ -141,6 +140,9 @@
                         Correo
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Roles
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Estado
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -167,6 +169,23 @@
                         </td>
                         <td class="px-6 py-4">
                             {{$user->email}}
+                        </td>
+                        <td class="px-6 py-4">
+                            @if(!$user->roles->isEmpty())
+                                <div class="flex flex-col items-start gap-2">
+                                    @foreach ($user->getRoleNames() as $role)
+                                        <span
+                                            class="inline-flex bg-zinc-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                                            {{ $role }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span
+                                    class="inline-flex bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                                    No tiene roles
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
@@ -267,6 +286,23 @@
                         <input type="email" name="email" id="email"
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                placeholder="Escribe un correo electrónico" value="{{ old('email') }}"/>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Roles</label>
+                        @foreach($roles as $role)
+                            <div class="flex items-center mb-4">
+                                <input
+                                    id="role_{{$role}}"
+                                    type="checkbox"
+                                    value="{{$role}}"
+                                    name="roles[]"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                >
+                                <label for="role_{{$role}}" class="ms-2 text-sm font-medium text-gray-900">
+                                    {{ucfirst($role)}}
+                                </label>
+                            </div>
+                        @endforeach
                     </div>
                     <div>
                         <label for="status"
