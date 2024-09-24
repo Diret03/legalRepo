@@ -106,6 +106,9 @@
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Usuario
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Título
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -123,6 +126,9 @@
                     <th scope="col" class="desc px-6 py-3">
                         Detalles
                     </th>
+                    <th scope="col" class="stat px-6 py-3">
+                        Estado
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Acción
                     </th>
@@ -137,6 +143,12 @@
                                 <input name="ids" type="checkbox" value="{{$case->id}}"
                                        class="checkbox_ids w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="checkbox_ids" class="sr-only">checkbox</label>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-black">
+                                <div class="text-base font-semibold">{{$case->user->name}} {{$case->user->last_name}}</div>
+                                <div class="font-normal text-gray-500">{{$case->user->email}}</div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
@@ -177,6 +189,17 @@
                                         <!-- Modal body -->
                                         <div class="modal-body p-4 md:p-5 space-y-4">
                                             <div>
+                                                <h4 class="font-semibold text-gray-900 dark:text-white">Etiquetas</h4>
+                                                <div class="flex flex-wrap gap-1">
+                                                    @foreach ($case->tags as $tag)
+                                                        <a  href="{{ route('cases.showByTag', $tag->id) }}"
+                                                            class="bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                                                            {{ $tag->name }}
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <div>
                                                 <h4 class="font-semibold text-gray-900 dark:text-white">Contexto</h4>
                                                 <textarea class="editor-modal" name="context">{{$case->context}}</textarea>
                                             </div>
@@ -197,6 +220,19 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col items-center">
+                                @if($case->status == 'Aceptado')
+                                    <img src="{{asset('svg/approved.svg')}}" class="h-5 w-5 mb-2" alt="Aceptado icon">
+                                @elseif($case->status == 'Pendiente')
+                                    <img src="{{asset('svg/pending.svg')}}" class="h-8 w-8 mb-2" alt="Pendiente icon">
+                                @elseif($case->status == 'Rechazado')
+                                    <img src="{{asset('svg/rejected.svg')}}" class="h-5 w-5 mb-2" alt="Rechazado icon">
+                                @endif
+                                <span>{{$case->status}}</span>
+                            </div>
+                        </td>
+
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <a href="{{route('cases.edit',$case->id)}}"

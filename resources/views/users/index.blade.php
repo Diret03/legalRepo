@@ -176,7 +176,7 @@
                                     @foreach ($user->getRoleNames() as $role)
                                         <span
                                             class="inline-flex bg-zinc-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-                                            {{ $role }}
+                                            {{ ucfirst($role) }}
                                         </span>
                                     @endforeach
                                 </div>

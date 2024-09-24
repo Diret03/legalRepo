@@ -6,6 +6,7 @@ use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\Models\Trial;
 use App\Models\LegalCase;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Spatie\Tags\Tag;
 class CaseController extends Controller
@@ -23,16 +24,19 @@ class CaseController extends Controller
 
     public function create(){
         $trials = Trial::all();
-        return view('cases.create',compact('trials'));
+        $users = User::orderBy('last_name','asc')->get();
+        return view('cases.create',compact('trials','users'));
     }
 
     public function store(Request $request){
 
         $validated_data = $request->validate([
             'title' => 'required|string',
+            'user_id' => 'required|exists:users,id',
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
             'origin' => 'required|string',
+            'status' => 'required|string|in:pending,accepted,rejected',
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
@@ -42,9 +46,11 @@ class CaseController extends Controller
 
         $case = LegalCase::create([
             'title' => $validated_data['title'],
+            'user_id' => $validated_data['user_id'],
             'trial_id' => $validated_data['trial_id'],
             'date' => $validated_data['date'],
             'origin' => $validated_data['origin'],
+            'status' => $validated_data['status'],
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],
@@ -71,15 +77,18 @@ class CaseController extends Controller
 
         $case = LegalCase::findOrFail($id);
         $trials = Trial::all();
-        return view('cases.edit', compact('case','trials'));
+        $users = User::orderBy('last_name','asc')->get();
+        return view('cases.edit', compact('case','trials', 'users'));
     }
 
     public function update(Request $request, $id) {
         $validated_data = $request->validate([
             'title' => 'required|string',
+            'user_id' => 'required|exists:users,id',
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
             'origin' => 'required|string',
+            'status' => 'required|string|in:pending,accepted,rejected',
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
@@ -90,9 +99,11 @@ class CaseController extends Controller
         $case = LegalCase::findOrFail($id);
         $case->update([
             'title' => $validated_data['title'],
+            'user_id' => $validated_data['user_id'],
             'trial_id' => $validated_data['trial_id'],
             'date' => $validated_data['date'],
             'origin' => $validated_data['origin'],
+            'status' => $validated_data['status'],
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],

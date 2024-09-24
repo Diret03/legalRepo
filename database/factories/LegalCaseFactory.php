@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Subject;
 use App\Models\Trial;
+use App\Models\User;
 use App\Models\LegalCase;
 
 /**
@@ -22,12 +23,13 @@ class LegalCaseFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'date' => $this->faker->date(),
+            'status' => $this->faker->randomElement(['pending', 'accepted', 'rejected']),
             'origin' => $this->faker->city(),
             'context' => $this->faker->paragraph(),
             'analysis' => $this->faker->text(),
             'resolution' => $this->faker->text(),
             'note' => $this->faker->paragraph(),
-//            'subject_id' => Subject::all()->random()->id,
+            'user_id' => User::all()->random()->id,
             'trial_id' => Trial::all()->random()->id,
         ];
     }
