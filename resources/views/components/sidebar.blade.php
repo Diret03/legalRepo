@@ -15,6 +15,14 @@
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
 
+        @can('revisar casos')
+            <x-dash-link
+                href="{{ route('cases.review') }}"
+                icon="svg/review.svg"
+                title="Revisar Casos"
+                :activeRoutes="['cases.review']"
+            />
+        @endcan
         <x-dash-link
             href="{{ route('cases.index') }}"
             icon="svg/cases.svg"

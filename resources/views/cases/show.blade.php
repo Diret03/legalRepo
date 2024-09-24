@@ -6,18 +6,52 @@
         @elseif ($accessedBy === 'tag')
             {{ Breadcrumbs::render('caseByTag', $case, $tag) }}
         @endif
-        <div class="flex items-center flex-wrap mb-8">
-            @if ($accessedBy === 'trial')
-                <x-go-back route="{{ route('cases.showByTrial',$case->trial->id) }}" />
-            @elseif ($accessedBy === 'tag')
-{{--                <x-go-back route="{{ route('cases.showByTag', [$case->id, $tag]) }}" />--}}
-                <x-go-back route="{{ url()->previous() }}" />
-            @else
-                <x-go-back route="{{ url()->previous() }}" />
-            @endif
+            <div class="flex items-center flex-wrap mb-8 justify-between">
+                <div class="flex items-center">
+                    @if ($accessedBy === 'trial')
+                        <x-go-back route="{{ route('cases.showByTrial',$case->trial->id) }}" />
+                    @elseif ($accessedBy === 'tag')
+                        <x-go-back route="{{ url()->previous() }}" />
+                    @else
+                        <x-go-back route="{{ url()->previous() }}" />
+                    @endif
+                    <h2 class="text-4xl font-extrabold ml-4">{{$case->title}}</h2>
+                </div>
 
-            <h2 class="text-4xl font-extrabold">{{$case->title}}</h2>
-        </div>
+                <div class="flex items-center space-x-4">
+                    @if(Auth::user()->can('aprobar casos') && Auth::user()->can('rechazar casos'))
+                        <form action="{{route('cases.approve',$case->id)}}" method="post">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                    class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-green-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Aprobar
+                            </button>
+                        </form>
+                        <form action="{{route('cases.reject',$case->id)}}" method="post">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                    class="flex items-center px-4 py-2 bg-red-650 hover:bg-red-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-red-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                Rechazar
+                            </button>
+                        </form>
+                    @endif
+
+                </div>
+            </div>
         <div class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4">
 
             <div class="flex flex-col lg:flex-row">
@@ -29,7 +63,6 @@
                 </div>
                 <div class="w-full lg:w-1/2">
                     <x-colon-text label="Origen" value="{{$case->origin}}"/>
-{{--                    <x-colon-text label="Etiquetas" value="aux"/>--}}
                     <div class="mb-3 flex items-center">
                         <p class="text-gray-700 font-extrabold mr-3">Etiquetas:</p>
                         <div class="flex flex-wrap gap-1">
@@ -41,7 +74,9 @@
                             @endforeach
                         </div>
                     </div>
-
+                    @can('aprobar casos')
+                        <x-colon-text label="Estado" :value="$case->status"/>
+                    @endcan
                 </div>
             </div>
 

@@ -59,6 +59,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete("/dashboard/selected-cases", [CaseController::class, 'deleteSelected'])->name('cases.delete');
     Route::get('/cases/tags', [CaseController::class, 'getAllTags']);
     Route::get('/cases/{id}/tags', [CaseController::class, 'getTags']);
+    Route::get('/cases/review', [CaseController::class, 'review'])->name('cases.review');
+    Route::patch('/cases/{id}/approve', [CaseController::class, 'approve'])->name('cases.approve');
+    Route::patch('/cases/{id}/reject', [CaseController::class, 'reject'])->name('cases.reject');
+
 
 });
 

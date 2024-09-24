@@ -260,7 +260,9 @@ class CaseController extends Controller
 
     public function showCasesbyTrial($trial_id){
 
-        $cases = LegalCase::where('trial_id',$trial_id)->paginate(5);
+        $cases = LegalCase::where('trial_id',$trial_id)
+            ->where('status','accepted')
+            ->paginate(5);
         $trial = Trial::where('id',$trial_id)->first();
         $trial_name = $trial->name;
         return view('cases.byTrial', compact('cases','trial','trial_name'));
@@ -291,14 +293,53 @@ class CaseController extends Controller
     }
 
     public function list(){
+        $cases = LegalCase::where('status','accepted')
+                ->paginate(10);
+        return view('cases.list',compact('cases'));
+    }
+
+    public function listUser(){
         $cases = LegalCase::paginate(10);
         return view('cases.list',compact('cases'));
+    }
+
+    public function review(Request $request){
+        $status = $request->query('status', 'pending'); // default sort field
+
+        $cases = LegalCase::where('status',$status)
+            ->orderBy('updated_at', 'desc')->paginate(12);
+
+        if($status == 'all'){
+            $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
+        }
+
+        return view('cases.review', compact('cases'));
+    }
+
+    public function approve($id){
+        $case = LegalCase::findOrFail($id);
+
+        $case->status = 'accepted';
+        $case->save();
+
+        return redirect()->route('cases.review');
+    }
+
+    public function reject($id){
+        $case = LegalCase::findOrFail($id);
+
+        $case->status = 'rejected';
+        $case->save();
+
+        return redirect()->route('cases.review');
     }
     public function showByTag($id){
 
         $tag = Tag::where('id', $id)->first();
         $tag_name = $tag->name;
-        $cases = LegalCase::withAnyTags([$tag_name])->paginate(10);
+        $cases = LegalCase::withAnyTags([$tag_name])
+            ->where('status','accepted')
+            ->paginate(10);
 
         return view('cases.byTag', compact('cases','tag','tag_name'));
     }

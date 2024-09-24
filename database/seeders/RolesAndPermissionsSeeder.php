@@ -23,6 +23,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear casos']);
         Permission::create(['name' => 'ver casos']);
         Permission::create(['name' => 'eliminar casos']);
+        Permission::create(['name' => 'revisar casos']);
         Permission::create(['name' => 'aprobar casos']);
         Permission::create(['name' => 'rechazar casos']);
 
@@ -60,6 +61,6 @@ class RolesAndPermissionsSeeder extends Seeder
             ]);
 
         $roleReviewer = Role::create(['name' => 'revisor'])
-            ->givePermissionTo(['ver casos', 'aprobar casos', 'rechazar casos']);
+            ->givePermissionTo(['ver casos', 'aprobar casos', 'rechazar casos','revisar casos']);
     }
 }
