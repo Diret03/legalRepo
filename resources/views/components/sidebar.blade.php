@@ -10,7 +10,8 @@
             </svg>
         </div>
         <button id="toggle-button" onclick="toggleSidebar()" class="focus:outline-none">
-            <img id="toggle-img" src="{{ asset('svg/toggle-on.svg') }}" class="size-10" alt="toggle icon"  style="filter: brightness(0) invert(1);">
+            <img id="toggle-img" src="{{ asset('svg/toggle-on.svg') }}" class="size-10" alt="toggle icon"
+                 style="filter: brightness(0) invert(1);">
         </button>
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
@@ -23,37 +24,51 @@
                 :activeRoutes="['cases.review']"
             />
         @endcan
-        <x-dash-link
-            href="{{ route('cases.index') }}"
-            icon="svg/cases.svg"
-            title="Casos"
-            :activeRoutes="['cases.index', 'cases.create', 'cases.edit']"
-        />
-        <x-dash-link
-            href="{{ route('subjects.index') }}"
-            icon="svg/subjects.svg"
-            title="Materias"
-            :activeRoutes="['subjects.index', 'subjects.create', 'subjects.edit']"
-        />
-        <x-dash-link
-            href="{{ route('trials.index') }}"
-            icon="svg/trials.svg"
-            title="Juicios"
-            :activeRoutes="['trials.index', 'trials.create', 'trials.edit']"
-        />
-        <x-dash-link
-            href="{{ route('users.index') }}"
-            icon="svg/users.svg"
-            title="Usuarios"
-            :activeRoutes="['users.index', 'users.create', 'users.edit']"
-        />
-{{--        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>--}}
+        @can('ver casos')
+            <x-dash-link
+                href="{{ route('cases.index') }}"
+                icon="svg/cases.svg"
+                title="Casos"
+                :activeRoutes="['cases.index', 'cases.create', 'cases.edit']"
+            />
+        @endcan
 
-{{--        <x-dash-link href="{{ route('trials.index') }}" icon="svg/trials.svg" title="Juicios" activeRoute="trials.index"/>--}}
+        @can('ver materias')
+            <x-dash-link
+                href="{{ route('subjects.index') }}"
+                icon="svg/subjects.svg"
+                title="Materias"
+                :activeRoutes="['subjects.index', 'subjects.create', 'subjects.edit']"
+            />
+        @endcan
+
+        @can('ver juicios')
+            <x-dash-link
+                href="{{ route('trials.index') }}"
+                icon="svg/trials.svg"
+                title="Juicios"
+                :activeRoutes="['trials.index', 'trials.create', 'trials.edit']"
+            />
+
+        @endcan
+
+        @can('ver usuarios')
+            <x-dash-link
+                href="{{ route('users.index') }}"
+                icon="svg/users.svg"
+                title="Usuarios"
+                :activeRoutes="['users.index', 'users.create', 'users.edit']"
+            />
+
+        @endcan
+
+        {{--        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>--}}
+
+        {{--        <x-dash-link href="{{ route('trials.index') }}" icon="svg/trials.svg" title="Juicios" activeRoute="trials.index"/>--}}
     </nav>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         // check if the screen width is less than or equal to 768px (
         let sidebarExpanded = !window.matchMedia("(max-width: 768px)").matches;
@@ -79,7 +94,7 @@
         updateSidebarState();
 
         // Toggle function
-        window.toggleSidebar = function() {
+        window.toggleSidebar = function () {
             sidebarExpanded = !sidebarExpanded;
             updateSidebarState();
         }

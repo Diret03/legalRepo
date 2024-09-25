@@ -30,24 +30,26 @@
             <div class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
 
                 <div class="flex items-center">
-                    <div>
-                        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
-                                type="button">
-                            <span class="sr-only">Action button</span>
-                            Acción
-                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                            </svg>
-                        </button>
-                        <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                                <li>
-                                    <a href="#" id="deleteAll" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
-                                </li>
-                            </ul>
+                    @can('eliminar casos')
+                        <div>
+                            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
+                                    type="button">
+                                <span class="sr-only">Action button</span>
+                                Acción
+                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                </svg>
+                            </button>
+                            <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+                                    <li>
+                                        <a href="#" id="deleteAll" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    @endcan
 
                     <div>
                         <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
@@ -76,11 +78,13 @@
 
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="flex items-center">
-                    <a href="{{route('cases.create')}}"
-                       class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
-                        <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
-                        <p>Agregar Caso</p>
-                    </a>
+                    @can('crear casos')
+                        <a href="{{route('cases.create')}}"
+                           class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
+                            <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
+                            <p>Agregar Caso</p>
+                        </a>
+                    @endcan
                     <div class="relative">
                         <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -129,9 +133,11 @@
                     <th scope="col" class="stat px-6 py-3">
                         Estado
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Acción
-                    </th>
+                    @if(Auth::user()->can('editar cualquier caso') || Auth::user()->can('eliminar cualquier caso'))
+                        <th scope="col" class="px-6 py-3">
+                            Acción
+                        </th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody id="cases-data">
@@ -232,25 +238,26 @@
                                 <span>{{$case->status}}</span>
                             </div>
                         </td>
+                        @if(Auth::user()->can('editar cualquier caso') || Auth::user()->can('eliminar cualquier caso'))
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <a href="{{route('cases.edit',$case->id)}}"
+                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                        <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
+                                    </a>
+                                    <form action="{{route('cases.destroy',$case->id)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
+                                            <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
+                                        </button>
+                                    </form>
 
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <a href="{{route('cases.edit',$case->id)}}"
-                                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                                    <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
-                                </a>
-                                <form action="{{route('cases.destroy',$case->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
-                                        <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
-                                    </button>
-                                </form>
-
-                            </div>
-                        </td>
+                                </div>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>

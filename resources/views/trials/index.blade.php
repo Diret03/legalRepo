@@ -28,32 +28,32 @@
                 class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
 
                 <div class="flex items-center">
-                    <div>
-                        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
-                                type="button">
-                            <span class="sr-only">Action button</span>
-                            Acción
-                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2" d="m1 1 4 4 4-4"/>
-                            </svg>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div id="dropdownAction"
-                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownActionButton">
-                                <li>
-                                    <a href="#" id="deleteAll"
-                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
-                                </li>
-                            </ul>
+                    @can('eliminar juicios')
+                        <div>
+                            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
+                                    type="button">
+                                <span class="sr-only">Action button</span>
+                                Acción
+                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2" d="m1 1 4 4 4-4"/>
+                                </svg>
+                            </button>
 
+                            <div id="dropdownAction"
+                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownActionButton">
+                                    <li>
+                                        <a href="#" id="deleteAll"
+                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-
+                    @endcan
                     <div>
                         <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
                                 class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
@@ -90,12 +90,13 @@
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="flex items-center">
 
-                    <a href="#" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
-                       class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
-                        <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
-                        <p>Agregar Juicio</p>
-                    </a>
-
+                    @can('crear juicios')
+                        <a href="#" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+                           class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
+                            <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
+                            <p>Agregar Juicio</p>
+                        </a>
+                    @endcan
 
                     <div class="relative">
 
@@ -134,9 +135,11 @@
                     <th scope="col" class="desc px-6 py-3">
                         Descripción
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Acción
-                    </th>
+                    @if(Auth::user()->can('editar juicios') || Auth::user()->can('eliminar juicios'))
+                        <th scope="col" class="px-6 py-3">
+                            Acción
+                        </th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody id="trials-data">
@@ -168,24 +171,25 @@
                                 {{ $trial->description }}
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <a href="{{route('trials.edit',$trial->id)}}"
-                                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                                    <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
-                                </a>
-                                <form action="{{route('trials.destroy',$trial->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
-                                        <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
-                                    </button>
-                                </form>
-
-                            </div>
-                        </td>
+                        @if(Auth::user()->can('editar juicios') || Auth::user()->can('eliminar juicios'))
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <a href="{{route('trials.edit',$trial->id)}}"
+                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                                        <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
+                                    </a>
+                                    <form action="{{route('trials.destroy',$trial->id)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
+                                            <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
 
@@ -195,72 +199,73 @@
                 {{ $trials->links() }}
             </div>
         </div>
-
     </div>
 </x-app-layout>
 
-<!-- Add trial modal -->
-<div id="authentication-modal" tabindex="-1" aria-hidden="true"
-     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Agregar juicio
-                </h3>
-                <button type="button"
-                        class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="authentication-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <!-- Modal body -->
-            <div class="p-4 md:p-5">
-                <form class="space-y-4" action="{{ route('trials.store') }}" method="POST"
-                     >
-                    @csrf
-                    <div>
-                        <label for="name"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                        <input type="text" name="name" id="name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribir nombre" required value="{{ old('name') }}"/>
-                    </div>
-                    <div>
-                        <label for="subject_id"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Materia</label>
-                        <select name="subject_id" id="subject_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            @foreach($subjects as $subject)
-                                <option value="{{$subject->id}}">{{$subject->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label for="description"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
-                        <textarea name="description" id="description" rows="10"
-                                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                  required >{{ old('description') }}</textarea>
-                    </div>
-
-
-                    <button type="submit"
-                            class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        Agregar
+@can('crear juicios')
+    <!-- Add trial modal -->
+    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
+         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Agregar juicio
+                    </h3>
+                    <button type="button"
+                            class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="authentication-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
                     </button>
-                </form>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5">
+                    <form class="space-y-4" action="{{ route('trials.store') }}" method="POST"
+                    >
+                        @csrf
+                        <div>
+                            <label for="name"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                            <input type="text" name="name" id="name"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   placeholder="Escribir nombre" required value="{{ old('name') }}"/>
+                        </div>
+                        <div>
+                            <label for="subject_id"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Materia</label>
+                            <select name="subject_id" id="subject_id"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                @foreach($subjects as $subject)
+                                    <option value="{{$subject->id}}">{{$subject->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="description"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
+                            <textarea name="description" id="description" rows="10"
+                                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                      required>{{ old('description') }}</textarea>
+                        </div>
+
+
+                        <button type="submit"
+                                class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            Agregar
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
+@endcan
 
 <script>
 

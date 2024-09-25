@@ -8,17 +8,17 @@
                 <h2 class="text-4xl mr-2 font-extrabold">Revisión de casos</h2>
             </div>
             <div class="flex items-center flex-wrap -mx-2 mb-4">
-                <a type="button" href="{{route('cases.review')}}?status=pending"
+                <a id="pending-link" type="button" href="{{route('cases.review')}}?status=pending"
                    class="flex items-center px-4 py-1 focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm mx-1 mb-2">
                     <img src="{{asset('svg/pending.svg')}}" class="h-8 w-8 mr-2 invert" alt="Pendiente icon">
                     Pendientes
                 </a>
-                <a type="button" href="{{route('cases.review')}}?status=accepted"
+                <a id="accepted-link" type="button" href="{{route('cases.review')}}?status=accepted"
                    class="flex items-center px-4 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm mx-1 mb-2">
                     <img src="{{asset('svg/approved.svg')}}" class="h-6 w-6 mr-2 invert" alt="Aceptado icon">
                     Aceptados
                 </a>
-                <a type="button" href="{{route('cases.review')}}?status=rejected"
+                <a id="rejected-link" type="button" href="{{route('cases.review')}}?status=rejected"
                    class="flex items-center px-4 py-2 focus:outline-none text-white bg-red-650 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm mx-1 mb-2">
                     <img src="{{asset('svg/rejected.svg')}}" class="h-6 w-6 mr-2 invert" alt="Rechazado icon">
                     Rechazados
@@ -114,5 +114,15 @@
             </div>
         </div>
     </div>
-
+    <script>
+        // document.addEventListener("DOMContentLoaded", (event) => {
+        //     let pending = true
+        //
+        //     $('pending-link').on('click', function (){
+        //
+        //
+        //
+        //     });
+        // });
+    </script>
 </x-app-layout>

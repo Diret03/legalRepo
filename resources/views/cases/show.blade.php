@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    @if(Auth::user()->can('aprobar casos') && Auth::user()->can('rechazar casos'))
+                    @can('aprobar casos')
                         <form action="{{route('cases.approve',$case->id)}}" method="post">
                             @csrf
                             @method('PATCH')
@@ -34,6 +34,8 @@
                                 Aprobar
                             </button>
                         </form>
+                    @endcan
+                    @can('rechazar casos')
                         <form action="{{route('cases.reject',$case->id)}}" method="post">
                             @csrf
                             @method('PATCH')
@@ -48,7 +50,7 @@
                                 Rechazar
                             </button>
                         </form>
-                    @endif
+                    @endcan
 
                 </div>
             </div>

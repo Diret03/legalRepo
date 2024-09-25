@@ -19,13 +19,17 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // create permissions
         //casos
-        Permission::create(['name' => 'editar casos']);
+        Permission::create(['name' => 'ver cualquier caso']);
+        Permission::create(['name' => 'ver cualquier caso']);
         Permission::create(['name' => 'crear casos']);
-        Permission::create(['name' => 'ver casos']);
-        Permission::create(['name' => 'eliminar casos']);
+        Permission::create(['name' => 'editar cualquier caso']);
+        Permission::create(['name' => 'eliminar cualquier caso']);
+        Permission::create(['name' => 'editar propio caso']);
+        Permission::create(['name' => 'eliminar propio caso']);
         Permission::create(['name' => 'revisar casos']);
         Permission::create(['name' => 'aprobar casos']);
         Permission::create(['name' => 'rechazar casos']);
+        Permission::create(['name' => 'reportar casos']);
 
         //juicios
         Permission::create(['name' => 'editar juicios']);
@@ -50,11 +54,11 @@ class RolesAndPermissionsSeeder extends Seeder
         // create roles and assign created permissions
 
         $roleDigitador = Role::create(['name' => 'digitador'])
-            ->givePermissionTo(['crear casos', 'editar casos', 'eliminar casos', 'ver casos']);
+            ->givePermissionTo(['crear casos', 'editar propio caso', 'eliminar propio caso', 'ver casos']);
 
         $roleAdmin = Role::create(['name' => 'administrador'])
             ->givePermissionTo([
-                'ver casos',
+                'ver casos', 'editar cualquier caso', 'eliminar cualquier caso', 'crear casos',
                 'crear materias', 'editar materias', 'eliminar materias', 'ver materias',
                 'crear juicios', 'editar juicios', 'eliminar juicios', 'ver juicios',
                 'crear usuarios', 'editar usuarios', 'eliminar usuarios', 'ver usuarios', 'activar usuarios', 'desactivar usuarios',

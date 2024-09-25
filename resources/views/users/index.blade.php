@@ -23,39 +23,45 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
-            <div
-                class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-                <div class="flex items-center">
-                    <div>
-                        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
-                                type="button">
-                            <span class="sr-only">Action button</span>
-                            Acción
-                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2" d="m1 1 4 4 4-4"/>
-                            </svg>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div id="dropdownAction"
-                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownActionButton">
-                                <li>
-                                    <a href="#" id="deactivateAll"
-                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="deleteAll"
-                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
-                                </li>
-                            </ul>
+                @endif
+                <div
+                    class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+                    <div class="flex items-center">
+                        @if(Auth::user()->can('eliminar usuarios') || Auth::user()->can('desactivar usuarios'))
+                            <div>
+                                <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                                        class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
+                                        type="button">
+                                    <span class="sr-only">Action button</span>
+                                    Acción
+                                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
+                                <div id="dropdownAction"
+                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                        aria-labelledby="dropdownActionButton">
+                                        @can('desactivar usuarios')
+                                            <li>
+                                                <a href="#" id="deactivateAll"
+                                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar</a>
+                                            </li>
+                                        @endcan
+                                        @can('eliminar usuarios')
+                                            <li>
+                                                <a href="#" id="deleteAll"
+                                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
+                                            </li>
 
-                        </div>
-                    </div>
+                                        @endcan
+                                    </ul>
+                                </div>
+                            </div>
+                        @endif
 
                     <div>
                         <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
@@ -93,11 +99,13 @@
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="flex items-center">
 
-                    <a href="#" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
-                       class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
-                        <img src="{{asset('svg/add-user.svg')}}" class="size-7 mr-3" alt="Agregar usuario icon">
-                        <p>Agregar Usuario</p>
-                    </a>
+                    @can('crear usuarios')
+                        <a href="#" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+                           class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
+                            <img src="{{asset('svg/add-user.svg')}}" class="size-7 mr-3" alt="Agregar usuario icon">
+                            <p>Agregar Usuario</p>
+                        </a>
+                    @endcan
 
 
                     <div class="relative">
@@ -145,9 +153,11 @@
                     <th scope="col" class="px-6 py-3">
                         Estado
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Acción
-                    </th>
+                    @if(Auth::user()->can('editar usuarios') || Auth::user()->can('eliminar usuarios'))
+                        <th scope="col" class="px-6 py-3">
+                            Acción
+                        </th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody id="users-data">
@@ -198,6 +208,7 @@
                                 @endif
                             </div>
                         </td>
+                        @if(Auth::user()->can('editar usuarios') || Auth::user()->can('eliminar usuarios'))
                         <td class="px-6 py-4">
                             <div class="flex items-center">
 
@@ -216,6 +227,7 @@
                                 </form>
                             </div>
                         </td>
+                        @endif
                     </tr>
                 @endforeach
 
