@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\Trial;
 use App\Models\LegalCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Spatie\Tags\Tag;
+
 class CaseController extends Controller
 {
 
@@ -32,7 +35,7 @@ class CaseController extends Controller
 
         $validated_data = $request->validate([
             'title' => 'required|string',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
             'origin' => 'required|string',
@@ -44,9 +47,13 @@ class CaseController extends Controller
             'tags' => 'nullable'
         ]);
 
+        // Use null coalescing to check if 'user_id' exists in $validated_data
+        $user_id = $validated_data['user_id'] ?? Auth::user()->id;
+        $isAdmin = isset($validated_data['user_id']); // Admin if 'user_id' was explicitly set
+
         $case = LegalCase::create([
             'title' => $validated_data['title'],
-            'user_id' => $validated_data['user_id'],
+            'user_id' => $user_id,
             'trial_id' => $validated_data['trial_id'],
             'date' => $validated_data['date'],
             'origin' => $validated_data['origin'],
@@ -54,9 +61,7 @@ class CaseController extends Controller
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],
-            'note' => $validated_data['note'],
         ]);
-
 
         if (!empty($validated_data['note'])) {
             $case->note = $validated_data['note'];
@@ -70,8 +75,13 @@ class CaseController extends Controller
             }
         }
 
+        if (!$isAdmin) {
+            return redirect()->route('cases.mycases', Auth::user()->id)->with('success', 'Juicio subido exitosamente, espera a que sea aprobado.');
+        }
+
         return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');
     }
+
 
     public function edit($id){
 
@@ -272,9 +282,18 @@ class CaseController extends Controller
 
         $case = LegalCase::where('id', $id)->first();
         $accessedBy = 'all';
+
+        // Only allow public access if the case is 'accepted'
+//        dd(Auth::check());
+//        dd($case->status);
+        if ($case->status !== 'Aceptado' && !Auth::check()) {
+            abort(404); // Show 404 for unauthorized users
+        }
+
         return view('cases.show', compact('case','accessedBy'));
 
     }
+
 
     public function showCaseByTrial($id){
 
@@ -297,6 +316,7 @@ class CaseController extends Controller
                 ->paginate(10);
         return view('cases.list',compact('cases'));
     }
+
 
     public function listUser(){
         $cases = LegalCase::paginate(10);
@@ -323,6 +343,22 @@ class CaseController extends Controller
         $case->save();
 
         return redirect()->route('cases.review');
+    }
+
+    public function myCases(Request $request, $user_id){
+
+        $status = $request->query('status', 'accepted'); // default sort field
+
+        $cases = LegalCase::where('user_id',$user_id)
+            ->where('status',$status)
+            ->orderBy('updated_at', 'desc')->paginate(12);
+
+        if($status == 'all'){
+            $cases = LegalCase::where('user_id',$user_id)
+            ->orderBy('updated_at', 'desc')->paginate(12);
+        }
+
+        return view('cases.mycases', compact('cases'));
     }
 
     public function reject($id){

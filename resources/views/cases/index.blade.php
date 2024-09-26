@@ -30,7 +30,7 @@
             <div class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
 
                 <div class="flex items-center">
-                    @can('eliminar casos')
+                    @can('eliminar cualquier caso')
                         <div>
                             <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
                                     class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
@@ -250,7 +250,7 @@
                                         @method('DELETE')
                                         <button type="submit"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
                                             <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                         </button>
                                     </form>

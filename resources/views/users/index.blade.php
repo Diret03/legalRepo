@@ -221,7 +221,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
                                         <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                     </button>
                                 </form>
@@ -412,6 +412,10 @@
                     $.each(all_ids, function (key, val) {
                         $('user_ids' + val).remove();
                     })
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al buscar:', error);
+                    console.error('Detalles del error:', xhr, status);
                 }
 
             });

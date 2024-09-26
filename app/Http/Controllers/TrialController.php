@@ -113,7 +113,7 @@ class TrialController extends Controller
     public function store(Request $request){
 
         $validated_data = $request->validate([
-            'name' => 'required|alpha:ascii',
+            'name' => 'required|string',
             'subject_id' => 'required|exists:subjects,id',
             'description' => 'required|string',
         ]);
@@ -141,7 +141,7 @@ class TrialController extends Controller
         $trial = Trial::findOrFail($id);
 
         $validated_data = $request->validate([
-            'name' => 'required|alpha:ascii',
+            'name' => 'required|string',
             'subject_id' => 'required|exists:subjects,id',
             'description' => 'required|string',
         ]);

@@ -24,18 +24,18 @@
                           enctype="multipart/form-data">
                         @csrf
                         @method('POST')
-
-
-                        <div>
-                            <label for="user_id"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
-                            <select name="user_id" id="user_id"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->email }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if(Auth::user()->hasRole('administrador'))
+                            <div>
+                                <label for="user_id"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
+                                <select name="user_id" id="user_id"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->email }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div>
                             <label for="title"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
@@ -158,7 +158,7 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             let myData = [];
             let instance = null;
 
@@ -166,7 +166,7 @@
             $.ajax({
                 url: '/cases/tags',
                 method: 'GET',
-                success: function(response) {
+                success: function (response) {
                     myData = response.tags;
 
                     console.log("tags: " + myData);
@@ -177,12 +177,12 @@
                         allowFreeEntries: true
                     });
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error("Error fetching tags:", error);
                 }
             });
 
-            $("#case-form").submit(function() {
+            $("#case-form").submit(function () {
                 let tags = instance.getSelection(); // Get selected tags
                 let tagNames = tags.map(tag => tag.name); // Extract the tag names
 

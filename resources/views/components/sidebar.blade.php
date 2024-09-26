@@ -16,6 +16,14 @@
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
 
+        @can('ver casos propios')
+            <x-dash-link
+                href="{{ route('cases.mycases', Auth::user()->id) }}"
+                icon="svg/review-case.svg"
+                title="Mis Casos"
+                :activeRoutes="['cases.mycases']"
+            />
+        @endcan
         @can('revisar casos')
             <x-dash-link
                 href="{{ route('cases.review') }}"
@@ -61,6 +69,20 @@
             />
 
         @endcan
+
+            <form action="{{ route('logout') }}" method="post">
+                @csrf
+                <button type="submit"
+                   class="group flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start
+                           hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
+                    <img src="{{ asset('svg/logout.svg') }}"
+                         class="size-5 mr-4 transition-all duration-300 invert group-hover:invert-0"
+                         alt="Salir icon">
+                    <p class="title-nav transition-opacity duration-300 ease-in-out">Cerrar sesión</p>
+                </button>
+
+
+            </form>
 
         {{--        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>--}}
 

@@ -19,8 +19,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // create permissions
         //casos
-        Permission::create(['name' => 'ver cualquier caso']);
-        Permission::create(['name' => 'ver cualquier caso']);
+        Permission::create(['name' => 'ver casos']);
+        Permission::create(['name' => 'ver casos propios']);
         Permission::create(['name' => 'crear casos']);
         Permission::create(['name' => 'editar cualquier caso']);
         Permission::create(['name' => 'eliminar cualquier caso']);
@@ -54,7 +54,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // create roles and assign created permissions
 
         $roleDigitador = Role::create(['name' => 'digitador'])
-            ->givePermissionTo(['crear casos', 'editar propio caso', 'eliminar propio caso', 'ver casos']);
+            ->givePermissionTo(['crear casos', 'editar propio caso', 'eliminar propio caso', 'ver casos propios']);
 
         $roleAdmin = Role::create(['name' => 'administrador'])
             ->givePermissionTo([

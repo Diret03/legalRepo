@@ -188,7 +188,7 @@
                                         @method('DELETE')
                                         <button type="submit"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro')">
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
                                             <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                         </button>
                                     </form>
@@ -248,7 +248,7 @@
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
                             <textarea name="description" id="description"
                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                      required value="{{ old('description') }}"></textarea>
+                                      required>{{ old('description') }}</textarea>
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">Subir
