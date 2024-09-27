@@ -142,6 +142,7 @@ class CaseController extends Controller
 
         if($request->ajax()){
             $query = $request->input('search');
+            $view = $request->input('view');
 
             if ($query != '') {
                 $dbDriver = DB::getDriverName();
@@ -170,12 +171,40 @@ class CaseController extends Controller
 
             if (count($cases) > 0) {
 
-                $output = view('cases.partials.row', ['cases' => $cases])->render();
+                if($view == 'table'){
+                    $output = view('cases.partials.row', ['cases' => $cases])->render();
+                }
+                elseif($view == 'mycases'){
+                    $output = view('cases.partials.mylist', ['cases' => $cases])->render();
+                }
+                elseif($view == 'review'){
+                    $output = view('cases.partials.reviewlist', ['cases' => $cases])->render();
+                }
+
 
             } else {
-                $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+
+                if($view == 'table'){
+                    $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                <td colspan="8" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
                            </tr>';
+                }
+                else {
+                    $output =
+                        '<div
+                        class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                        role="alert">
+                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <span class="sr-only">Info</span>
+                        <div> No se encontraron resultados</div>
+
+                    </div>';
+                }
             }
 
             return $output;

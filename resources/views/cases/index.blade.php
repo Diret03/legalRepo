@@ -219,9 +219,6 @@
     }
 
     $(document).ready(function () {
-        // setupToggleDescriptionListeners();
-        // $('.editor'.getBody()).find('ul').addClass('list-disc');
-
         $('#search').on('keyup', function () {
             let query = $(this).val();
 
@@ -236,7 +233,10 @@
             $.ajax({
                 url: "{{ route('cases.search') }}",
                 type: "GET",
-                data: {'search': query},
+                data: {
+                    'search': query,
+                    'view':"table",
+                },
 
                 success: function (data) {
                     $('#cases-data').html(data)
