@@ -33,7 +33,7 @@ Route::get('/juicio/caso/{id}', [CaseController::class, 'showCaseByTrial'])->nam
 
 
 Route::get('/casos', [CaseController::class, 'list'])->name('cases.list');
-Route::get('/casos-etiqueta/{id}',[CaseController::class,'showByTag'])->name('cases.showByTag');
+Route::get('/etiquetas/caso/{id}',[CaseController::class,'showByTag'])->name('cases.showByTag');
 
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
@@ -69,7 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard/materias', [SubjectController::class, 'index'])->name('subjects.index');
         Route::get('/dashboard/materias/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
     });
-    Route::get("/dashboard/materias/search", [SubjectController::class, 'search'])->name('subjects.search');
+    Route::get("/materias/search", [SubjectController::class, 'search'])->name('subjects.search');
 
     Route::group(['middleware' => ['can:crear materias']], function () {
         Route::get('/dashboard/materias/crear', [SubjectController::class, 'create'])->name('subjects.create');

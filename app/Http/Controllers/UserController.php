@@ -34,7 +34,7 @@ class UserController extends Controller
                 $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
 
                 // Perform search query
-                $data = User::where('id', $likeOperator, '%' . $query . '%')
+                $users = User::where('id', $likeOperator, '%' . $query . '%')
                     ->orWhere('name', $likeOperator, '%' . $query . '%')
                     ->orWhere('last_name', $likeOperator, '%' . $query . '%')
                     ->orWhere('email', $likeOperator, '%' . $query . '%')
@@ -42,48 +42,12 @@ class UserController extends Controller
 
             } else {
                 // If search query is empty, return all users
-                $data = User::paginate(10);
+                $users = User::paginate(10);
             }
 
-            $output = '';
-            if (count($data) > 0) {
-                foreach($data as $row){
-                    $output .= '
-                    <tr id="user_ids'.$row->id.'" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="w-4 p-4">
-                            <div class="flex items-center">
-                                <input name="ids" type="checkbox" value='.$row->id.'
-                                       class="checkbox_ids w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox_ids " class="sr-only">checkbox</label>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">' . $row->name . '</td>
-                        <td class="px-6 py-4">' . $row->last_name . '</td>
-                        <td class="px-6 py-4">' . $row->email . '</td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-                                Activo
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <a href="'.route('users.edit',$row->id).'" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                                        <img src="' . asset('svg/edit.svg') . '" class="size-7" alt="Editar icon">
-                                </a>
-                                <form action="' . route('users.destroy', $row->id) . '" method="POST">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
-                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            onclick="return confirm(\'¿Estás seguro de que deseas eliminar este registro?\')">
-                                        <img src="' . asset('svg/delete.svg') . '" class="size-7" alt="Borrar icon">
-                                    </button>
-                                 </form>
-                            </div>
-                        </td>
-                    </tr>';
+            if (count($users) > 0) {
+                $output = view('users.row', ['users' => $users])->render();
 
-                }
             } else {
                 $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                <td colspan="6" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
