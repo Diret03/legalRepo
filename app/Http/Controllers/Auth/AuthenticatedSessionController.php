@@ -28,6 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+//        dd(Auth::user()->roles->pluck('name'));
+        // Check if the user has the "digitador" role
+        if(Auth::user()->roles->pluck('name')->contains('digitador')){
+            return redirect()->intended(route('cases.mycases',Auth::id()));
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

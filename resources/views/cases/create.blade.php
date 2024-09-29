@@ -24,7 +24,7 @@
                           enctype="multipart/form-data">
                         @csrf
                         @method('POST')
-                        @if(Auth::user()->hasRole('administrador'))
+                        @can('editar cualquier caso')
                             <div>
                                 <label for="user_id"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
@@ -35,7 +35,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        @endif
+                        @endcan
                         <div>
                             <label for="title"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
@@ -57,17 +57,19 @@
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                    placeholder="Escribir origen" required value="{{ old('origin') }}"/>
                         </div>
-                        <div>
-                            <label for="status"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
-                            <select name="status" id="status"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
+                        @can('editar cualquier caso')
+                            <div>
+                                <label for="status"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
+                                <select name="status" id="status"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
 
-                                <option value="accepted">Aceptado</option>
-                                <option value="pending">Pendiente</option>
-                                <option value="rejected">Rechazado</option>
-                            </select>
-                        </div>
+                                    <option value="accepted">Aceptado</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="rejected">Rechazado</option>
+                                </select>
+                            </div>
+                        @endcan
                         <!-- Trial Dropdown -->
                         <div>
                             <label for="trial_id"

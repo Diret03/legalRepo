@@ -39,17 +39,23 @@ class CaseController extends Controller
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
             'origin' => 'required|string',
-            'status' => 'required|string|in:pending,accepted,rejected',
+            'status' => 'nullable|string|in:pending,accepted,rejected',
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
             'note' => 'nullable|string',
             'tags' => 'nullable'
+        ],[
+            'context.required' => 'El campo contexto es obligatorio.',
+            'analysis.required' => 'El campo de análisis jurídico es obligatorio.',
+            'resolution.required' => 'El campo de resolución es obligatorio.',
         ]);
 
-        // Use null coalescing to check if 'user_id' exists in $validated_data
+        // null coalescing to check if 'user_id' exists in $validated_data
         $user_id = $validated_data['user_id'] ?? Auth::user()->id;
         $isAdmin = isset($validated_data['user_id']); // Admin if 'user_id' was explicitly set
+
+        $status = $validated_data['status'] ?? 'pending';
 
         $case = LegalCase::create([
             'title' => $validated_data['title'],
@@ -57,7 +63,7 @@ class CaseController extends Controller
             'trial_id' => $validated_data['trial_id'],
             'date' => $validated_data['date'],
             'origin' => $validated_data['origin'],
-            'status' => $validated_data['status'],
+            'status' => $status,
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],
@@ -94,30 +100,38 @@ class CaseController extends Controller
     public function update(Request $request, $id) {
         $validated_data = $request->validate([
             'title' => 'required|string',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
             'trial_id' => 'required|exists:trials,id',
             'date' => 'required|date',
             'origin' => 'required|string',
-            'status' => 'required|string|in:pending,accepted,rejected',
+            'status' => 'nullable|string|in:pending,accepted,rejected',
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
             'note' => 'nullable|string',
             'tags' => 'nullable'
+        ],[
+            'context.required' => 'El campo contexto es obligatorio.',
+            'analysis.required' => 'El campo de análisis jurídico es obligatorio.',
+            'resolution.required' => 'El campo de resolución es obligatorio.',
         ]);
+
+        // null coalescing to check if 'user_id' exists in $validated_data
+        $user_id = $validated_data['user_id'] ?? Auth::user()->id;
+        $isAdmin = isset($validated_data['user_id']); // Admin if 'user_id' was explicitly set
+        $status = $validated_data['status'] ?? 'pending';
 
         $case = LegalCase::findOrFail($id);
         $case->update([
             'title' => $validated_data['title'],
-            'user_id' => $validated_data['user_id'],
+            'user_id' => $user_id,
             'trial_id' => $validated_data['trial_id'],
             'date' => $validated_data['date'],
             'origin' => $validated_data['origin'],
-            'status' => $validated_data['status'],
+            'status' => $status,
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],
-            'note' => $validated_data['note'],
         ]);
 
         if (!empty($validated_data['note'])) {
@@ -132,11 +146,12 @@ class CaseController extends Controller
             }
         }
 
+        if (!$isAdmin) {
+            return redirect()->route('cases.mycases', Auth::user()->id)->with('success', 'Juicio actualizado exitosamente, espera a que sea aprobado.');
+        }
 
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
     }
-
-
 
     public function search(Request $request){
 
@@ -151,24 +166,37 @@ class CaseController extends Controller
                 $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
 
                 // Perform search query
-                $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
-                    ->orWhere('title', $likeOperator, '%' . $query . '%')
-                    ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                    ->orWhere('date', $likeOperator, '%' . $query . '%')
-                    ->orWhereHas('trial', function ($queryBuilder) use ($query, $likeOperator) {
-                        $queryBuilder->where('name', $likeOperator, '%' . $query . '%')
-                            ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                if($view == 'mycases'){
+                    $cases = LegalCase::where('user_id', Auth::id()) // Mandatory condition
+                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                            ->orWhere('date', $likeOperator, '%' . $query . '%')
+                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                    });
                             });
                     })
-                    ->get();
-
+                        ->get();
+                }
+                else{
+                    $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
+                        ->orWhere('title', $likeOperator, '%' . $query . '%')
+                        ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                        ->orWhere('date', $likeOperator, '%' . $query . '%')
+                        ->orWhereHas('trial', function ($queryBuilder) use ($query, $likeOperator) {
+                            $queryBuilder->where('name', $likeOperator, '%' . $query . '%')
+                                ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                    $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                });
+                        })
+                        ->get();
+                }
             } else {
-
                 $cases = LegalCase::paginate(10);
             }
-
-
             if (count($cases) > 0) {
 
                 if($view == 'table'){
@@ -187,7 +215,7 @@ class CaseController extends Controller
 
                 if($view == 'table'){
                     $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                               <td colspan="8" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
+                               <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
                            </tr>';
                 }
                 else {
@@ -305,7 +333,7 @@ class CaseController extends Controller
         $case->status = 'accepted';
         $case->save();
 
-        return redirect()->route('cases.review');
+        return redirect()->route('cases.review')->with('success', "Juicio ".$id." aprobado correctamente.");
     }
 
     public function myCases(Request $request, $user_id){
@@ -321,6 +349,10 @@ class CaseController extends Controller
             ->orderBy('updated_at', 'desc')->paginate(12);
         }
 
+        if ($user_id != Auth::id()) {
+            abort(404); // Show 404 for unauthorized users
+        }
+
         return view('cases.mycases', compact('cases'));
     }
 
@@ -330,7 +362,7 @@ class CaseController extends Controller
         $case->status = 'rejected';
         $case->save();
 
-        return redirect()->route('cases.review');
+        return redirect()->route('cases.review')->with('success', "Juicio ".$id." rechazado correctamente.");
     }
     public function showByTag($id){
 

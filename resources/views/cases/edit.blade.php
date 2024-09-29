@@ -17,25 +17,28 @@
                     <h3 class="text-3xl font-semibold text-gray-900 dark:text-white">
                         Editar caso
                     </h3>
-                    <x-go-back route="{{ route('cases.index') }}" />
+                    <x-go-back route="{{ url()->previous() }}" />
                 </div>
                 <div class="p-4 md:p-5">
                     <form id="edit-case-form" class="space-y-4" method="POST" action="{{ route('cases.update', $case->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div>
-                            <label for="user_id"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
-                            <select name="user_id" id="edit_user_id"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}"
-                                        @if($user->id == $case->user->id) selected @endif>
-                                        {{ $user->email }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+
+                        @can('editar cualquier caso')
+                            <div>
+                                <label for="user_id"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
+                                <select name="user_id" id="edit_user_id"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            @if($user->id == $case->user->id) selected @endif>
+                                            {{ $user->email }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endcan
                         <div>
                             <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
                             <input type="text" name="title" id="title"
@@ -54,17 +57,19 @@
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                    placeholder="Escribir origen" required value="{{ old('origin', $case->origin) }}"/>
                         </div>
-                        <div>
-                            <label for="status"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
-                            <select name="status" id="edit_status"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
+                        @can('editar cualquier caso')
+                            <div>
+                                <label for="status"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
+                                <select name="status" id="edit_status"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5">
 
-                                <option value="accepted">Aceptado</option>
-                                <option value="pending">Pendiente</option>
-                                <option value="rejected">Rechazado</option>
-                            </select>
-                        </div>
+                                    <option value="accepted">Aceptado</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="rejected">Rechazado</option>
+                                </select>
+                            </div>
+                        @endcan
                         <!-- Trial Dropdown -->
                         <div>
                             <label for="trial_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Juicio</label>
