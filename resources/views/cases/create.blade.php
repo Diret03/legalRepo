@@ -150,7 +150,7 @@
                         <div class="flex justify-center">
                             <button type="submit"
                                     class="w-1/3 h-16 text-white bg-red-650 hover:bg-red-200 hover:border-solid hover:border-2 hover:border-black hover:text-black focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                Subir cambios
+                                Subir caso
                             </button>
                         </div>
                     </form>

@@ -4,12 +4,11 @@
 <script>
     tinymce.init({
         selector: 'textarea.editor',
-        plugins: ' lists',
+        plugins: 'lists paste',  // Ensure the 'paste' plugin is included
         menubar: 'edit format',
         branding: false,
         language: 'es',
         license_key: 'gpl',
-        // paste_as_text: true,
         promotion: false,
         toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table',
 
@@ -17,11 +16,19 @@
         menu: {
             format: {
                 title: 'Formato',
-                items: 'bold italic underline strikethrough superscript subscript | styles blocks fontsize align lineheight | forecolor backcolor | language | removeformat'
+                items: 'bold italic underline strikethrough superscript subscript | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat',
             }
         },
-        content_style: "@import url('https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap'); body { font-family: 'Figtree', sans-serif; }"
-    })
+
+        //Figtree as the top font in the font family list
+        font_family_formats: 'Figtree=figtree; Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Tahoma=tahoma,arial,helvetica,sans-serif; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings;',
+
+        // Figtree font as default
+        content_style: "@import url('https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap'); body { font-family: 'Figtree', sans-serif; }",
+
+    });
+
+
 
     tinymce.init({
         selector: 'textarea.editor-display',
