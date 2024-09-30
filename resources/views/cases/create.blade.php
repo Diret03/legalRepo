@@ -17,7 +17,7 @@
                     <h3 class="text-3xl font-semibold text-gray-900 dark:text-white">
                         Crear caso
                     </h3>
-                    <x-go-back route="{{ route('cases.index') }}"/>
+                    <x-go-back route="{{ url()->previous() }}"/>
                 </div>
                 <div class="p-4 md:p-5">
                     <form id="case-form" class="space-y-4" method="POST" action="{{ route('cases.store') }}"
@@ -150,7 +150,7 @@
                         <div class="flex justify-center">
                             <button type="submit"
                                     class="w-1/3 h-16 text-white bg-red-650 hover:bg-red-200 hover:border-solid hover:border-2 hover:border-black hover:text-black focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                Guardar cambios
+                                Subir cambios
                             </button>
                         </div>
                     </form>

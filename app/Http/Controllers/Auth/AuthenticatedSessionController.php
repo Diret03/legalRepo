@@ -24,13 +24,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
-//        dd(Auth::user()->roles->pluck('name'));
-        // Check if the user has the "digitador" role
-        if(Auth::user()->roles->pluck('name')->contains('digitador')){
+        if(Auth::user()->can('crear casos')){
             return redirect()->intended(route('cases.mycases',Auth::id()));
         }
 

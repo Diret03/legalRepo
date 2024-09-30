@@ -49,6 +49,18 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Check if the user's status is not false
+        if ($user->status === false) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Tu cuenta está inactiva. Por favor contacta a un administrador.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

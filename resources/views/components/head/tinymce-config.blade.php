@@ -9,6 +9,7 @@
         branding: false,
         language: 'es',
         license_key: 'gpl',
+        // paste_as_text: true,
         promotion: false,
         toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table',
 

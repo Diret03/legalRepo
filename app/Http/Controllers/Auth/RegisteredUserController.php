@@ -44,12 +44,13 @@ class RegisteredUserController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'status' => false,
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+//        Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('home')->with('success', 'Se ha registrado tu cuenta con éxito, por favor espera a que un administrador te asigne un rol.');
     }
 }

@@ -6,4 +6,5 @@ return [
     'failed'   => 'These credentials do not match our records.',
     'password' => 'The password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'inactive' => 'Tu cuenta está inactiva. Por favor contacta a un administrador.',
 ];

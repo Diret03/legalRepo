@@ -1,7 +1,9 @@
 <x-app-layout>
+    <x-success-error-alert/>
     <!-- Start block -->
     <section class="bg-white min-h-screen flex items-center">
         <div class="container mx-auto px-4 py-8 sm:py-14 lg:py-10 lg:px-16">
+
             {{-- Breadcrumbs can be added here if needed --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center lg:gap-16">
                 <!-- Left content: Heading and text -->
