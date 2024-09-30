@@ -13,6 +13,6 @@ class TrialSeeder extends Seeder
      */
     public function run(): void
     {
-        Trial::factory()->count(30)->create();
+        Trial::factory()->count(15)->create();
     }
 }

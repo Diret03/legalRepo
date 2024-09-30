@@ -19,4 +19,8 @@ class Trial extends Model
     public function subject(){
         return $this->belongsTo(Subject::class);
     }
+
+    public function cases() {
+        return $this->hasMany(LegalCase::class);
+    }
 }

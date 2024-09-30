@@ -153,6 +153,58 @@ class CaseController extends Controller
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
     }
 
+    public function filter(Request $request)
+    {
+        $output = null;
+
+        if ($request->ajax()) {
+            // Start the query
+            $query = LegalCase::query()->where('status', 'accepted');
+
+            // Apply the filters if they exist
+            if ($request->has('subject_ids') && !empty($request->input('subject_ids'))) {
+                // Filter cases where the trial is related to the subject
+                $query->whereHas('trial.subject', function ($subjectQuery) use ($request) {
+                    $subjectQuery->whereIn('id', $request->input('subject_ids'));
+                });
+            }
+
+            if ($request->has('trial_ids') && !empty($request->input('trial_ids'))) {
+                $query->whereIn('trial_id', $request->input('trial_ids'));
+            }
+
+
+
+            // Get the results
+            $cases = $query->get();
+
+            if (count($cases) > 0) {
+                // Render the view with the retrieved data
+                $output = view('cases.partials.all-list', ['cases' => $cases])->render();
+            }
+            else{
+                $output =
+                    '<div
+                        class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                        role="alert">
+                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <span class="sr-only">Info</span>
+                        <div> No se encontraron resultados</div>
+
+                    </div>';
+            }
+
+
+        }
+
+        return $output;
+    }
+
+
     public function search(Request $request){
 
         if($request->ajax()){
@@ -181,6 +233,21 @@ class CaseController extends Controller
                     })
                         ->get();
                 }
+                elseif ($view == 'all-list') {
+                    $cases = LegalCase::where('status', 'accepted') // Mandatory condition
+                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                            ->orWhere('date', $likeOperator, '%' . $query . '%')
+                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                    });
+                            });
+                    })
+                        ->get();
+                }
                 else{
                     $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
                         ->orWhere('title', $likeOperator, '%' . $query . '%')
@@ -195,7 +262,32 @@ class CaseController extends Controller
                         ->get();
                 }
             } else {
-                $cases = LegalCase::paginate(10);
+                if($view == 'table'){
+                    $cases = LegalCase::paginate(10);
+                }
+                elseif($view == 'mycases'){
+
+                    $user_id = $request->input('user_id');
+                    $status = $request->input('status');
+
+                    if($status != 'all'){
+                        $cases = LegalCase::where('user_id',$user_id)
+                            ->where('status',$status)
+                            ->orderBy('updated_at', 'desc')->paginate(12);
+                    }
+                    else{
+                        $cases = LegalCase::where('user_id',$user_id)
+                            ->orderBy('updated_at', 'desc')->paginate(12);
+                    }
+                }
+                elseif($view == 'review'){
+                    $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
+                }
+                elseif($view == 'all-list'){
+                    $cases = LegalCase::where('status','accepted')
+                        ->paginate(10);
+                }
+
             }
             if (count($cases) > 0) {
 
@@ -207,6 +299,9 @@ class CaseController extends Controller
                 }
                 elseif($view == 'review'){
                     $output = view('cases.partials.reviewlist', ['cases' => $cases])->render();
+                }
+                elseif($view == 'all-list'){
+                    $output = view('cases.partials.all-list', ['cases' => $cases])->render();
                 }
 
 
@@ -305,7 +400,27 @@ class CaseController extends Controller
     public function list(){
         $cases = LegalCase::where('status','accepted')
                 ->paginate(10);
-        return view('cases.list',compact('cases'));
+
+        $trials = Trial::withCount(['cases' => function($query) {
+            $query->where('status', 'accepted');
+        }])->orderBy('name', 'asc')->get();
+
+        // Get subjects along with the count of accepted cases via trials
+        $subjects = Subject::with(['trials' => function($query) {
+            $query->withCount(['cases' => function ($caseQuery) {
+                $caseQuery->where('status', 'accepted');
+            }]);
+        }])->get();
+
+        // Add a 'cases_count' attribute to each subject by summing the cases of its related trials
+        foreach ($subjects as $subject) {
+            $subject->cases_count = $subject->trials->sum('cases_count');
+        }
+
+//        $subjects = Subject::all();
+
+        // Return the data to the view
+        return view('cases.list', compact('cases', 'trials', 'subjects'));
     }
 
 

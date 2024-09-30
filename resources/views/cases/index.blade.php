@@ -27,91 +27,89 @@
                     </ul>
                 </div>
             @endif
-            <div
-                class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+                <div class="p-4 md:p-10 bg-white dark:bg-gray-900">
+                    <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+                        <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                            @can('eliminar cualquier caso')
+                                <div>
+                                    <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
+                                            type="button">
+                                        <span class="sr-only">Action button</span>
+                                        Acción
+                                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                             fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
+                                    <!-- Dropdown menu (hidden by default) -->
+                                    <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                            aria-labelledby="dropdownActionButton">
+                                            <li>
+                                                <a href="#" id="deleteAll"
+                                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            @endcan
 
-                <div class="flex items-center">
-                    @can('eliminar cualquier caso')
-                        <div>
-                            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
-                                    type="button">
-                                <span class="sr-only">Action button</span>
-                                Acción
-                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                          stroke-width="2" d="m1 1 4 4 4-4"/>
-                                </svg>
-                            </button>
-                            <div id="dropdownAction"
-                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="dropdownActionButton">
-                                    <li>
-                                        <a href="#" id="deleteAll"
-                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
-                                    </li>
-                                </ul>
+                            <div>
+                                <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
+                                        class="w-full sm:w-auto inline-flex items-center justify-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
+                                        type="button">
+                                    <span class="sr-only">Action button</span>
+                                    Ordenar
+                                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                         fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
+                                <!-- Dropdown menu (hidden by default) -->
+                                <div id="dropdownAction2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                        aria-labelledby="dropdownActionButton2">
+                                        <li>
+                                            <a href="{{route('cases.index')}}?sort=date&direction=desc"
+                                               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
+                                                recientes</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{route('cases.index')}}?sort=date&direction=asc"
+                                               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
+                                                antiguos</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    @endcan
 
-                    <div>
-                        <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
-                                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
-                                type="button">
-                            <span class="sr-only">Action button</span>
-                            Ordenar
-                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2" d="m1 1 4 4 4-4"/>
-                            </svg>
-                        </button>
-                        <div id="dropdownAction2"
-                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownActionButton2">
-                                <li>
-                                    <a href="{{route('cases.index')}}?sort=date&direction=desc"
-                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
-                                        recientes</a>
-                                </li>
-                                <li>
-                                    <a href="{{route('cases.index')}}?sort=date&direction=asc"
-                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
-                                        antiguos</a>
-                                </li>
-                            </ul>
+                        <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                            @can('crear casos')
+                                <a href="{{route('cases.create')}}"
+                                   class="w-full sm:w-auto flex items-center justify-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5">
+                                    <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
+                                    <p>Agregar Caso</p>
+                                </a>
+                            @endcan
+                            <div class="relative w-full sm:w-80">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input type="text" id="search" name="search"
+                                       class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                       placeholder="Buscar casos">
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <label for="table-search" class="sr-only">Search</label>
-                <div class="flex items-center">
-                    @can('crear casos')
-                        <a href="{{route('cases.create')}}"
-                           class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
-                            <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
-                            <p>Agregar Caso</p>
-                        </a>
-                    @endcan
-                    <div class="relative">
-                        <div
-                            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
-                        </div>
-                        <input type="text" id="search" name="search"
-                               class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               placeholder="Buscar casos">
-                    </div>
-                </div>
-            </div>
             <div role="status" id="loading-spinner"
                  class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-red-650" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,7 +160,7 @@
                 </tr>
                 </thead>
                 <tbody id="cases-data">
-                @include('cases.partials.row', ['cases' => $cases])
+                    @include('cases.partials.row', ['cases' => $cases])
                 </tbody>
 
             </table>

@@ -37,6 +37,8 @@ Route::get('/etiquetas/caso/{id}',[CaseController::class,'showByTag'])->name('ca
 
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
+Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.search');
+Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -117,7 +119,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/cases/{case}/edit', [CaseController::class, 'edit'])->name('cases.edit');
     Route::put('/dashboard/cases/{case}', [CaseController::class, 'update'])->name('cases.update');
     Route::delete('/dashboard/cases/{case}', [CaseController::class, 'destroy'])->name('cases.destroy');
-    Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.search');
     Route::delete("/dashboard/selected-cases", [CaseController::class, 'deleteSelected'])->name('cases.delete');
     Route::get('/cases/tags', [CaseController::class, 'getAllTags']);
     Route::get('/cases/{id}/tags', [CaseController::class, 'getTags']);

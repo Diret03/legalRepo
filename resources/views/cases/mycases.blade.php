@@ -142,6 +142,8 @@
                     data: {
                         'search': query,
                         'view': "mycases",
+                        'user_id': {{Auth::id()}},
+                        'status' : "{{ request('status') }}",
                     },
 
                     success: function (data) {

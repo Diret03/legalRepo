@@ -19,4 +19,5 @@ class Subject extends Model
     public function trials(){
         return $this->hasMany(Trial::class);
     }
+
 }
