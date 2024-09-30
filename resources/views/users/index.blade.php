@@ -23,45 +23,45 @@
                         @endforeach
                     </ul>
                 </div>
-                @endif
-                <div
-                    class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-                    <div class="flex items-center">
-                        @if(Auth::user()->can('eliminar usuarios') || Auth::user()->can('desactivar usuarios'))
-                            <div>
-                                <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                                        class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
-                                        type="button">
-                                    <span class="sr-only">Action button</span>
-                                    Acción
-                                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         fill="none" viewBox="0 0 10 6">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                              stroke-width="2" d="m1 1 4 4 4-4"/>
-                                    </svg>
-                                </button>
-                                <div id="dropdownAction"
-                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                        aria-labelledby="dropdownActionButton">
-                                        @can('desactivar usuarios')
-                                            <li>
-                                                <a href="#" id="deactivateAll"
-                                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar</a>
-                                            </li>
-                                        @endcan
-                                        @can('eliminar usuarios')
-                                            <li>
-                                                <a href="#" id="deleteAll"
-                                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
-                                            </li>
+            @endif
+            <div
+                class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+                <div class="flex items-center">
+                    @if(Auth::user()->can('eliminar usuarios') || Auth::user()->can('desactivar usuarios'))
+                        <div>
+                            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
+                                    type="button">
+                                <span class="sr-only">Action button</span>
+                                Acción
+                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2" d="m1 1 4 4 4-4"/>
+                                </svg>
+                            </button>
+                            <div id="dropdownAction"
+                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownActionButton">
+                                    @can('desactivar usuarios')
+                                        <li>
+                                            <a href="#" id="deactivateAll"
+                                               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar</a>
+                                        </li>
+                                    @endcan
+                                    @can('eliminar usuarios')
+                                        <li>
+                                            <a href="#" id="deleteAll"
+                                               class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Eliminar</a>
+                                        </li>
 
-                                        @endcan
-                                    </ul>
-                                </div>
+                                    @endcan
+                                </ul>
                             </div>
-                        @endif
+                        </div>
+                    @endif
 
                     <div>
                         <button id="dropdownActionButton2" data-dropdown-toggle="dropdownAction2"
@@ -128,6 +128,19 @@
                 </div>
 
             </div>
+            <div role="status" id="loading-spinner"
+                 class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-red-650"
+                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor"/>
+                    <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="currentFill"/>
+                </svg>
+                <span class="sr-only">Loading...</span>
+            </div>
             <table id="users-table" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -161,7 +174,7 @@
                 </tr>
                 </thead>
                 <tbody id="users-data">
-                     @include('users.row', ['users' => $users])
+                @include('users.row', ['users' => $users])
                 </tbody>
             </table>
             <div class="pagination mt-4 pb-10">
@@ -276,10 +289,38 @@
 
 
 <script>
-
     $(document).ready(function () {
+        {{--$('#search').on('keyup', function () {--}}
+        {{--    let query = $(this).val();--}}
+
+        {{--    if (query.length > 0) {--}}
+        {{--        $('.pagination').hide();--}}
+        {{--    } else {--}}
+        {{--        $('.pagination').show();--}}
+        {{--    }--}}
+
+        {{--    $.ajax({--}}
+        {{--        url: "{{ route('users.search') }}",--}}
+        {{--        type: "GET",--}}
+        {{--        data: {'search': query},--}}
+        {{--        success: function (data) {--}}
+        {{--            $('#users-data').html(data);--}}
+        {{--        },--}}
+        {{--        error: function (xhr, status, error) {--}}
+        {{--            console.error('Error al buscar:', error);--}}
+        {{--            console.error('Detalles del error:', xhr, status);--}}
+        {{--        }--}}
+        {{--    });--}}
+        {{--});--}}
+
+        const $loadingSpinner = $('#loading-spinner');
+        const $data = $('#users-data');
+        let debounceTimer;
+
         $('#search').on('keyup', function () {
             let query = $(this).val();
+            // Clear the previous timer
+            clearTimeout(debounceTimer);
 
             if (query.length > 0) {
                 $('.pagination').hide();
@@ -287,72 +328,81 @@
                 $('.pagination').show();
             }
 
-            $.ajax({
-                url: "{{ route('users.search') }}",
-                type: "GET",
-                data: {'search': query},
-                success: function (data) {
-                    $('#users-data').html(data);
+            // Set a new timer
+            debounceTimer = setTimeout(function () {
+                // Show the loading spinner
+                $loadingSpinner.removeClass('hidden');
 
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al buscar:', error);
-                    console.error('Detalles del error:', xhr, status);
-                }
-            });
+                $.ajax({
+                    url: "{{ route('users.search') }}",
+                    type: "GET",
+                    data: {
+                        'search': query,
+                    },
+                    success: function (data) {
+                        $data.html(data);
+                    },
+                    complete: function () {
+                        // Hide the loading spinner
+                        $loadingSpinner.addClass('hidden');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al buscar:', error);
+                        console.error('Detalles del error:', xhr, status);
+                        // Hide the loading spinner in case of error
+                        $loadingSpinner.addClass('hidden');
+                    }
+                });
+            }, 300); // delay time
         });
-    });
 
-    $(function (e) {
 
+        // Select/Deselect all checkboxes
         $("#select_all_ids").click(function () {
             $('.checkbox_ids').prop('checked', $(this).prop('checked'));
-
         });
 
+        // Deletion of selected users
         $('#deleteAll').click(function (e) {
-
             e.preventDefault();
 
-
+            // Confirm deletion
             if (!confirm("¿Estás seguro de que deseas eliminar los registros seleccionados?")) {
                 return;
             }
 
             const all_ids = [];
 
-            // if (all_ids.length === 0) {
-            //     return;
-            // }
-
-
+            // Gather all selected checkbox values
             $('input:checkbox[name=ids]:checked').each(function () {
                 all_ids.push($(this).val());
             });
 
-            console.log("IDs to delete: " + all_ids);
+            // Check if no checkboxes were selected
+            if (all_ids.length === 0) {
+                alert('No has seleccionado ningún registro.');
+                return;
+            }
 
+            // Proceed with AJAX delete request
             $.ajax({
-                url: "{{route('users.deleteSelected')}}",
+                url: "{{ route('users.deleteSelected') }}",
                 type: "DELETE",
                 data: {
                     ids: all_ids,
-                    _token: '{{csrf_token()}}'
+                    _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
                     $.each(all_ids, function (key, val) {
-                        $('user_ids' + val).remove();
-                    })
+                        // Properly target the element by its ID
+                        $('#user_ids' + val).remove();
+                    });
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error al buscar:', error);
+                    console.error('Error al eliminar:', error);
                     console.error('Detalles del error:', xhr, status);
                 }
-
             });
-
-
         });
     });
-
 </script>

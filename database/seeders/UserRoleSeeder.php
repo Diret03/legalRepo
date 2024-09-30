@@ -21,24 +21,28 @@ class UserRoleSeeder extends Seeder
             'name' => 'Jordan',
             'last_name' => 'Puruncajas',
             'email' => 'digitador@gmail.com',
+            'status' => true,
         ]);
 
         $revisor = User::factory()->create([
             'name' => 'Galo',
             'last_name' => 'Recalde',
             'email' => 'revisor@gmail.com',
+            'status' => true,
         ]);
 
         $admin = User::factory()->create([
             'name' => 'El',
             'last_name' => 'Admin',
             'email' => 'admin@gmail.com',
+            'status' => true,
         ]);
 
         $superAdmin = User::factory()->create([
             'name' => 'Diego',
             'last_name' => 'Recalde',
             'email' => 'diegodavidrecalde@gmail.com',
+            'status' => true,
         ]);
 
         $superAdmin->assignRole('administrador','digitador','revisor');

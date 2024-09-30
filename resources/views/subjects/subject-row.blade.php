@@ -23,7 +23,7 @@
             </div>
         </td>
         <td class="px-6 py-4">
-            <img class="size-16"
+            <img class="size-20"
                  src="{{ $subject->image ? asset($subject->image) : asset('svg/no-image.svg') }}"
                  alt="Materia imagen"/>
 

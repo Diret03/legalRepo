@@ -52,7 +52,7 @@
                             </button>
                         </form>
                     @endif
-                    @if(Auth::user()->can('editar casos propios') && $case->status != 'Aceptado')
+                    @if((Auth::user()->can('editar cualquier caso') || (Auth::user()->can('editar casos propios') && Auth::user()->id === $case->user->id)) && $case->status != 'Aceptado')
                         <a href="{{route('cases.edit',$case->id)}}"
                            class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
                             <img src="{{asset('svg/edit.svg')}}" class="size-7 mr-3" alt="Editar icon">
