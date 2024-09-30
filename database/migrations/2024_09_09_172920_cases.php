@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('analysis');
             $table->text('resolution');
             $table->text('note')->nullable();
+            $table->text('rejection_message')->nullable();
 
 
             //constraints

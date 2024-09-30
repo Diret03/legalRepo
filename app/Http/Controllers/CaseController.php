@@ -82,7 +82,7 @@ class CaseController extends Controller
         }
 
         if (!$isAdmin) {
-            return redirect()->route('cases.mycases', Auth::user()->id)->with('success', 'Juicio subido exitosamente, espera a que sea aprobado.');
+            return redirect()->route('cases.mycases', ['user_id' => Auth::user()->id, 'status' => 'pending'])->with('success', 'Juicio subido exitosamente, espera a que sea aprobado.');
         }
 
         return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');
@@ -147,7 +147,7 @@ class CaseController extends Controller
         }
 
         if (!$isAdmin) {
-            return redirect()->route('cases.mycases', Auth::user()->id)->with('success', 'Juicio actualizado exitosamente, espera a que sea aprobado.');
+            return redirect()->route('cases.mycases', ['user_id' => Auth::user()->id, 'status' => 'pending'])->with('success', 'Juicio actualizado exitosamente, espera a que sea aprobado.');
         }
 
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
@@ -356,9 +356,14 @@ class CaseController extends Controller
         return view('cases.mycases', compact('cases'));
     }
 
-    public function reject($id){
+    public function reject(Request $request, $id){
         $case = LegalCase::findOrFail($id);
 
+        $validated_data = $request->validate([
+            'rejection_message' => 'required|string'
+        ]);
+
+        $case->rejection_message = $validated_data['rejection_message'];
         $case->status = 'rejected';
         $case->save();
 

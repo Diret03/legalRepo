@@ -22,6 +22,7 @@ class LegalCase extends Model
         'analysis',
         'resolution',
         'note',
+        'rejection_message',
     ];
 
     public function getStatusAttribute($value)
