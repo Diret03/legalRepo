@@ -498,7 +498,11 @@ class CaseController extends Controller
     public function deleteSelected(Request $request){
         $ids = $request->ids;
         LegalCase::whereIn('id',$ids)->delete();
+
+//        $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(10);
+//        $output = view('cases.partials.row', ['cases' => $cases])->render();
         return response()->json(['success'=>'Casos eliminados correctamente.']);
+//        return redirect()->route('cases.index')->with('success', 'Casos eliminado exitosamente.');
 
     }
 

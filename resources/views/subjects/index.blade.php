@@ -14,6 +14,20 @@
                     <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
             @endif
+            <!-- success json message -->
+            <div id="message"
+                 class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 mt-2 rounded relative"
+                 role="alert">
+                <strong class="font-bold">Éxito!</strong>
+                <span class="block sm:inline" id="message-text"></span>
+            </div>
+            <!-- error json message -->
+            <div id="message-error"
+                 class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-2 rounded relative"
+                 role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline" id="message-text-error"></span>
+            </div>
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <strong class="font-bold">Error!</strong>
@@ -296,54 +310,8 @@
             }, 300); // delay time
         });
     });
-
-    $(function (e) {
-
-        $("#select_all_ids").click(function () {
-            $('.checkbox_ids').prop('checked', $(this).prop('checked'));
-
-        });
-
-        $('#deleteAll').click(function (e) {
-
-            e.preventDefault();
-
-
-            if (!confirm("¿Estás seguro de que deseas eliminar los registros seleccionados?")) {
-                return;
-            }
-
-            const all_ids = [];
-
-            // if (all_ids.length === 0) {
-            //     return;
-            // }
-
-
-            $('input:checkbox[name=ids]:checked').each(function () {
-                all_ids.push($(this).val());
-            });
-
-            console.log("IDs to delete: " + all_ids);
-
-            $.ajax({
-                url: "{{route('subjects.deleteSelected')}}",
-                type: "DELETE",
-                data: {
-                    ids: all_ids,
-                    _token: '{{csrf_token()}}'
-                },
-                success: function (response) {
-                    $.each(all_ids, function (key, val) {
-                        $('subject_ids' + val).remove();
-                    })
-                }
-
-            });
-
-
-        });
-    });
-
-
+</script>
+<script src="{{ asset('js/deleteSelected.js') }}"></script>
+<script>
+    initializeDeleteFunction("{{ route('subjects.deleteSelected') }}", "subject_ids");
 </script>

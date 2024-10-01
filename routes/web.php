@@ -85,7 +85,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['middleware' => ['can:eliminar materias']], function () {
         Route::delete('/dashboard/materias/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
-        Route::delete("/dashboard/materias/selected", [SubjectController::class, 'deleteSelected'])->name('subjects.deleteSelected');
+        Route::delete("/dashboard/selected-subjects", [SubjectController::class, 'deleteSelected'])->name('subjects.deleteSelected');
     });
 
 
