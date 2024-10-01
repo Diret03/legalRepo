@@ -141,6 +141,18 @@ class UserController extends Controller
 
     }
 
+    public function deactivateSelected(Request $request){
+        $ids = $request->ids;
+
+        $users = User::whereIn('id', $ids)->get();
+        foreach ($users as $user) {
+            $user->update(['status' => false]);
+        }
+
+        return response()->json(['success'=>'Usuarios desactivados correctamente.']);
+
+    }
+
     public function destroy($id)
     {
         $project = User::findOrFail($id);

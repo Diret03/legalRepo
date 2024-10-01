@@ -65,6 +65,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
           Route::delete("/dashboard/selected-users", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
     });
 
+    Route::group(['middleware' => ['can:desactivar usuarios']], function () {
+        Route::patch("/dashboard/deactivate-selected-users", [UserController::class, 'deactivateSelected'])->name('users.deactivateSelected');
+    });
 
     // Subject routes
     Route::group(['middleware' => ['can:ver materias']], function () {

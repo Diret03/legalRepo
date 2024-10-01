@@ -372,6 +372,8 @@
     });
 </script>
 <script src="{{ asset('js/deleteSelected.js') }}"></script>
+<script src="{{ asset('js/deactivateSelected.js') }}"></script>
 <script>
     initializeDeleteFunction("{{ route('users.deleteSelected') }}", "users_ids");
+    initializeDeactivateFunction("{{ route('users.deactivateSelected') }}", "users_ids");
 </script>

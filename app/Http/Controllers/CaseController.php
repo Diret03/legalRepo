@@ -506,6 +506,7 @@ class CaseController extends Controller
 
     }
 
+
     public function destroy($id)
     {
         $case = LegalCase::findOrFail($id);
