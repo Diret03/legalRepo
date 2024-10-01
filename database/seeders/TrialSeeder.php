@@ -13,6 +13,119 @@ class TrialSeeder extends Seeder
      */
     public function run(): void
     {
-        Trial::factory()->count(15)->create();
+//        Trial::factory()->count(15)->create();
+        // Familia, Mujer Niñez y Adolescencia
+        Trial::create([
+            'subject_id' => 1,
+            'name' => 'Fijación de Pensión Alimenticia',
+            'description' => 'Proceso judicial para la fijación de pensión alimenticia.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 1,
+            'name' => 'Fijación de Pensión Alimenticia de Ayuda Prenatal',
+            'description' => 'Juicio para la fijación de pensión alimenticia para ayuda prenatal.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 1,
+            'name' => 'Incidente de Aumento o Rebaja de Pensión Alimenticia (Con Proceso Judicial)',
+            'description' => 'Incidente para aumento o rebaja de pensión alimenticia con proceso judicial.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 1,
+            'name' => 'Acuerdo de Pago de Alimentos con Juicio o Mediación',
+            'description' => 'Acuerdo de pago de alimentos a través de juicio o mediación.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 1,
+            'name' => 'Cambio de Modalidad de Pensión Alimenticia con Juicio o Mediación',
+            'description' => 'Cambio de modalidad de pensión alimenticia con juicio o mediación.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 1,
+            'name' => 'Régimen de Visitas y Tenencia para realizar el Divorcio',
+            'description' => 'Proceso judicial para determinar régimen de visitas y tenencia durante un divorcio.'
+        ]);
+
+        // Laboral
+        Trial::create([
+            'subject_id' => 2,
+            'name' => 'Despido Injustificado',
+            'description' => 'Proceso judicial en el que el trabajador demanda por haber sido despedido sin causa justificada.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 2,
+            'name' => 'Reclamación de Beneficios Sociales',
+            'description' => 'Juicio laboral en el que el trabajador reclama el pago de beneficios sociales no percibidos.'
+        ]);
+
+        // Inquilinato
+        Trial::create([
+            'subject_id' => 3,
+            'name' => 'Desalojo por Falta de Pago',
+            'description' => 'Proceso judicial para solicitar el desalojo del inquilino por falta de pago de la renta.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 3,
+            'name' => 'Reparación de Daños a la Propiedad',
+            'description' => 'Juicio en el que el propietario demanda al inquilino por daños a la propiedad durante el arrendamiento.'
+        ]);
+
+        // Civil
+        Trial::create([
+            'subject_id' => 4,
+            'name' => 'Deuda Lícita',
+            'description' => 'Juicio para la recuperación de deudas lícitas.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 4,
+            'name' => 'Alimentos Congruos y Necesarios',
+            'description' => 'Juicio por alimentos congruos y necesarios.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 4,
+            'name' => 'Incumplimiento de contratos',
+            'description' => 'Juicio por incumplimiento de contratos.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 4,
+            'name' => 'Contrato de servicios profesionales',
+            'description' => 'Juicio por problemas en contratos de servicios profesionales.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 4,
+            'name' => 'Conflictos vecinales',
+            'description' => 'Juicios relacionados con conflictos entre vecinos.'
+        ]);
+
+        // Penal
+        Trial::create([
+            'subject_id' => 5,
+            'name' => 'Tránsito Daños Materiales',
+            'description' => 'Juicio por daños materiales en accidentes de tránsito.'
+        ]);
+
+        Trial::create([
+            'subject_id' => 5,
+            'name' => 'Tránsito Lesiones',
+            'description' => 'Juicio por lesiones en accidentes de tránsito.'
+        ]);
+
+        // Tributario
+        Trial::create([
+            'subject_id' => 6,
+            'name' => 'SRI: multas recargos e intereses',
+            'description' => 'Juicio tributario sobre multas, recargos e intereses del SRI, con el 25% de la deuda cancelada.'
+        ]);
     }
 }

@@ -21,7 +21,6 @@ return new class extends Migration
             //constraints
             $table->foreign('subject_id')->references('id')->on('subjects')->onUpdate('cascade');
 
-
             $table->timestamps();
         });
     }

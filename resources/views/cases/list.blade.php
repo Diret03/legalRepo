@@ -21,11 +21,16 @@
 
                     <!-- Subjects Filter -->
                     <div class="mb-4">
-                        <div class="flex items-center mb-2">
-                            <img src="{{ asset('svg/subjects.svg') }}" class="size-5 mr-1 " alt="Materias icon">
-                            <h4 class="font-medium">Materias</h4>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <img src="{{ asset('svg/subjects.svg') }}" class="size-5 mr-1 " alt="Materias icon">
+                                <h4 class="font-medium">Materias</h4>
+                            </div>
+                            <button id="toggleSubjects" class="text-sm text-gray-500 hover:text-gray-700">
+                                Ocultar
+                            </button>
                         </div>
-                        <div class="space-y-2">
+                        <div id="subjectsContainer" class="space-y-2">
                             @foreach($subjects as $subject)
                                 <div class="flex items-center">
                                     <input id="subject-{{$subject->id}}" name="subject_ids[]" type="checkbox"
@@ -41,12 +46,16 @@
 
                     <!-- Trials Filter -->
                     <div>
-                        <div class="flex items-center mb-2">
-                            <img src="{{ asset('svg/trials.svg') }}" class="size-5 mr-1" alt="Juicios icon">
-                            <h4 class="font-medium">Juicios</h4>
-
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <img src="{{ asset('svg/trials.svg') }}" class="size-5 mr-1" alt="Juicios icon">
+                                <h4 class="font-medium">Juicios</h4>
+                            </div>
+                            <button id="toggleTrials" class="text-sm text-gray-500 hover:text-gray-700">
+                                Ocultar
+                            </button>
                         </div>
-                        <div class="space-y-2">
+                        <div id="trialsContainer" class="space-y-2">
                             @foreach($trials as $trial)
                                 <div class="flex items-center">
                                     <input id="trial-{{$trial->id}}" name="trial_ids[]" type="checkbox"
@@ -263,10 +272,24 @@
 
             const filterToggle = document.getElementById('filterToggle');
             const filterContainer = document.getElementById('filterContainer');
+            const toggleSubjects = document.getElementById('toggleSubjects');
+            const subjectsContainer = document.getElementById('subjectsContainer');
+            const toggleTrials = document.getElementById('toggleTrials');
+            const trialsContainer = document.getElementById('trialsContainer');
 
             filterToggle.addEventListener('click', function() {
                 filterContainer.classList.toggle('hidden');
                 filterToggle.textContent = filterContainer.classList.contains('hidden') ? 'Mostrar Filtros' : 'Ocultar Filtros';
+            });
+
+            toggleSubjects.addEventListener('click', function() {
+                subjectsContainer.classList.toggle('hidden');
+                this.textContent = subjectsContainer.classList.contains('hidden') ? 'Mostrar' : 'Ocultar';
+            });
+
+            toggleTrials.addEventListener('click', function() {
+                trialsContainer.classList.toggle('hidden');
+                this.textContent = trialsContainer.classList.contains('hidden') ? 'Mostrar' : 'Ocultar';
             });
         });
 
