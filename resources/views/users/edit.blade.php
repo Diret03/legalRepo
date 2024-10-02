@@ -25,23 +25,40 @@
                         @csrf
                         @method('PUT')
                         <div>
-                            <label for="edit-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                            <input type="text" name="name" id="edit-name" value="{{ $user->name }}"
-                                   class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
+                            @if(Auth::id() === $user->id)
+                                <label for="edit-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                                <input type="text" name="name" id="edit-name" value="{{ $user->name }}"
+                                       class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"/>
+                            @else
+                                <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</p>
+                                <p class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-300 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500">{{$user->name}}</p>
+                            @endif
                         </div>
                         <div>
-                            <label for="edit-last_name"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
-                            <input type="text" name="last_name" id="edit-last_name" value="{{ $user->last_name }}"
-                                   class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
+                            @if(Auth::id() === $user->id)
+                                <label for="edit-last_name"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
+                                <input type="text" name="last_name" id="edit-last_name" value="{{ $user->last_name }}"
+                                       class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"/>
+                            @else
+                                <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</p>
+                                <p class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-300 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500">{{$user->last_name}}</p>
+                            @endif
                         </div>
                         <div>
-                            <label for="edit-email"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
-                                electrónico</label>
-                            <input type="email" name="email" id="edit-email" value="{{ $user->email }}"
-                                   class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
+                            @if(Auth::id() === $user->id)
+                                <label for="edit-email"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
+                                    electrónico</label>
+                                <input type="email" name="email" id="edit-email" value="{{ $user->email }}"
+                                       class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"/>
+                            @else
+                                <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
+                                    electrónico</p>
+                                <p class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-300 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500">{{$user->email}}</p>
+                             @endif
                         </div>
+
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900">Roles</label>
                             @foreach($roles as $role)
@@ -76,14 +93,17 @@
                                 @endif
                             </select>
                         </div>
-                        <div>
-                            <label for="edit_password"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
-                            <input type="password" name="password" id="edit_password" placeholder="••••••••"
-                                   class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Dejar en blanco para mantener la
-                                contraseña actual</p>
-                        </div>
+                        @if(Auth::id()===$user->id)
+                            <div class="my-2">
+                                <label for="edit_password"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
+                                <input type="password" name="password" id="edit_password" placeholder="••••••••"
+                                       class="w-full px-3 py-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"/>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Dejar en blanco para mantener
+                                    la
+                                    contraseña actual</p>
+                            </div>
+                        @endif
                         <button type="submit"
                                 class="w-full text-white bg-red-650 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                             Guardar cambios

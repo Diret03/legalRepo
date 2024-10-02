@@ -27,7 +27,8 @@ class CaseController extends Controller
 
     public function create(){
         $trials = Trial::all();
-        $users = User::orderBy('last_name','asc')->get();
+        $users = User::orderBy('last_name','asc')
+                ->where('status',true)->get();
         return view('cases.create',compact('trials','users'));
     }
 
@@ -93,7 +94,8 @@ class CaseController extends Controller
 
         $case = LegalCase::findOrFail($id);
         $trials = Trial::all();
-        $users = User::orderBy('last_name','asc')->get();
+        $users = User::orderBy('last_name','asc')
+                ->where('status',true)->get();
         return view('cases.edit', compact('case','trials', 'users'));
     }
 

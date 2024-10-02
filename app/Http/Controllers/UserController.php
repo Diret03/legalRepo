@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -103,9 +104,9 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $validated_data = $request->validate([
-            'name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
-            'last_name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
-            'email' => ['required', 'max:255', 'email', Rule::unique('users')->ignore($user->id)],
+            'name' => ['nullable', 'regex:/^[a-zA-Z\s]+$/'],
+            'last_name' => ['nullable', 'regex:/^[a-zA-Z\s]+$/'],
+            'email' => ['nullable', 'max:255', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
             'status' => 'required|boolean',
             'roles' => 'array',
@@ -115,12 +116,19 @@ class UserController extends Controller
             'last_name.regex' => 'El apellido solo debe contener letras.',
         ]);
 
-        $user->name = $validated_data['name'];
-        $user->last_name = $validated_data['last_name'];
-        $user->email = $validated_data['email'];
         $user->status = $validated_data['status'];
 
-        if (!empty($validated_data['password'])) {
+        if (!empty($validated_data['name']) && Auth::id() === $user->id) {
+            $user->name = $validated_data['name'];
+        }
+        if (!empty($validated_data['last_name']) && Auth::id() === $user->id) {
+            $user->last_name = $validated_data['last_name'];
+        }
+        if (!empty($validated_data['email']) && Auth::id() === $user->id) {
+            $user->email = $validated_data['email'];
+        }
+
+        if (!empty($validated_data['password']) && Auth::id() === $user->id) {
             $user->password = Hash::make($validated_data['password']);
         }
 
