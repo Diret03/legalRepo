@@ -20,6 +20,8 @@
                  role="alert">
                 <strong class="font-bold">Éxito!</strong>
                 <span class="block sm:inline" id="message-text"></span>
+                <ul class="list-disc list-inside">
+                </ul>
             </div>
             <!-- error json message -->
             <div id="message-error"
@@ -27,6 +29,8 @@
                  role="alert">
                 <strong class="font-bold">Error!</strong>
                 <span class="block sm:inline" id="message-text-error"></span>
+                <ul class="list-disc list-inside">
+                </ul>
             </div>
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
@@ -374,6 +378,6 @@
 <script src="{{ asset('js/deleteSelected.js') }}"></script>
 <script src="{{ asset('js/deactivateSelected.js') }}"></script>
 <script>
-    initializeDeleteFunction("{{ route('users.deleteSelected') }}", "users_ids");
-    initializeDeactivateFunction("{{ route('users.deactivateSelected') }}", "users_ids");
+    initializeDeleteFunction("{{ route('users.deleteSelected') }}", "user_ids");
+    initializeDeactivateFunction("{{ route('users.deactivateSelected') }}", "user_ids");
 </script>

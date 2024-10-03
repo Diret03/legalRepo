@@ -43,7 +43,7 @@ class UserController extends Controller
 
             } else {
                 // If search query is empty, return all users
-                $users = User::paginate(10);
+                $users = User::orderBy('updated_at', 'desc')->paginate(10);
             }
 
             if (count($users) > 0) {
@@ -51,7 +51,7 @@ class UserController extends Controller
 
             } else {
                 $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                               <td colspan="6" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
+                               <td colspan="7" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
                            </tr>';
             }
 
@@ -68,7 +68,7 @@ class UserController extends Controller
             'email' =>  ['required', 'unique:users', 'max:255', 'email'],
             'password' => 'required|string',
             'status' => 'required|boolean',
-            'roles' => 'array',
+            'roles' => 'nullable|array',
             'roles.*' => 'string|exists:roles,name',
         ],[
             'name.regex' => 'El nombre solo debe contener letras.',
@@ -83,7 +83,7 @@ class UserController extends Controller
             'status' => $validated_data['status'],
         ]);
 
-        if($validated_data['roles']){
+        if (!empty($validated_data['roles'])) {
             $user->syncRoles($validated_data['roles']);
             $user->save();
         }
@@ -109,7 +109,7 @@ class UserController extends Controller
             'email' => ['nullable', 'max:255', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
             'status' => 'required|boolean',
-            'roles' => 'array',
+            'roles' => 'nullable|array',
             'roles.*' => 'string|exists:roles,name',
         ],[
             'name.regex' => 'El nombre solo debe contener letras.',
@@ -132,20 +132,61 @@ class UserController extends Controller
             $user->password = Hash::make($validated_data['password']);
         }
 
-        if($validated_data['roles']){
+        if (!empty($validated_data['roles'])) {
             $user->syncRoles($validated_data['roles']);
         }
+        else{
+            $user->roles()->detach();
+        }
+
         $user->save();
 
         return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 
 
+//    public function deleteSelected(Request $request){
+//
+//        $ids = $request->ids;
+//        User::whereIn('id',$ids)->delete();
+//        return response()->json(['success'=>'Usuarios eliminados correctamente.']);
+//    }
+
     public function deleteSelected(Request $request){
 
         $ids = $request->ids;
-        User::whereIn('id',$ids)->delete();
-        return response()->json(['success'=>'Usuarios eliminados correctamente.']);
+        $invalidNames = [];
+        $deletedNames = [];
+        $invalidIds = [];
+        User::whereIn('id',$ids)->get()->each(function($user) use (&$invalidNames, &$deletedNames, &$invalidIds) {
+            if($user->cases->count() > 0){
+                $invalidNames[] = $user->name.' '.$user->last_name;
+                $invalidIds[] = strval($user->id);
+            }
+            else{
+                $deletedNames[] = $user->name;
+                $user->delete();
+            }
+        });
+
+        $response = [];
+
+        if (!empty($deletedNames)) {
+            $response['success'] = [
+                'message' => 'Se han eliminado los siguientes usuarios:',
+                'names' => $deletedNames,
+            ];
+        }
+
+        if (!empty($invalidNames)) {
+            $response['error'] = [
+                'message' => 'No se pueden eliminar los siguientes usuarios debido a que tienen casos asociados:',
+                'names'=>$invalidNames,
+                'ids'=>$invalidIds,
+            ];
+        }
+
+        return response()->json($response);
 
     }
 
@@ -153,11 +194,21 @@ class UserController extends Controller
         $ids = $request->ids;
 
         $users = User::whereIn('id', $ids)->get();
+        $userNames = [];
+
         foreach ($users as $user) {
             $user->update(['status' => false]);
+            $userNames[] = $user->name.' '.$user->last_name;
         }
 
-        return response()->json(['success'=>'Usuarios desactivados correctamente.']);
+        $output = view('users.row', ['users' => User::orderBy('updated_at', 'desc')->paginate(10)])->render();
+        $response['success'] = [
+            'message' => 'Se han desactivado los siguientes usuarios:',
+            'names' => $userNames,
+            'data' => $output,
+        ];
+
+        return response()->json($response);
 
     }
 

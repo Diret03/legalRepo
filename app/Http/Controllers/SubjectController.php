@@ -138,15 +138,51 @@ class SubjectController extends Controller
     public function deleteSelected(Request $request){
 
         $ids = $request->ids;
-        Subject::whereIn('id',$ids)->delete();
-        return response()->json(['success'=>'Materias eliminadas correctamente.']);
+        $invalidNames = [];
+        $deletedNames = [];
+        $invalidIds = [];
+        Subject::whereIn('id',$ids)->get()->each(function($subject) use (&$invalidNames, &$deletedNames, &$invalidIds) {
+            if($subject->trials->count() > 0){
+                    $invalidNames[] = $subject->name;
+                    $invalidIds[] = strval($subject->id);
+            }
+            else{
+                $deletedNames[] = $subject->name;
+                $subject->delete();
+
+            }
+        });
+
+        $response = [];
+
+        if (!empty($deletedNames)) {
+            $response['success'] = [
+                'message' => 'Se han eliminado las siguientes materias:',
+                'names' => $deletedNames,
+            ];
+        }
+
+        if (!empty($invalidNames)) {
+            $response['error'] = [
+                'message' => 'No se pueden eliminar las siguientes materias debido a que tienen juicios asociados:',
+                'names'=>$invalidNames,
+                'ids'=>$invalidIds,
+            ];
+        }
+
+        return response()->json($response);
 
     }
 
     public function destroy($id)
     {
-        $project = Subject::findOrFail($id);
-        $project->delete();
+        $subject = Subject::findOrFail($id);
+
+        if($subject->trials->count() > 0){
+            return redirect()->back()->with('error', 'No se puede eliminar esta materia, tiene juicios asociados.');
+        }
+
+        $subject->delete();
 
         return redirect()->back()->with('success', 'Materia eliminada exitosamente.');
     }

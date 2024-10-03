@@ -61,6 +61,14 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (count($user->getRoleNames()->toArray()) <= 0) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Tu cuenta no tiene roles. Por favor contacta a un administrador.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

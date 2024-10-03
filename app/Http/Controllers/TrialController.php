@@ -113,10 +113,47 @@ class TrialController extends Controller
 
     }
 
+//    public function deleteSelected(Request $request){
+//        $ids = $request->ids;
+//        Trial::whereIn('id',$ids)->delete();
+//        return response()->json(['success'=>'Juicios eliminados correctamente.']);
+//    }
     public function deleteSelected(Request $request){
+
         $ids = $request->ids;
-        Trial::whereIn('id',$ids)->delete();
-        return response()->json(['success'=>'Juicios eliminados correctamente.']);
+        $invalidNames = [];
+        $deletedNames = [];
+        $invalidIds = [];
+        Trial::whereIn('id',$ids)->get()->each(function($trial) use (&$invalidNames, &$deletedNames, &$invalidIds) {
+            if($trial->cases->count() > 0){
+                $invalidNames[] = $trial->name;
+                $invalidIds[] = strval($trial->id);
+            }
+            else{
+                $deletedNames[] = $trial->name;
+                $trial->delete();
+
+            }
+        });
+
+        $response = [];
+
+        if (!empty($deletedNames)) {
+            $response['success'] = [
+                'message' => 'Se han eliminado los siguientes juicios:',
+                'names' => $deletedNames,
+            ];
+        }
+
+        if (!empty($invalidNames)) {
+            $response['error'] = [
+                'message' => 'No se pueden eliminar los siguientes juicios debido a que tienen casos asociados:',
+                'names'=>$invalidNames,
+                'ids'=>$invalidIds,
+            ];
+        }
+
+        return response()->json($response);
 
     }
 

@@ -24,6 +24,8 @@
                  role="alert">
                 <strong class="font-bold">Éxito!</strong>
                 <span class="block sm:inline" id="message-text"></span>
+                <ul class="list-disc list-inside">
+                </ul>
             </div>
             <!-- error json message -->
             <div id="message-error"
@@ -31,6 +33,8 @@
                  role="alert">
                 <strong class="font-bold">Error!</strong>
                 <span class="block sm:inline" id="message-text-error"></span>
+                <ul class="list-disc list-inside">
+                </ul>
             </div>
 
             @if ($errors->any())
@@ -314,7 +318,7 @@
 
 <script src="{{ asset('js/deleteSelected.js') }}"></script>
 <script>
-    initializeDeleteFunction("{{ route('cases.delete') }}", "cases_ids");
+    initializeDeleteFunction("{{ route('cases.delete') }}", "case_ids");
 </script>
 
 

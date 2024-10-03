@@ -41,11 +41,20 @@ function initializeDeactivateFunction(route, elementPrefix) {
 
                     if (response.success) {
                         $('#message').removeClass('hidden').addClass('block');
-                        $('#message-text').text(response.success);
+                        $('#message-text').text(response.success.message);
 
-                        setTimeout(function () {
-                            location.reload();
-                        }, 750);
+                        $.each(response.success.names, function(index, name) {
+                            $('#message ul').append('<li>' + name + '</li>');
+                        });
+
+                        // $.each(all_ids, function (key, val) {
+                        //     $('#' + elementPrefix + val).html(response.success.data); // Use the passed element prefix
+                        // });
+                        $('#users-data').html(response.success.data);
+
+                        // setTimeout(function () {
+                        //     location.reload();
+                        // }, 750);
                     }
 
                 },

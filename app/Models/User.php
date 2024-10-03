@@ -48,4 +48,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function cases(){
+        return $this->hasMany(LegalCase::class);
+    }
 }
