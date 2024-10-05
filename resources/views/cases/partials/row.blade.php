@@ -109,20 +109,23 @@
         @if(Auth::user()->can('editar cualquier caso') || Auth::user()->can('eliminar cualquier caso'))
             <td class="px-6 py-4">
                 <div class="flex items-center">
-                    <a href="{{route('cases.edit',$case->id)}}"
-                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                        <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
-                    </a>
-                    <form action="{{route('cases.destroy',$case->id)}}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
-                            <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
-                        </button>
-                    </form>
-
+                    @can('editar cualquier caso')
+                        <a href="{{route('cases.edit',$case->id)}}"
+                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                            <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
+                        </a>
+                    @endcan
+                    @can('eliminar cualquier caso')
+                        <form action="{{route('cases.destroy',$case->id)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
+                                <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </td>
         @endif

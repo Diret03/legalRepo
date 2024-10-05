@@ -58,7 +58,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $roleAdmin = Role::create(['name' => 'administrador'])
             ->givePermissionTo([
-                'ver casos', 'editar cualquier caso', 'eliminar cualquier caso', 'crear casos',
+                'ver casos', 'eliminar cualquier caso',
                 'crear materias', 'editar materias', 'eliminar materias', 'ver materias',
                 'crear juicios', 'editar juicios', 'eliminar juicios', 'ver juicios',
                 'crear usuarios', 'editar usuarios', 'eliminar usuarios', 'ver usuarios', 'activar usuarios', 'desactivar usuarios',
