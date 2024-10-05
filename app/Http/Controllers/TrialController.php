@@ -15,7 +15,7 @@ class TrialController extends Controller
 
         $trials = Trial::where('subject_id',$id)->paginate(5);
 //        $subject = Subject::find($id);
-        $subject = Subject::where('id',$id)->first();
+        $subject = Subject::findOrFail($id);
         $subject_name = $subject->name;
         return view('trials', compact('trials','subject','subject_name'));
     }

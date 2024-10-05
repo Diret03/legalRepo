@@ -362,14 +362,14 @@ class CaseController extends Controller
         $cases = LegalCase::where('trial_id',$trial_id)
             ->where('status','accepted')
             ->paginate(5);
-        $trial = Trial::where('id',$trial_id)->first();
+        $trial = Trial::findOrFail($trial_id);
         $trial_name = $trial->name;
         return view('cases.byTrial', compact('cases','trial','trial_name'));
     }
 
     public function show($id){
 
-        $case = LegalCase::where('id', $id)->first();
+        $case = LegalCase::findOrFail($id);
         $accessedBy = 'all';
 
         // Only allow public access if the case is 'accepted'
@@ -386,7 +386,7 @@ class CaseController extends Controller
 
     public function showCaseByTrial($id){
 
-        $case = LegalCase::where('id', $id)->first();
+        $case = LegalCase::findOrFail($id);
         $accessedBy = 'trial';
         return view('cases.show', compact('case', 'accessedBy'));
 
@@ -492,7 +492,7 @@ class CaseController extends Controller
     }
     public function showByTag($id){
 
-        $tag = Tag::where('id', $id)->first();
+        $tag = Tag::findOrFail($id);
         $tag_name = $tag->name;
         $cases = LegalCase::withAnyTags([$tag_name])
             ->where('status','accepted')
