@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Notifications\CaseAccepted;
 use Spatie\Tags\Tag;
 
 class CaseController extends Controller
@@ -450,6 +451,9 @@ class CaseController extends Controller
         $case->status = 'accepted';
         $case->save();
 
+        $user = User::findOrFail($case->user_id);
+        $user->notify(new CaseAccepted($case));
+
         return redirect()->route('cases.review')->with('success', "Juicio ".$id." aprobado correctamente.");
     }
 
@@ -506,7 +510,7 @@ class CaseController extends Controller
             $deletedNames[] = $case->title;
             $case->delete();
         }
-        
+
         $response['success'] = [
             'message' => 'Se han eliminado los siguientes casos:',
             'names' => $deletedNames,
