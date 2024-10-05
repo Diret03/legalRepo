@@ -1,0 +1,91 @@
+---
+preheader: "Tu caso ha sido a revisado."
+bodyClass: bg-slate-50
+---
+
+<push name="head">
+  <style>
+    @font-face {
+      font-family: 'Figtree';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Figtree Regular'), local('Figtree-Regular'), url('https://fonts.gstatic.com/s/figtree/v10/_Xmt-HQyrFIqCz9NXe6p0nFssHqB.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Figtree';
+      font-style: normal;
+      font-weight: 700;
+      src: local('Figtree Bold'), local('Figtree-Bold'), url('https://fonts.gstatic.com/s/figtree/v10/_Xmt-HQyrFIqCz9NXe6p0nFsssHqB.woff2') format('woff2');
+    }
+
+    body {
+      font-family: 'Figtree', sans-serif;
+    }
+  </style>
+</push>
+<x-main>
+  <div class="bg-slate-50 sm:px-4 font-sans">
+    <table align="center">
+      <tr>
+        <td class="w-[552px] max-w-full">
+          <div class="my-12 sm:my-8 text-center">
+            <a href="https://maizzle.com">
+              <img src="@{{$message->embed(public_path('img/logo-utn.png'))}}" width="70" alt="UTN Logo">
+            </a>
+          </div>
+
+          <table class="w-full">
+            <tr>
+              <td class="p-12 sm:px-6 text-base text-slate-700 bg-white rounded shadow-sm">
+                <h1 class="m-0 mb-6 text-2xl sm:leading-8 text-black font-semibold">
+                  Hola, @{{$user->name}}
+                </h1>
+
+                <p class="m-0 leading-6">
+                  @if($case->status === 'Aceptado')
+                    Tu caso "@{{$case->title}}" ha sido aceptado!
+                  @else
+                    Tu caso "@{{$case->title}}" ha sido rechazado!
+                  @endif
+                  <br>
+                  <br>
+                  @if($case->status === 'Aceptado')
+                    Puedes visualizar tu caso aquí:
+                  @endif
+                </p>
+
+                <x-spacer height="24px" />
+
+                @if($case->status === 'Rechazado')
+                  <p class="m-0 leading-6">
+                    Tu caso fue rechazado debido al siguiente motivo:
+                  </p>
+                    <div class="mt-2 p-5 bg-slate-200 rounded-lg flex justify-center">
+                      <p class="text-sm italic">"@{{$case->rejection_message}}"</p>
+                    </div>
+                  <p class="m-0 leading-6">
+                    Puedes visualizar tu caso aquí:
+                  </p>
+                   <x-spacer height="24px" />
+                @endif
+
+                <x-button href="@{{$caseUrl}}" class="bg-red-600">
+                  Ver caso &rarr;
+                </x-button>
+
+                <x-divider space-y="32px" class="bg-slate-200" />
+
+                <p class="m-0">
+                  Gracias por utilizar la aplicación, <br />Repositorio Jurídico UTN
+                </p>
+              </td>
+            </tr>
+            <tr role="separator">
+              <td class="leading-12">&zwj;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</x-main>

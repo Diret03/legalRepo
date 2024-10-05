@@ -18,7 +18,7 @@ module.exports = {
         extension: 'blade.php'
       },
       assets:{
-        destination: '../../../public/img/emails'
+        destination: '../../../public/img'
       }
     },
   },

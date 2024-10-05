@@ -488,6 +488,9 @@ class CaseController extends Controller
         $case->status = 'rejected';
         $case->save();
 
+        $user = User::findOrFail($case->user_id);
+        $user->notify(new CaseAccepted($case));
+
         return redirect()->route('cases.review')->with('success', "Juicio ".$id." rechazado correctamente.");
     }
     public function showByTag($id){

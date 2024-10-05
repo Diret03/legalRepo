@@ -36,14 +36,25 @@ class CaseAccepted extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        if ($this->case->status == 'Aceptado') {
+            return (new MailMessage)
+                ->subject('Tu caso ha sido aceptado')
+                ->view('emails.case-reviewed',
+                [   'case'=>$this->case,
+                    'user'=>$notifiable,
+                    'caseUrl'=>route('cases.show',$this->case->id),
+                ]);
+        }
+        else{
+            return (new MailMessage)
+                ->subject('Tu caso ha sido rechazado')
+                ->view('emails.case-reviewed',
+                    [   'case'=>$this->case,
+                        'user'=>$notifiable,
+                        'caseUrl'=>route('cases.show',$this->case->id),
+                    ]);
+        }
 
-        return (new MailMessage)->view(
-            'emails.case-accepted',
-            ['case'=>$this->case,
-                'user'=>$notifiable,
-                'caseUrl'=>route('cases.show',$this->case->id),
-            ],
-        );
     }
 
     /**
