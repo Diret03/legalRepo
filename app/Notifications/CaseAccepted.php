@@ -36,15 +36,13 @@ class CaseAccepted extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $htmlContent = view('emails.case-accepted', [
-            'case' => $this->case,
-            'user' => $notifiable
-        ])->render();
 
         return (new MailMessage)->view(
             'emails.case-accepted',
             ['case'=>$this->case,
-                'user'=>$notifiable],
+                'user'=>$notifiable,
+                'caseUrl'=>route('cases.show',$this->case->id),
+            ],
         );
     }
 

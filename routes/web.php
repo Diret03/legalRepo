@@ -20,6 +20,10 @@ Route::get('/go-back', function() {
     return back();
 })->name('goBack');
 
+Route::get('/test-email', function() {
+    return view('emails.transactional');
+});
+
 Route::get('/materias',  [SubjectController::class, 'list'])->name('subjects.list');
 
 Route::get('/materias/juicio/{id}',  [TrialController::class, 'showTrials'])->name('trials.bySubject');
