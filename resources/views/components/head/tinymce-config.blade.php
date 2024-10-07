@@ -1,10 +1,10 @@
-{{--<script src="https://cdn.tiny.cloud/1/7bqonvnrcjk10cz5i3nrxsahk0xzrgnzpy64pi3au8v5cedn/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>--}}
-{{--<script src="/path/to/tinymce/tinymce.min.js"></script>--}}
-<script src="{{asset('assets/tinymce/tinymce.min.js')}}"></script>
+{{-- <script src="https://cdn.tiny.cloud/1/7bqonvnrcjk10cz5i3nrxsahk0xzrgnzpy64pi3au8v5cedn/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script> --}}
+{{-- <script src="/path/to/tinymce/tinymce.min.js"></script> --}}
+<script src="{{ asset('assets/tinymce/tinymce.min.js') }}"></script>
 <script>
     tinymce.init({
         selector: 'textarea.editor',
-        plugins: 'lists paste',  // Ensure the 'paste' plugin is included
+        plugins: 'lists',
         menubar: 'edit format',
         branding: false,
         language: 'es',

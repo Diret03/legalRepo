@@ -16,17 +16,19 @@ use Spatie\Tags\Tag;
 class CaseController extends Controller
 {
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
         $cases = LegalCase::orderBy($sortField, $sortDirection)->paginate(10);
         $trials = Trial::all();
-        return view('cases.index', compact('cases','trials'));
+        return view('cases.index', compact('cases', 'trials'));
     }
 
-    public function archived(Request $request){
+    public function archived(Request $request)
+    {
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
@@ -36,14 +38,17 @@ class CaseController extends Controller
         return view('cases.archived', compact('cases'));
     }
 
-    public function create(){
+    public function create()
+    {
         $trials = Trial::all();
-        $users = User::orderBy('last_name','asc')
-                ->where('status',true)->get();
-        return view('cases.create',compact('trials','users'));
+        $subjects = Subject::all();
+        $users = User::orderBy('last_name', 'asc')
+            ->where('status', true)->get();
+        return view('cases.create', compact('trials', 'users', 'subjects'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $validated_data = $request->validate([
             'title' => 'required|string',
@@ -57,7 +62,7 @@ class CaseController extends Controller
             'resolution' => 'required|string',
             'note' => 'nullable|string',
             'tags' => 'nullable'
-        ],[
+        ], [
             'context.required' => 'El campo contexto es obligatorio.',
             'analysis.required' => 'El campo de análisis jurídico es obligatorio.',
             'resolution.required' => 'El campo de resolución es obligatorio.',
@@ -101,16 +106,19 @@ class CaseController extends Controller
     }
 
 
-    public function edit($id){
+    public function edit($id)
+    {
 
         $case = LegalCase::findOrFail($id);
         $trials = Trial::all();
-        $users = User::orderBy('last_name','asc')
-                ->where('status',true)->get();
-        return view('cases.edit', compact('case','trials', 'users'));
+        $subjects = Subject::all();
+        $users = User::orderBy('last_name', 'asc')
+            ->where('status', true)->get();
+        return view('cases.edit', compact('case', 'trials', 'users','subjects'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $validated_data = $request->validate([
             'title' => 'required|string',
             'user_id' => 'nullable|exists:users,id',
@@ -123,7 +131,7 @@ class CaseController extends Controller
             'resolution' => 'required|string',
             'note' => 'nullable|string',
             'tags' => 'nullable'
-        ],[
+        ], [
             'context.required' => 'El campo contexto es obligatorio.',
             'analysis.required' => 'El campo de análisis jurídico es obligatorio.',
             'resolution.required' => 'El campo de resolución es obligatorio.',
@@ -194,8 +202,7 @@ class CaseController extends Controller
             if (count($cases) > 0) {
                 // Render the view with the retrieved data
                 $output = view('cases.partials.all-list', ['cases' => $cases])->render();
-            }
-            else{
+            } else {
                 $output =
                     '<div
                         class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
@@ -210,17 +217,16 @@ class CaseController extends Controller
 
                     </div>';
             }
-
-
         }
 
         return $output;
     }
 
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             $query = $request->input('search');
             $view = $request->input('view');
 
@@ -231,37 +237,35 @@ class CaseController extends Controller
                 $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
 
                 // Perform search query
-                if($view == 'mycases'){
+                if ($view == 'mycases') {
                     $cases = LegalCase::where('user_id', Auth::id()) // Mandatory condition
-                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
-                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                            ->orWhere('date', $likeOperator, '%' . $query . '%')
-                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                    });
-                            });
-                    })
+                        ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                            $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                ->orWhere('date', $likeOperator, '%' . $query . '%')
+                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                        });
+                                });
+                        })
                         ->get();
-                }
-                elseif ($view == 'all-list') {
+                } elseif ($view == 'all-list') {
                     $cases = LegalCase::where('status', 'accepted') // Mandatory condition
-                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
-                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                            ->orWhere('date', $likeOperator, '%' . $query . '%')
-                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                    });
-                            });
-                    })
+                        ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                            $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                ->orWhere('date', $likeOperator, '%' . $query . '%')
+                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                        });
+                                });
+                        })
                         ->get();
-                }
-                else{
+                } else {
                     $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
                         ->orWhere('title', $likeOperator, '%' . $query . '%')
                         ->orWhere('origin', $likeOperator, '%' . $query . '%')
@@ -275,58 +279,47 @@ class CaseController extends Controller
                         ->get();
                 }
             } else {
-                if($view == 'table'){
+                if ($view == 'table') {
                     $cases = LegalCase::paginate(10);
-                }
-                elseif($view == 'mycases'){
+                } elseif ($view == 'mycases') {
 
                     $user_id = $request->input('user_id');
                     $status = $request->input('status');
 
-                    if($status != 'all'){
-                        $cases = LegalCase::where('user_id',$user_id)
-                            ->where('status',$status)
+                    if ($status != 'all') {
+                        $cases = LegalCase::where('user_id', $user_id)
+                            ->where('status', $status)
+                            ->orderBy('updated_at', 'desc')->paginate(12);
+                    } else {
+                        $cases = LegalCase::where('user_id', $user_id)
                             ->orderBy('updated_at', 'desc')->paginate(12);
                     }
-                    else{
-                        $cases = LegalCase::where('user_id',$user_id)
-                            ->orderBy('updated_at', 'desc')->paginate(12);
-                    }
-                }
-                elseif($view == 'review'){
+                } elseif ($view == 'review') {
                     $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
-                }
-                elseif($view == 'all-list'){
-                    $cases = LegalCase::where('status','accepted')
+                } elseif ($view == 'all-list') {
+                    $cases = LegalCase::where('status', 'accepted')
                         ->paginate(10);
                 }
-
             }
             if (count($cases) > 0) {
 
-                if($view == 'table'){
+                if ($view == 'table') {
                     $output = view('cases.partials.row', ['cases' => $cases])->render();
-                }
-                elseif($view == 'mycases'){
+                } elseif ($view == 'mycases') {
                     $output = view('cases.partials.mylist', ['cases' => $cases])->render();
-                }
-                elseif($view == 'review'){
+                } elseif ($view == 'review') {
                     $output = view('cases.partials.reviewlist', ['cases' => $cases])->render();
-                }
-                elseif($view == 'all-list'){
+                } elseif ($view == 'all-list') {
                     $output = view('cases.partials.all-list', ['cases' => $cases])->render();
                 }
-
-
             } else {
 
 
-                if($view == 'table'){
+                if ($view == 'table') {
                     $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
                            </tr>';
-                }
-                else {
+                } else {
                     $output =
                         '<div
                         class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
@@ -347,79 +340,83 @@ class CaseController extends Controller
         }
     }
 
-    public function getAllTags(){
+    public function getAllTags()
+    {
         $orderedTags = Tag::all();
         return response()->json(['tags' => $orderedTags->pluck('name')]);
     }
 
-    public function getTags($id){
+    public function getTags($id)
+    {
         $case = LegalCase::findOrFail($id);
         $tags = [];
 
-        foreach ($case->tags as $tag){
+        foreach ($case->tags as $tag) {
 
             $tags[] = [
-                'id' =>$tag->name,
-                'name'=>$tag->name
+                'id' => $tag->name,
+                'name' => $tag->name
             ];
         }
         return response()->json(['tags' => $tags]);
     }
 
 
-    public function showCasesbyTrial($trial_id){
+    public function showCasesbyTrial($trial_id)
+    {
 
-        $cases = LegalCase::where('trial_id',$trial_id)
-            ->where('status','accepted')
+        $cases = LegalCase::where('trial_id', $trial_id)
+            ->where('status', 'accepted')
             ->paginate(5);
         $trial = Trial::findOrFail($trial_id);
         $trial_name = $trial->name;
-        return view('cases.byTrial', compact('cases','trial','trial_name'));
+        return view('cases.byTrial', compact('cases', 'trial', 'trial_name'));
     }
 
-    public function show($id){
+    public function show($id)
+    {
 
         $case = LegalCase::findOrFail($id);
         $accessedBy = 'all';
 
         // Only allow public access if the case is 'accepted'
-//        dd(Auth::check());
-//        dd($case->status);
+        //        dd(Auth::check());
+        //        dd($case->status);
         if ($case->status !== 'Aceptado' && !Auth::check()) {
             abort(404); // Show 404 for unauthorized users
         }
 
-        return view('cases.show', compact('case','accessedBy'));
-
+        return view('cases.show', compact('case', 'accessedBy'));
     }
 
 
-    public function showCaseByTrial($id){
+    public function showCaseByTrial($id)
+    {
 
         $case = LegalCase::findOrFail($id);
         $accessedBy = 'trial';
         return view('cases.show', compact('case', 'accessedBy'));
-
     }
 
     public function showCaseByTag($id, $tag)
     {
         $case = LegalCase::findOrFail($id);
         $accessedBy = 'tag';
-//        dd($tag);
+        //        dd($tag);
         return view('cases.show', compact('case', 'tag', 'accessedBy'));
     }
 
-    public function list(){
-        $cases = LegalCase::where('status','accepted')
-                ->paginate(10);
+    public function list()
+    {
+        $cases = LegalCase::where('status', 'accepted')
+            ->paginate(10);
 
-        $trials = Trial::withCount(['cases' => function($query) {
+        $trials = Trial::withCount(['cases' => function ($query) {
             $query->where('status', 'accepted');
         }])->orderBy('name', 'asc')->get();
 
         // Get subjects along with the count of accepted cases via trials
-        $subjects = Subject::with(['trials' => function($query) {
+        $subjects = Subject::with(['trials' => function ($query) {
             $query->withCount(['cases' => function ($caseQuery) {
                 $caseQuery->where('status', 'accepted');
             }]);
@@ -430,34 +427,37 @@ class CaseController extends Controller
             $subject->cases_count = $subject->trials->sum('cases_count');
         }
 
-//        $subjects = Subject::all();
+        //        $subjects = Subject::all();
 
         // Return the data to the view
         return view('cases.list', compact('cases', 'trials', 'subjects'));
     }
 
 
-    public function listUser(){
+    public function listUser()
+    {
         $cases = LegalCase::paginate(10);
-        return view('cases.list',compact('cases'));
+        return view('cases.list', compact('cases'));
     }
 
 
 
-    public function review(Request $request){
+    public function review(Request $request)
+    {
         $status = $request->query('status', 'pending'); // default sort field
 
-        $cases = LegalCase::where('status',$status)
+        $cases = LegalCase::where('status', $status)
             ->orderBy('updated_at', 'desc')->paginate(12);
 
-        if($status == 'all'){
+        if ($status == 'all') {
             $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
         }
 
         return view('cases.review', compact('cases'));
     }
 
-    public function approve($id){
+    public function approve($id)
+    {
         $case = LegalCase::findOrFail($id);
 
         $case->status = 'accepted';
@@ -466,20 +466,21 @@ class CaseController extends Controller
         $user = User::findOrFail($case->user_id);
         $user->notify(new CaseAccepted($case));
 
-        return redirect()->route('cases.review')->with('success', "Juicio ".$id." aprobado correctamente.");
+        return redirect()->route('cases.review')->with('success', "Juicio " . $id . " aprobado correctamente.");
     }
 
-    public function myCases(Request $request, $user_id){
+    public function myCases(Request $request, $user_id)
+    {
 
         $status = $request->query('status', 'accepted'); // default sort field
 
-        $cases = LegalCase::where('user_id',$user_id)
-            ->where('status',$status)
+        $cases = LegalCase::where('user_id', $user_id)
+            ->where('status', $status)
             ->orderBy('updated_at', 'desc')->paginate(12);
 
-        if($status == 'all'){
-            $cases = LegalCase::where('user_id',$user_id)
-            ->orderBy('updated_at', 'desc')->paginate(12);
+        if ($status == 'all') {
+            $cases = LegalCase::where('user_id', $user_id)
+                ->orderBy('updated_at', 'desc')->paginate(12);
         }
 
         if ($user_id != Auth::id()) {
@@ -489,7 +490,8 @@ class CaseController extends Controller
         return view('cases.mycases', compact('cases'));
     }
 
-    public function reject(Request $request, $id){
+    public function reject(Request $request, $id)
+    {
         $case = LegalCase::findOrFail($id);
 
         $validated_data = $request->validate([
@@ -503,22 +505,24 @@ class CaseController extends Controller
         $user = User::findOrFail($case->user_id);
         $user->notify(new CaseAccepted($case));
 
-        return redirect()->route('cases.review')->with('success', "Juicio ".$id." rechazado correctamente.");
+        return redirect()->route('cases.review')->with('success', "Juicio " . $id . " rechazado correctamente.");
     }
-    public function showByTag($id){
+    public function showByTag($id)
+    {
 
         $tag = Tag::findOrFail($id);
         $tag_name = $tag->name;
         $cases = LegalCase::withAnyTags([$tag_name])
-            ->where('status','accepted')
+            ->where('status', 'accepted')
             ->paginate(10);
 
-        return view('cases.byTag', compact('cases','tag','tag_name'));
+        return view('cases.byTag', compact('cases', 'tag', 'tag_name'));
     }
 
-    public function deleteSelected(Request $request){
+    public function deleteSelected(Request $request)
+    {
         $ids = $request->ids;
-        $cases = LegalCase::whereIn('id',$ids)->get();
+        $cases = LegalCase::whereIn('id', $ids)->get();
         $deletedNames = [];
 
         foreach ($cases as $case) {
@@ -532,8 +536,6 @@ class CaseController extends Controller
         ];
 
         return response()->json($response);
-
-
     }
 
 
@@ -551,12 +553,12 @@ class CaseController extends Controller
         return redirect()->back()->with('success', 'Caso eliminado exitosamente.');
     }
 
-    public function restore($id){
+    public function restore($id)
+    {
         $case = LegalCase::onlyTrashed()->findOrFail($id);
         $case->restore();
 
         return redirect()->back()->with('success', 'Caso restaurado exitosamente.');
-
     }
 
     public function forceDelete($id)
@@ -565,7 +567,5 @@ class CaseController extends Controller
         $case->forceDelete();
 
         return redirect()->back()->with('success', 'Caso eliminado definitivamente.');
-
     }
-
 }

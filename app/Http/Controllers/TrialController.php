@@ -20,6 +20,14 @@ class TrialController extends Controller
         return view('trials', compact('trials','subject','subject_name'));
     }
 
+    public function getTrialsBySubject($subject_id){
+
+        $subject = Subject::findOrFail($subject_id);
+
+        return response()->json($subject->trials);
+
+    }
+
     public function index(Request $request){
 
         $sortField = $request->query('sort', 'updated_at'); // default sort field

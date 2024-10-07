@@ -16,11 +16,11 @@ Route::get('/', function () {
 //    return view('subjects');
 //})->name('subjects.index');
 
-Route::get('/go-back', function() {
+Route::get('/go-back', function () {
     return back();
 })->name('goBack');
 
-Route::get('/test-email', function() {
+Route::get('/test-email', function () {
     return view('emails.transactional');
 });
 
@@ -37,7 +37,7 @@ Route::get('/juicio/caso/{id}', [CaseController::class, 'showCaseByTrial'])->nam
 
 
 Route::get('/casos', [CaseController::class, 'list'])->name('cases.list');
-Route::get('/etiquetas/caso/{id}',[CaseController::class,'showByTag'])->name('cases.showByTag');
+Route::get('/etiquetas/caso/{id}', [CaseController::class, 'showByTag'])->name('cases.showByTag');
 
 Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
@@ -65,8 +65,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::group(['middleware' => ['can:eliminar usuarios']], function () {
-          Route::delete('/dashboard/usuarios/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-          Route::delete("/dashboard/selected-users", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
+        Route::delete('/dashboard/usuarios/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::delete("/dashboard/selected-users", [UserController::class, 'deleteSelected'])->name('users.deleteSelected');
     });
 
     Route::group(['middleware' => ['can:desactivar usuarios']], function () {
@@ -100,6 +100,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::group(['middleware' => ['can:ver juicios']], function () {
         Route::get('/dashboard/juicios', [TrialController::class, 'index'])->name('trials.index');
         Route::get('/dashboard/juicios/{trial}', [TrialController::class, 'show'])->name('trials.show');
+        Route::get('/dashboard/{materia}/juicios', [TrialController::class, 'getTrialsBySubject']);
     });
     Route::get("/trials/search", [TrialController::class, 'search'])->name('trials.search');
 
@@ -137,7 +138,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/casos/archivados', [CaseController::class, 'archived'])->name('cases.archived');
     Route::post('dashboard/casos/{case}/restaurar', [CaseController::class, 'restore'])->name('cases.restore');
     Route::post('dashboard/casos/{case}/force-delete', [CaseController::class, 'forceDelete'])->name('cases.forceDelete');
-
 });
 
 
@@ -156,4 +156,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
