@@ -26,6 +26,16 @@ class CaseController extends Controller
         return view('cases.index', compact('cases','trials'));
     }
 
+    public function archived(Request $request){
+        $sortField = $request->query('sort', 'updated_at'); // default sort field
+        $sortDirection = $request->query('direction', 'desc'); // default sort direction
+
+        $cases = LegalCase::onlyTrashed()
+            ->orderBy($sortField, $sortDirection)
+            ->paginate(10);
+        return view('cases.archived', compact('cases'));
+    }
+
     public function create(){
         $trials = Trial::all();
         $users = User::orderBy('last_name','asc')
@@ -432,6 +442,8 @@ class CaseController extends Controller
         return view('cases.list',compact('cases'));
     }
 
+
+
     public function review(Request $request){
         $status = $request->query('status', 'pending'); // default sort field
 
@@ -527,12 +539,33 @@ class CaseController extends Controller
 
 
 
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         $case = LegalCase::findOrFail($id);
         $case->delete();
 
+        if ($request->query('from')) {
+            return redirect()->route('cases.mycases', Auth::id())->with('success', 'Tu caso se ha eliminado exitosamente.');
+        }
+
         return redirect()->back()->with('success', 'Caso eliminado exitosamente.');
+    }
+
+    public function restore($id){
+        $case = LegalCase::onlyTrashed()->findOrFail($id);
+        $case->restore();
+
+        return redirect()->back()->with('success', 'Caso restaurado exitosamente.');
+
+    }
+
+    public function forceDelete($id)
+    {
+        $case = LegalCase::onlyTrashed()->findOrFail($id);
+        $case->forceDelete();
+
+        return redirect()->back()->with('success', 'Caso eliminado definitivamente.');
+
     }
 
 }

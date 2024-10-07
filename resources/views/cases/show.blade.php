@@ -18,45 +18,66 @@
                 <h2 class="text-4xl font-extrabold ml-4">{{$case->title}}</h2>
             </div>
 
-            <div class="flex items-center space-x-4">
-                @if (Auth::check())
-                    @if(Auth::user()->can('aprobar casos') && $case->status != 'Aceptado')
-                        <form action="{{route('cases.approve',$case->id)}}" method="post">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit"
-                                    class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-green-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M5 13l4 4L19 7"/>
-                                </svg>
-                                Aprobar
-                            </button>
-                        </form>
+            <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+                <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                    @if (Auth::check())
+                        @if(Auth::user()->can('aprobar casos') && $case->status != 'Aceptado')
+                            <div>
+                                <form action="{{route('cases.approve',$case->id)}}" method="post">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                            class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-green-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+                                             viewBox="0 0 24 24"
+                                             stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Aprobar
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                        @if(Auth::user()->can('rechazar casos') && $case->status != 'Rechazado')
+                            <div>
+                                <button type="button" data-modal-target="rejection-modal"
+                                        data-modal-toggle="rejection-modal"
+                                        class="flex items-center px-4 py-2 bg-red-650 hover:bg-red-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-red-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                    Rechazar
+                                </button>
+                            </div>
+                        @endif
+                        @if((Auth::user()->can('editar cualquier caso') || (Auth::user()->can('editar casos propios') && Auth::user()->id === $case->user->id)) && $case->status != 'Aceptado')
+                            <div>
+                                <a href="{{route('cases.edit',$case->id)}}"
+                                   class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5">
+                                    <img src="{{asset('svg/edit.svg')}}" class="size-7 mr-3" alt="Editar icon">
+                                    <p>Editar caso</p>
+                                </a>
+                            </div>
+                        @endif
+                        @can('eliminar casos propios')
+                            <div>
+                                <form action="{{route('cases.destroy',$case->id)}}?from=show" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                <button type="submit"
+                                   class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5">
+                                    <img src="{{asset('svg/delete.svg')}}" class="size-7 mr-3" alt="Editar icon">
+                                    Eliminar caso
+                                </button>
+                                </form>
+                            </div>
+                        @endcan
                     @endif
-                    @if(Auth::user()->can('rechazar casos') && $case->status != 'Rechazado')
-                        <button type="button" data-modal-target="rejection-modal" data-modal-toggle="rejection-modal"
-                                class="flex items-center px-4 py-2 bg-red-650 hover:bg-red-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-red-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                            Rechazar
-                        </button>
-                    @endif
-                    @if((Auth::user()->can('editar cualquier caso') || (Auth::user()->can('editar casos propios') && Auth::user()->id === $case->user->id)) && $case->status != 'Aceptado')
-                        <a href="{{route('cases.edit',$case->id)}}"
-                           class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
-                            <img src="{{asset('svg/edit.svg')}}" class="size-7 mr-3" alt="Editar icon">
-                            <p>Editar caso</p>
-                        </a>
-                    @endif
-                @endif
-
+                </div>
             </div>
         </div>
         @if (Auth::check() && $case->status == 'Rechazado')
@@ -180,96 +201,99 @@
     </div>
 
     @if(Auth::check())
-    <!-- to Reject modal -->
-    <div id="rejection-modal" tabindex="-1" aria-hidden="true"
-         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Rechazar caso
-                    </h3>
-                    <button type="button"
-                            class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                            data-modal-hide="rejection-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                             viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <div class="p-4 md:p-5">
-                    <form class="space-y-4" action="{{ route('cases.reject', $case->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <div>
-                            <label for="rejection_message"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Explica por qué
-                                rechazas este caso</label>
-                            <textarea name="rejection_message" id="rejection_message" rows="10"
-                                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                      required>{{ old('rejection_message') }}</textarea>
-                        </div>
-                        <button type="submit"
-                                class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            Rechazar
+        <!-- to Reject modal -->
+        <div id="rejection-modal" tabindex="-1" aria-hidden="true"
+             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Rechazar caso
+                        </h3>
+                        <button type="button"
+                                class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                data-modal-hide="rejection-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
                         </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- to Reject modal -->
-    <div id="see-rejection-modal" tabindex="-1" aria-hidden="true"
-         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Motivo de rechazo
-                    </h3>
-                    <button type="button"
-                            class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                            data-modal-hide="see-rejection-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                             viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <div class="p-4 md:p-5">
-                    <div class="pb-5">
-                        <label for="rejection_message"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            @if(Auth::check())
-                                @if(Auth::user()->id === $case->user->id)
-                                    Tu
-                                @else
-                                    Este
-                                @endif
-
-                            @endif
-                            caso fue rechazado debido al siguiente motivo:
-                        </label>
-                        <textarea name="rejection_message" id="rejection_message" rows="10"
-                                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                  readonly>{{$case->rejection_message}}</textarea>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-4 md:p-5">
+                        <form class="space-y-4" action="{{ route('cases.reject', $case->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <div>
+                                <label for="rejection_message"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Explica por
+                                    qué
+                                    rechazas este caso</label>
+                                <textarea name="rejection_message" id="rejection_message" rows="10"
+                                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                          required>{{ old('rejection_message') }}</textarea>
+                            </div>
+                            <button type="submit"
+                                    class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                Rechazar
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    @endif
-    </div>
+        <!-- to Reject modal -->
+        <div id="see-rejection-modal" tabindex="-1" aria-hidden="true"
+             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Motivo de rechazo
+                        </h3>
+                        <button type="button"
+                                class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                data-modal-hide="see-rejection-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-4 md:p-5">
+                        <div class="pb-5">
+                            <label for="rejection_message"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                @if(Auth::check())
+                                    @if(Auth::user()->id === $case->user->id)
+                                        Tu
+                                    @else
+                                        Este
+                                    @endif
+
+                                @endif
+                                caso fue rechazado debido al siguiente motivo:
+                            </label>
+                            <textarea name="rejection_message" id="rejection_message" rows="10"
+                                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                      readonly>{{$case->rejection_message}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
 </x-app-layout>
 
 <script src="{{asset('js/renderTiny.js')}}"></script>

@@ -1,10 +1,4 @@
 <x-app-layout>
-    <style>
-        .modal-body {
-            max-height: calc(100vh - 210px);
-            overflow-y: auto;
-        }
-    </style>
     <div class="flex">
         <x-sidebar/>
 
@@ -50,6 +44,10 @@
 
 
             <div class="p-4 md:p-10 bg-white dark:bg-gray-900">
+                <div class="flex items-center mb-3">
+                    <x-go-back route="{{route('cases.index') }}"/>
+                    <p class="text-2xl font-bold ml-2">Casos archivados</p>
+                </div>
                 <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                     <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
                         @can('eliminar cualquier caso')
@@ -98,35 +96,21 @@
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                     aria-labelledby="dropdownActionButton2">
                                     <li>
-                                        <a href="{{route('cases.index')}}?sort=updated_at&direction=desc"
+                                        <a href="{{route('cases.archived')}}?sort=date&direction=desc"
                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                             recientes</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('cases.index')}}?sort=updated_at&direction=asc"
+                                        <a href="{{route('cases.archived')}}?sort=date&direction=asc"
                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                             antiguos</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <div>
-                            <a href="{{route('cases.archived')}}"
-                                class="w-full sm:w-auto inline-flex items-center justify-center text-white bg-zinc-700 border-solid focus:outline-none hover:bg-zinc-900 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
-                                type="button">
-                                Archivados
-                            </a>
-                        </div>
                     </div>
 
                     <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                        @can('crear casos')
-                            <a href="{{route('cases.create')}}"
-                               class="w-full sm:w-auto flex items-center justify-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5">
-                                <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
-                                <p>Agregar Caso</p>
-                            </a>
-                        @endcan
                         <div class="relative w-full sm:w-80">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -137,7 +121,7 @@
                             </div>
                             <input type="text" id="search" name="search"
                                    class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                   placeholder="Buscar casos">
+                                   placeholder="Buscar casos archivados">
                         </div>
                     </div>
                 </div>
@@ -189,7 +173,7 @@
                     <th scope="col" class="stat px-6 py-3">
                         Estado
                     </th>
-                    @if(Auth::user()->can('editar cualquier caso'))
+                    @if(Auth::user()->can('restaurar casos') || Auth::user()->can('eliminar casos definitivamente'))
                         <th scope="col" class="px-6 py-3">
                             Acción
                         </th>
@@ -197,7 +181,7 @@
                 </tr>
                 </thead>
                 <tbody id="cases-data">
-                     @include('cases.partials.row', ['cases' => $cases])
+                    @include('cases.partials.archived-row', ['cases' => $cases])
                 </tbody>
 
             </table>

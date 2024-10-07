@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Tags\HasTags;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LegalCase extends Model
 {
-    use HasFactory, HasTags;
+    use HasFactory, HasTags, SoftDeletes;
 
     protected $table = 'cases';
     protected $fillable = [

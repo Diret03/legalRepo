@@ -119,13 +119,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Cases routes
-    Route::get('/dashboard/cases', [CaseController::class, 'index'])->name('cases.index');
+    Route::get('/dashboard/casos', [CaseController::class, 'index'])->name('cases.index');
     Route::get('/dashboard/casos/crear', [CaseController::class, 'create'])->name('cases.create');
-    Route::post('/dashboard/cases', [CaseController::class, 'store'])->name('cases.store');
-
-    Route::get('/dashboard/cases/{case}/edit', [CaseController::class, 'edit'])->name('cases.edit');
-    Route::put('/dashboard/cases/{case}', [CaseController::class, 'update'])->name('cases.update');
-    Route::delete('/dashboard/cases/{case}', [CaseController::class, 'destroy'])->name('cases.destroy');
+    Route::post('/dashboard/casos', [CaseController::class, 'store'])->name('cases.store');
+    Route::get('/dashboard/casos/{case}/edit', [CaseController::class, 'edit'])->name('cases.edit');
+    Route::put('/dashboard/casos/{case}', [CaseController::class, 'update'])->name('cases.update');
+    Route::delete('/dashboard/casos/{case}', [CaseController::class, 'destroy'])->name('cases.destroy');
     Route::delete("/dashboard/selected-cases", [CaseController::class, 'deleteSelected'])->name('cases.delete');
     Route::get('/cases/tags', [CaseController::class, 'getAllTags']);
     Route::get('/cases/{id}/tags', [CaseController::class, 'getTags']);
@@ -133,6 +132,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/cases/{id}/approve', [CaseController::class, 'approve'])->name('cases.approve');
     Route::patch('/cases/{id}/reject', [CaseController::class, 'reject'])->name('cases.reject');
     Route::get('/dashboard/mis-casos/{user_id}', [CaseController::class, 'myCases'])->name('cases.mycases');
+
+
+    Route::get('/dashboard/casos/archivados', [CaseController::class, 'archived'])->name('cases.archived');
+    Route::post('dashboard/casos/{case}/restaurar', [CaseController::class, 'restore'])->name('cases.restore');
+    Route::post('dashboard/casos/{case}/force-delete', [CaseController::class, 'forceDelete'])->name('cases.forceDelete');
+
 });
 
 

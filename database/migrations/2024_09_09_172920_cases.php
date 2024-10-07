@@ -26,6 +26,7 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->text('rejection_message')->nullable();
 
+            $table->softDeletes();
 
             //constraints
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
