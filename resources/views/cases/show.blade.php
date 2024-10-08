@@ -1,13 +1,15 @@
 <x-app-layout>
 
-    <div class="container mx-auto px-4 my-12 min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 my-8 min-h-screen flex flex-col">
         @if ($accessedBy === 'trial')
             {{ Breadcrumbs::render('caseByTrial', $case) }}
         @elseif ($accessedBy === 'tag')
             {{ Breadcrumbs::render('caseByTag', $case, $tag) }}
         @endif
-        <div class="flex items-center flex-wrap mb-8 justify-between">
-            <div class="flex items-center">
+
+
+        <div class="flex flex-col space-y-4 md:space-y-6 mb-8">
+            <div class="flex items-center flex-wrap">
                 @if ($accessedBy === 'trial')
                     <x-go-back route="{{ route('cases.showByTrial',$case->trial->id) }}"/>
                 @elseif ($accessedBy === 'tag')
@@ -15,71 +17,64 @@
                 @else
                     <x-go-back route="{{ url()->previous() }}"/>
                 @endif
-                <h2 class="text-4xl font-extrabold ml-4">{{$case->title}}</h2>
+                <h2 class="text-2xl md:text-4xl font-extrabold ml-4 break-words">{{$case->title}}</h2>
             </div>
 
-            <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-                <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                    @if (Auth::check())
-                        @if(Auth::user()->can('aprobar casos') && $case->status != 'Aceptado')
-                            <div>
-                                <form action="{{route('cases.approve',$case->id)}}" method="post">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit"
-                                            class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-green-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M5 13l4 4L19 7"/>
-                                        </svg>
-                                        Aprobar
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
-                        @if(Auth::user()->can('rechazar casos') && $case->status != 'Rechazado')
-                            <div>
-                                <button type="button" data-modal-target="rejection-modal"
-                                        data-modal-toggle="rejection-modal"
-                                        class="flex items-center px-4 py-2 bg-red-650 hover:bg-red-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-red-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
-                                         viewBox="0 0 24 24"
-                                         stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M6 18L18 6M6 6l12 12"/>
-                                    </svg>
-                                    Rechazar
-                                </button>
-                            </div>
-                        @endif
-                        @if((Auth::user()->can('editar cualquier caso') || (Auth::user()->can('editar casos propios') && Auth::user()->id === $case->user->id)) && $case->status != 'Aceptado')
-                            <div>
-                                <a href="{{route('cases.edit',$case->id)}}"
-                                   class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5">
-                                    <img src="{{asset('svg/edit.svg')}}" class="size-7 mr-3" alt="Editar icon">
-                                    <p>Editar caso</p>
-                                </a>
-                            </div>
-                        @endif
-                        @can('eliminar casos propios')
-                            <div>
-                                <form action="{{route('cases.destroy',$case->id)}}?from=show" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                <button type="submit"
-                                   class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5">
-                                    <img src="{{asset('svg/delete.svg')}}" class="size-7 mr-3" alt="Editar icon">
-                                    Eliminar caso
-                                </button>
-                                </form>
-                            </div>
-                        @endcan
+            <div class="flex flex-wrap gap-2">
+
+                    @if(Auth::check() && (Auth::user()->can('aprobar casos') && $case->status != 'Aceptado'))
+                        <form action="{{route('cases.approve',$case->id)}}" method="post">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                    class="flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-green-300 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                     viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Aprobar
+                            </button>
+                        </form>
                     @endif
-                </div>
+                    @if(Auth::check() && (Auth::user()->can('rechazar casos') && $case->status != 'Rechazado'))
+                        <button type="button" data-modal-target="rejection-modal" data-modal-toggle="rejection-modal"
+                                class="flex items-center px-3 py-1.5 bg-red-650 hover:bg-red-700 text-white rounded-md focus:outline-none focus:ring-4 focus:ring-red-300 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                            Rechazar
+                        </button>
+                    @endif
+                    <a href="{{route('cases.pdf',$case->id)}}"
+                       class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-sm px-3 py-1.5">
+                        <img src="{{asset('svg/download-pdf.svg')}}" class="h-5 w-5 mr-1" alt="Descargar icon">
+                        Descargar
+                    </a>
+                    @if(Auth::check() && ((Auth::user()->can('editar cualquier caso') || (Auth::user()->can('editar casos propios') && Auth::user()->id === $case->user->id)) && $case->status != 'Aceptado'))
+                        <a href="{{route('cases.edit',$case->id)}}"
+                           class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-sm px-3 py-1.5">
+                            <img src="{{asset('svg/edit.svg')}}" class="h-5 w-5 mr-1" alt="Editar icon">
+                            Editar caso
+                        </a>
+                    @endif
+                    @if(Auth::check() && (Auth::user()->can('eliminar casos propios') && $case->user_id == Auth::id()))
+                        <form action="{{route('cases.destroy',$case->id)}}?from=show" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-sm px-3 py-1.5">
+                                <img src="{{asset('svg/delete.svg')}}" class="h-5 w-5 mr-1" alt="Eliminar icon">
+                                Eliminar caso
+                            </button>
+                        </form>
+                    @endif
+
             </div>
         </div>
+
         @if (Auth::check() && $case->status == 'Rechazado')
             <div id="alert-2"
                  class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
@@ -302,5 +297,4 @@
         applyTailwindStyles('default-tab-content');
 
     });
-
 </script>

@@ -43,6 +43,8 @@ Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
 Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.search');
 Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
+Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -138,6 +140,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/casos/archivados', [CaseController::class, 'archived'])->name('cases.archived');
     Route::post('dashboard/casos/{case}/restaurar', [CaseController::class, 'restore'])->name('cases.restore');
     Route::post('dashboard/casos/{case}/force-delete', [CaseController::class, 'forceDelete'])->name('cases.forceDelete');
+});
+
+Route::get('/caso-pdf', function () {
+    $case = \App\Models\LegalCase::findOrFail(53);
+    return view('pdf.case', ['case' => $case]);
 });
 
 

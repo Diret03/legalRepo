@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\CaseAccepted;
 use Spatie\Tags\Tag;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CaseController extends Controller
 {
@@ -567,5 +568,26 @@ class CaseController extends Controller
         $case->forceDelete();
 
         return redirect()->back()->with('success', 'Caso eliminado definitivamente.');
+    }
+
+    public function generatePDF($id){
+
+        $case = LegalCase::findOrFail($id);
+
+        $data = [
+            'case' => $case,
+        ];
+
+        $pdf = Pdf::loadView('pdf.case', $data)
+            ->setPaper('A4', 'landscape');
+
+        $pdfName = "Caso: " . $case->title.".pdf";
+//
+        return $pdf->download($pdfName);
+
+//        Pdf::view('pdf.case', ['case' => $case])
+//            ->save('/some/directory/invoice.pdf');
+
+
     }
 }
