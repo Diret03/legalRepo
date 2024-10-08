@@ -10,22 +10,29 @@ use App\Models\LegalCase;
 class TagController extends Controller
 {
 
-//    public function list()
-//    {
-//        $tags = Tag::all()->sortBy('name')->groupBy(function ($tag) {
-//            return strtoupper(substr($tag->name, 0, 1));
-//        })->paginate(5);
-////        dd($tags);
-//        return view('tags', compact('tags'));
-//    }
+    //    public function list()
+    //    {
+    //        $tags = Tag::all()->sortBy('name')->groupBy(function ($tag) {
+    //            return strtoupper(substr($tag->name, 0, 1));
+    //        })->paginate(5);
+    ////        dd($tags);
+    //        return view('tags', compact('tags'));
+    //    }
 
     public function list()
     {
         // Retrieve tags that are associated with at least one accepted case
         $acceptedTags = Tag::whereHas('cases', function ($query) {
             $query->where('status', 'accepted');
-        })->get()->sortBy('name');
+        })
+            ->withCount(['cases as accepted_cases_count' => function ($query) {
+                $query->where('status', 'accepted');
+            }])
+            ->get()
+            ->sortBy('name');
 
+
+        // dd($acceptedTags);
 
         // Group the accepted tags by the first letter of their name
         $groupedTags = $acceptedTags->groupBy(function ($tag) {
@@ -47,5 +54,4 @@ class TagController extends Controller
 
         return view('tags', compact('paginatedTags'));
     }
-
 }
