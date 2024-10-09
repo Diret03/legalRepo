@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página no encontrada</title>
+    <title>Error del servidor</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -34,17 +34,18 @@
 <body class="h-full bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
     <section class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full mx-4">
         <div class="py-12 px-6 text-center">
-            <div class=" mb-8 drop-shadow-xl animate-float lg:flex lg:justify-center">
-                <img src="{{ asset('img/broken-justice.png') }}" alt="Balanza de justicia rota"
-                    class="ml-4 lg:ml-24 w-96 h-96 object-contain">
+            <div class=" mb-8 drop-shadow-xl animate-float">
+                <img src="{{ asset('svg/server-error.svg') }}" alt="Prohibido icon"
+                    class="mx-auto w-96 hd-96 object-contain">
             </div>
             <h1
                 class="mb-6 text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800">
-                404</h1>
-            <h2 class="mb-4 text-4xl font-bold text-gray-800">Página no encontrada...</h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Lo sentimos, no pudimos encontrar la página
-                solicitada.</p>
-            <p class="mb-8 text-xl text-gray-600 max-w-2xl mx-auto">Puedes encontrar más contenido al regresar a:</p>
+                500</h1>
+            <h2 class="mb-4 text-4xl font-bold text-gray-800">Error interno del servidor</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">El servidor no pudo completar tu solicitud.</p>
+            <p class="mb-8 text-xl text-gray-600 max-w-2xl mx-auto">Puedes
+                intentar recargar la página o encontrar
+                más contenido al regresar a:</p>
             <div class="flex justify-center gap-6 my-8">
                 <a @if (url()->previous() != url()->current()) href="{{ url()->previous() }}"
                 @else

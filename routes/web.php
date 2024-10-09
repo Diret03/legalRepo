@@ -46,9 +46,13 @@ Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.sear
 Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
 Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
 
-//Route::get('/error-404', function () {
-//    return view('errors.404');
-//});
+Route::get('/error-500', function () {
+    abort(500);
+});
+
+Route::get('/error-401', function () {
+    abort(401);
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::group(['middleware' => ['can:ver dashboard']], function () {
