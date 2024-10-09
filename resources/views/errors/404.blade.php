@@ -30,7 +30,13 @@
         <h2 class="mb-4 text-4xl font-bold text-gray-800">Página no encontrada...</h2>
         <p class="mb-8 text-xl text-gray-600 max-w-2xl mx-auto">Lo sentimos, no pudimos encontrar la página solicitada. Puedes encontrar más contenido al regresar a:</p>
         <div class="flex justify-center gap-6 my-8">
-            <a href="{{url()->previous()}}" class="group flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+            <a
+                @if(url()->previous() != url()->current())
+                    href="{{url()->previous()}}"
+                @else
+                    href="{{route('home')}}"
+                @endif
+               class="group flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
                 <img src="{{asset('svg/return.svg')}}" alt="Regresa icono" class="w-6 h-6 invert transition-transform duration-300 group-hover:-translate-x-1">
                 <span>Página anterior</span>
             </a>
