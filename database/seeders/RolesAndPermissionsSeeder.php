@@ -18,6 +18,10 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
+
+        //dashboard
+        Permission::create(['name' => 'ver dashboard']);
+
         //casos
         Permission::create(['name' => 'ver casos']);
         Permission::create(['name' => 'ver casos propios']);
@@ -30,6 +34,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'aprobar casos']);
         Permission::create(['name' => 'rechazar casos']);
         Permission::create(['name' => 'reportar casos']);
+        Permission::create(['name' => 'ver casos archivados']);
         Permission::create(['name' => 'restaurar casos']);
         Permission::create(['name' => 'eliminar casos definitivamente']);
 
@@ -60,7 +65,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $roleAdmin = Role::create(['name' => 'administrador'])
             ->givePermissionTo([
-                'ver casos', 'eliminar cualquier caso', 'restaurar casos', 'eliminar casos definitivamente',
+                'ver dashboard',
+                'ver casos', 'eliminar cualquier caso', 'restaurar casos', 'eliminar casos definitivamente', 'ver casos archivados',
                 'crear materias', 'editar materias', 'eliminar materias', 'ver materias',
                 'crear juicios', 'editar juicios', 'eliminar juicios', 'ver juicios',
                 'crear usuarios', 'editar usuarios', 'eliminar usuarios', 'ver usuarios', 'activar usuarios', 'desactivar usuarios',

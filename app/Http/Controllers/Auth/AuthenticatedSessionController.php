@@ -30,8 +30,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if(Auth::user()->can('crear casos')){
+        if(Auth::user()->can('ver casos propios')){
             return redirect()->intended(route('cases.mycases',Auth::id()));
+        }
+
+        if(Auth::user()->can('revisar casos')){
+            return redirect()->intended(route('cases.review'));
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

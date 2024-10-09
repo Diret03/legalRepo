@@ -19,7 +19,7 @@ class UserController extends Controller
 
         $users = User::orderBy($sortField, $sortDirection)->paginate(10);
         $roles = Role::all()->pluck('name');
-//        dd($roles);
+
         return view('users.index', compact('users', 'roles'));
     }
 

@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
 <nav x-data="{ open: false }" class="bg-red-650 border-b border-black-100" style="border-bottom-width: 0px;">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,8 +19,21 @@
                 </div>
                 @if (Route::has('login'))
                     @auth
+                        @php
+                            $dashboardLink = '#'; // Default value
+
+                            if (Auth::user()->can('ver dashboard')) {
+                                $dashboardLink = route('dashboard');
+                            } elseif (Auth::user()->can('ver casos propios')) {
+                                $dashboardLink = route('cases.mycases', Auth::id());
+                            } elseif (Auth::user()->can('revisar casos')) {
+                                $dashboardLink = route('cases.review');
+                            }
+                        @endphp
                         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard') || request()->is('dashboard/*')">
+                            <x-nav-link
+                                :href="$dashboardLink"
+                                :active="request()->routeIs('dashboard') || request()->is('dashboard/*')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
                         </div>

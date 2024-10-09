@@ -6,6 +6,7 @@ use App\Http\Controllers\TrialController;
 use App\Http\Controllers\CaseController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,9 +46,14 @@ Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.sear
 Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
 Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
 
+//Route::get('/error-404', function () {
+//    return view('errors.404');
+//});
 
 Route::middleware(['auth', 'verified'])->group(function () {
-
+    Route::group(['middleware' => ['can:ver dashboard']], function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    });
     // User routes
     Route::group(['middleware' => ['can:ver usuarios']], function () {
         Route::get('/dashboard/usuarios', [UserController::class, 'index'])->name('users.index');
@@ -153,9 +159,6 @@ Route::get('/inicio', function () {
     return view('prueba');
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

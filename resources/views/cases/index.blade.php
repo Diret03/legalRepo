@@ -111,11 +111,13 @@
                             </div>
                         </div>
                         <div>
-                            <a href="{{route('cases.archived')}}"
-                                class="w-full sm:w-auto inline-flex items-center justify-center text-white bg-zinc-700 border-solid focus:outline-none hover:bg-zinc-900 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
-                                type="button">
-                                Archivados
-                            </a>
+                            @can('ver casos archivados')
+                                <a href="{{route('cases.archived')}}"
+                                    class="w-full sm:w-auto inline-flex items-center justify-center text-white bg-zinc-700 border-solid focus:outline-none hover:bg-zinc-900 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5"
+                                    type="button">
+                                    Archivados
+                                </a>
+                            @endcan
                         </div>
                     </div>
 

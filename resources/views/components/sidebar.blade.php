@@ -16,6 +16,14 @@
     </div>
     <nav class="flex flex-col gap-1 px-2 pb-2 font-sans text-base font-normal text-white">
 
+        @can('ver dashboard')
+            <x-dash-link
+                href="{{ route('dashboard') }}"
+                icon="svg/summary.svg"
+                title="Resumen"
+                :activeRoutes="['dashboard']"
+            />
+        @endcan
         @can('ver casos propios')
             <x-dash-link
                 href="{{ route('cases.mycases', Auth::user()->id) }}"
