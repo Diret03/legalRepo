@@ -23,7 +23,7 @@
                 </div>
             @else
                 @foreach($cases as $case)
-                    <div class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4">
+                    <div class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4 transform transition-transform duration-300 hover:translate-x-2 hover:-translate-y-2 hover:shadow-lg">
 
                         <a href="{{route('trial.cases.show',$case->id)}}">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 underline">{{$case->title}}</h5>

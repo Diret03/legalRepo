@@ -39,6 +39,37 @@ class CaseController extends Controller
         return view('cases.archived', compact('cases'));
     }
 
+    public function list(Request $request)
+    {
+        $sortField = $request->query('sort', 'updated_at'); // default sort field
+        $sortDirection = $request->query('direction', 'desc'); // default sort direction
+
+        $cases = LegalCase::where('status', 'accepted')
+            ->orderBy($sortField, $sortDirection)
+            ->paginate(10);
+
+        $trials = Trial::withCount(['cases' => function ($query) {
+            $query->where('status', 'accepted');
+        }])->orderBy('name', 'asc')->get();
+
+        // Get subjects along with the count of accepted cases via trials
+        $subjects = Subject::with(['trials' => function ($query) {
+            $query->withCount(['cases' => function ($caseQuery) {
+                $caseQuery->where('status', 'accepted');
+            }]);
+        }])->get();
+
+        // Add a 'cases_count' attribute to each subject by summing the cases of its related trials
+        foreach ($subjects as $subject) {
+            $subject->cases_count = $subject->trials->sum('cases_count');
+        }
+
+        //        $subjects = Subject::all();
+
+        // Return the data to the view
+        return view('cases.list', compact('cases', 'trials', 'subjects'));
+    }
+
     public function create()
     {
         $trials = Trial::all();
@@ -180,22 +211,24 @@ class CaseController extends Controller
         $output = null;
 
         if ($request->ajax()) {
-            // Start the query
+            // Start the query with an initial condition for accepted cases
             $query = LegalCase::query()->where('status', 'accepted');
 
-            // Apply the filters if they exist
-            if ($request->has('subject_ids') && !empty($request->input('subject_ids'))) {
+            // Check if the filters exist, and apply them cumulatively
+            $query->where(function ($query) use ($request) {
+
                 // Filter cases where the trial is related to the subject
-                $query->whereHas('trial.subject', function ($subjectQuery) use ($request) {
-                    $subjectQuery->whereIn('id', $request->input('subject_ids'));
-                });
-            }
+                if ($request->has('subject_ids') && !empty($request->input('subject_ids'))) {
+                    $query->whereHas('trial.subject', function ($subjectQuery) use ($request) {
+                        $subjectQuery->whereIn('id', $request->input('subject_ids'));
+                    });
+                }
 
-            if ($request->has('trial_ids') && !empty($request->input('trial_ids'))) {
-                $query->whereIn('trial_id', $request->input('trial_ids'));
-            }
-
-
+                // Add an OR condition to include cases that match the selected trial, even if not related to the selected subject
+                if ($request->has('trial_ids') && !empty($request->input('trial_ids'))) {
+                    $query->orWhereIn('trial_id', $request->input('trial_ids'));
+                }
+            });
 
             // Get the results
             $cases = $query->get();
@@ -407,32 +440,7 @@ class CaseController extends Controller
         return view('cases.show', compact('case', 'tag', 'accessedBy'));
     }
 
-    public function list()
-    {
-        $cases = LegalCase::where('status', 'accepted')
-            ->paginate(10);
 
-        $trials = Trial::withCount(['cases' => function ($query) {
-            $query->where('status', 'accepted');
-        }])->orderBy('name', 'asc')->get();
-
-        // Get subjects along with the count of accepted cases via trials
-        $subjects = Subject::with(['trials' => function ($query) {
-            $query->withCount(['cases' => function ($caseQuery) {
-                $caseQuery->where('status', 'accepted');
-            }]);
-        }])->get();
-
-        // Add a 'cases_count' attribute to each subject by summing the cases of its related trials
-        foreach ($subjects as $subject) {
-            $subject->cases_count = $subject->trials->sum('cases_count');
-        }
-
-        //        $subjects = Subject::all();
-
-        // Return the data to the view
-        return view('cases.list', compact('cases', 'trials', 'subjects'));
-    }
 
 
     public function listUser()
