@@ -46,6 +46,10 @@ Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.sear
 Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
 Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
 
+Route::get('/acerca', function () {
+    return view('about');
+})->name('about');
+
 Route::get('/error-500', function () {
     abort(500);
 });
