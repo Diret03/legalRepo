@@ -1,14 +1,14 @@
-<x-app-layout>
+<x-app-dash-layout>
     <div class="flex md:flex-row">
         <x-sidebar />
         <div class="flex-1 p-4 md:p-10">
-            <x-success-error-alert/>
+            <x-success-error-alert />
             <div class="max-w-full mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 p-5">
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-700">
                     <h3 class="text-3xl font-semibold text-gray-900 dark:text-white">
                         Crear caso
                     </h3>
-                    <x-go-back route="{{ route('cases.mycases',Auth::id()) }}" />
+                    <x-go-back route="{{ route('cases.mycases', Auth::id()) }}" />
                 </div>
                 <div class="p-4 md:p-5">
                     <form id="case-form" class="space-y-4" method="POST" action="{{ route('cases.store') }}"
@@ -108,8 +108,8 @@
                                 <li class="me-2" role="presentation">
                                     <button
                                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                                        id="resolution-tab" data-tabs-target="#resolution" type="button"
-                                        role="tab" aria-controls="resolution" aria-selected="false">Resolución
+                                        id="resolution-tab" data-tabs-target="#resolution" type="button" role="tab"
+                                        aria-controls="resolution" aria-selected="false">Resolución
                                     </button>
                                 </li>
                                 <li role="presentation">
@@ -243,7 +243,7 @@
                 });
             }
 
-            function fetchTrials(){
+            function fetchTrials() {
                 fetch('/dashboard/' + subjectSelect.value + '/juicios')
                     .then(response => response.json())
                     .then(data => {
@@ -262,4 +262,4 @@
         });
     </script>
 
-</x-app-layout>
+</x-app-dash-layout>
