@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('prueba');
-});
+})->name('/');
 
 //Route::get('/registros-materias', function () {
 //    return view('subjects');
