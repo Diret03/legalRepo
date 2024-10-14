@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-dash-layout>
     <div class="flex md:flex-row">
         <x-sidebar />
         <div class="flex-1 p-4 md:p-10">
@@ -268,4 +268,4 @@
             });
         });
     </script>
-</x-app-layout>
+</x-app-dash-layout>

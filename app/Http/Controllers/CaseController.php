@@ -473,7 +473,13 @@ class CaseController extends Controller
         $case->save();
 
         $user = User::findOrFail($case->user_id);
-        $user->notify(new CaseAccepted($case));
+
+        try {
+            $user->notify(new CaseAccepted($case));
+
+        }catch (\Exception $exception){
+            return redirect()->route('cases.review')->with('info', "Juicio " . $id . " aprobado correctamente. Sin embargo, no se pudo enviar la notificación por correo electrónico al digitador debido a que tiene un correo no válido.");
+        }
 
         return redirect()->route('cases.review')->with('success', "Juicio " . $id . " aprobado correctamente.");
     }
@@ -512,7 +518,13 @@ class CaseController extends Controller
         $case->save();
 
         $user = User::findOrFail($case->user_id);
-        $user->notify(new CaseAccepted($case));
+
+        try {
+            $user->notify(new CaseAccepted($case));
+
+        }catch (\Exception $exception){
+            return redirect()->route('cases.review')->with('info', "Juicio " . $id . " rechazado correctamente. Sin embargo, no se pudo enviar la notificación por correo electrónico al digitador debido a que tiene un correo no válido.");
+        }
 
         return redirect()->route('cases.review')->with('success', "Juicio " . $id . " rechazado correctamente.");
     }

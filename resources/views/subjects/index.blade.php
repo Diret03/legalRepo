@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-dash-layout>
 
     <div class="flex">
         <x-sidebar/>
@@ -191,7 +191,7 @@
         </div>
 
     </div>
-</x-app-layout>
+</x-app-dash-layout>
 
 @can('crear materias')
     <!-- Add subject modal -->

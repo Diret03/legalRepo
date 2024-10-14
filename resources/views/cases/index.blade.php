@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-dash-layout>
     <style>
         .modal-body {
             max-height: calc(100vh - 210px);
@@ -210,7 +210,7 @@
         </div>
     </div>
 
-</x-app-layout>
+</x-app-dash-layout>
 
 <script src="{{asset('js/renderTiny.js')}}"></script>
 <script>

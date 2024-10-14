@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-dash-layout>
 
     <div class="flex">
         <x-sidebar/>
@@ -184,7 +184,7 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-app-dash-layout>
 
 @can('crear juicios')
     <!-- Add trial modal -->

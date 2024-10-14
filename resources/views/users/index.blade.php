@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-dash-layout>
 
     <div class="flex">
         <x-sidebar/>
@@ -201,7 +201,7 @@
         </div>
 
     </div>
-</x-app-layout>
+</x-app-dash-layout>
 
 <!-- Add user modal -->
 <div id="authentication-modal" tabindex="-1" aria-hidden="true"

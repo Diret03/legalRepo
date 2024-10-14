@@ -21,13 +21,13 @@
 
         <x-head.tinymce-config/>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100" style="margin-bottom: -25%;">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-gray-100">
+        @include('layouts.navigation')
+        <div class="container mx-auto px-2 sm:px-4 lg:px-6 max-w-7xl py-8" >
 
 
             <!-- Page Content -->
-            <main class="">
+            <main>
                 {{ $slot }}
             </main>
         </div>

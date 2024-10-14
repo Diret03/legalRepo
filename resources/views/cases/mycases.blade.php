@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-dash-layout>
 
     <div class="flex">
         <x-sidebar />
@@ -41,7 +41,7 @@
                     <a id="accepted-link" type="button"
                         href="{{ route('cases.mycases', Auth::user()->id) }}?status=accepted"
                         class="flex items-center px-4 py-2 focus:outline-none text-white {{ $bgAccepted }} hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm mx-1 mb-2
-                    
+
                         ">
                         <img src="{{ asset('svg/approved.svg') }}" class="h-6 w-6 mr-2 invert" alt="Aceptado icon">
                         Aceptados
@@ -228,4 +228,4 @@
             });
         });
     </script>
-</x-app-layout>
+</x-app-dash-layout>
