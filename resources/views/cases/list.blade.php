@@ -15,9 +15,17 @@
             <!-- Left Filter Container -->
             <div id="filterContainer" class="w-full md:w-1/4 pr-4 mb-4 md:mb-0 hidden md:block">
                 <div class="bg-white p-4 rounded-lg shadow">
-                    <div class="flex items-center mb-4">
-                        <img src="{{ asset('svg/filter.svg') }}" class="size-6 mr-1 " alt="Filtro icon">
-                        <h3 class="text-2xl font-bold">Filtros</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <img src="{{ asset('svg/filter.svg') }}" class="size-6 mr-1 " alt="Filtro icon">
+                            <h3 class="text-2xl font-bold">Filtros</h3>
+                        </div>
+                        <button id="cleanFilters" class="text-sm text-gray-500 hover:text-gray-700">
+                            <div class="flex items-center">
+                                <img src="{{ asset('svg/clean.svg') }}" class="size-5 mr-1 " alt="Limpiar icon">
+                                Limpiar
+                            </div>
+                        </button>
                     </div>
 
                     <!-- Subjects Filter -->
@@ -153,7 +161,7 @@
                         <div id="cases-data">
                             @include('cases.partials.all-list', ['cases' => $cases])
                         </div>
-                        <div class="pagination pb-10">
+                        <div id="pagination" class="pagination pb-10">
                             {{ $cases->links('pagination::tailwind') }}
                         </div>
                     @endif
@@ -171,6 +179,7 @@
                 return this.value;
             }).get();
         }
+
 
         $(document).ready(function() {
             const $loadingSpinner = $('#loading-spinner');
@@ -296,6 +305,7 @@
             const subjectsContainer = document.getElementById('subjectsContainer');
             const toggleTrials = document.getElementById('toggleTrials');
             const trialsContainer = document.getElementById('trialsContainer');
+            const cleanFilters = document.getElementById('cleanFilters');
 
             filterToggle.addEventListener('click', function() {
                 filterContainer.classList.toggle('hidden');
@@ -312,6 +322,49 @@
                 trialsContainer.classList.toggle('hidden');
                 this.textContent = trialsContainer.classList.contains('hidden') ? 'Mostrar' : 'Ocultar';
             });
+
+
+
+            cleanFilters.addEventListener('click', function() {
+                const subjectCheckboxes = Array.from(document.getElementsByClassName('subject-checkbox'));
+                const trialCheckboxes = Array.from(document.getElementsByClassName('trial-checkbox'));
+                const loadingSpinner = document.getElementById("loading-spinner");
+                const paginationBtn = document.getElementById("pagination");
+
+                subjectCheckboxes.forEach(element => {
+                    element.checked = false;
+                });
+
+                trialCheckboxes.forEach(element => {
+                    element.checked = false;
+                });
+
+                const cases_data = document.getElementById("cases-data");
+                const searchParams = new URLSearchParams(window.location.search);
+                let page = searchParams.get('page');
+
+                loadingSpinner.classList.remove("hidden");
+                fetch('/casos/clean-filters', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute(
+                                    'content')
+                        },
+                        body: JSON.stringify({
+                            'page': page,
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(response => {
+                        cases_data.innerHTML = response;
+                        paginationBtn.style.display = '';
+                        loadingSpinner.classList.add("hidden");
+                    })
+                    .catch(error => console.error('Error:', error))
+            });
+
         });
     </script>
 

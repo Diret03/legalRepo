@@ -435,6 +435,16 @@ class CaseController extends Controller
         }
     }
 
+    public function cleanFilters(Request $request)
+    {
+
+        $page = $request->input('page') ?? 1;
+        $cases = LegalCase::where('status', 'accepted')->paginate(10, ['*'], 'page', $page);
+        $output = view('cases.partials.all-list', ['cases' => $cases])->render();
+
+        return $output;
+    }
+
     public function getAllTags()
     {
         $orderedTags = Tag::all();

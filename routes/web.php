@@ -35,7 +35,7 @@ Route::get('/materias/juicio/casos/{id}',  [CaseController::class, 'showCasesbyT
 Route::get('/casos/{case}', [CaseController::class, 'show'])->name('cases.show');
 Route::get('/tags/caso/{id}/{tag}', [CaseController::class, 'showCaseByTag'])->name('tag.cases.show');
 Route::get('/juicio/caso/{id}', [CaseController::class, 'showCaseByTrial'])->name('trial.cases.show');
-
+Route::post('/casos/clean-filters', [CaseController::class, 'cleanFilters'])->name('cases.cleanFilters');
 
 Route::get('/casos', [CaseController::class, 'list'])->name('cases.list');
 Route::get('/etiquetas/caso/{id}', [CaseController::class, 'showByTag'])->name('cases.showByTag');
