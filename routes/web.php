@@ -113,10 +113,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // Trial routes
+    Route::get('/dashboard/{materia}/juicios', [TrialController::class, 'getTrialsBySubject']);
+
     Route::group(['middleware' => ['can:ver juicios']], function () {
         Route::get('/dashboard/juicios', [TrialController::class, 'index'])->name('trials.index');
         Route::get('/dashboard/juicios/{trial}', [TrialController::class, 'show'])->name('trials.show');
-        Route::get('/dashboard/{materia}/juicios', [TrialController::class, 'getTrialsBySubject']);
     });
     Route::get("/trials/search", [TrialController::class, 'search'])->name('trials.search');
 
