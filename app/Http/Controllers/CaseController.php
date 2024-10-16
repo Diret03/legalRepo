@@ -211,27 +211,58 @@ class CaseController extends Controller
         $output = null;
 
         if ($request->ajax()) {
-            // Start the query with an initial condition for accepted cases
-            $query = LegalCase::query()->where('status', 'accepted');
+            $queryBuilder = LegalCase::query()->where('status', 'accepted');
 
-            // Check if the filters exist, and apply them cumulatively
-            $query->where(function ($query) use ($request) {
+            $subjectIds = $request->input('subject_ids', []);
+            $trialIds = $request->input('trial_ids', []);
 
-                // Filter cases where the trial is related to the subject
-                if ($request->has('subject_ids') && !empty($request->input('subject_ids'))) {
-                    $query->whereHas('trial.subject', function ($subjectQuery) use ($request) {
-                        $subjectQuery->whereIn('id', $request->input('subject_ids'));
+            $query = $request->input('search');
+            $dbDriver = DB::getDriverName();
+            // Use ILIKE for PostgreSQL and LIKE for others
+            $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
+
+            $queryBuilder->where(function ($mainQuery) use ($query, $likeOperator, $subjectIds, $trialIds) {
+                // Apply subject and trial filters if provided
+                if (!empty($subjectIds)) {
+                    $mainQuery->whereHas('trial.subject', function ($q) use ($subjectIds) {
+                        $q->whereIn('id', $subjectIds);
                     });
                 }
 
-                // Add an OR condition to include cases that match the selected trial, even if not related to the selected subject
-                if ($request->has('trial_ids') && !empty($request->input('trial_ids'))) {
-                    $query->orWhereIn('trial_id', $request->input('trial_ids'));
+                if (!empty($trialIds)) {
+                    $mainQuery->orWhereIn('trial_id', $trialIds);
+                }
+
+                if (!empty($query)) {
+                    // If no filters were applied, allow searching by case attributes, trial name, or subject name
+                    if (empty($subjectIds) && empty($trialIds)) {
+                        $mainQuery->where(function ($q) use ($query, $likeOperator) {
+                            $q->where('title', $likeOperator, '%' . $query . '%')
+                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                ->orWhere('date', $likeOperator, '%' . $query . '%')
+                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                        });
+                                });
+                        });
+                    } else {
+                        // If filters were applied, only search within case attributes
+                        $mainQuery->where(function ($q) use ($query, $likeOperator) {
+                            $q->where('title', $likeOperator, '%' . $query . '%')
+                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                ->orWhere('date', $likeOperator, '%' . $query . '%');
+                        });
+                    }
                 }
             });
 
-            // Get the results
-            $cases = $query->get();
+
+            $page = $request->input('page') ?? 1;
+            // $renderedCases = $queryBuilder->paginate(10, ['*'], 'page', $page);
+            $cases = $queryBuilder->get();
+
 
             if (count($cases) > 0) {
                 // Render the view with the retrieved data
@@ -263,7 +294,7 @@ class CaseController extends Controller
             $query = $request->input('search');
             $view = $request->input('view');
 
-            if ($query != '') {
+            if (!empty($query)) {
                 $dbDriver = DB::getDriverName();
 
                 // Use ILIKE for PostgreSQL and LIKE for others
@@ -272,17 +303,17 @@ class CaseController extends Controller
                 // Perform search query
                 if ($view == 'mycases') {
                     $cases = LegalCase::where('user_id', Auth::id()) // Mandatory condition
-                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
-                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                            ->orWhere('date', $likeOperator, '%' . $query . '%')
-                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                    });
-                            });
-                    })
+                        ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                            $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                ->orWhere('date', $likeOperator, '%' . $query . '%')
+                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                        });
+                                });
+                        })
                         ->get();
                 } elseif ($view == 'all-list') {
 
@@ -325,22 +356,7 @@ class CaseController extends Controller
                             });
                         }
                     });
-
-
                     $cases = $queryBuilder->get();
-//                    $cases = LegalCase::where('status', 'accepted') // Mandatory condition
-//                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
-//                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-//                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
-//                            ->orWhere('date', $likeOperator, '%' . $query . '%')
-//                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-//                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-//                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-//                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-//                                    });
-//                            });
-//                    })
-//                        ->get();
                 } else {
                     $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
                         ->orWhere('title', $likeOperator, '%' . $query . '%')
@@ -355,8 +371,10 @@ class CaseController extends Controller
                         ->get();
                 }
             } else {
+                $page = $request->input('page') ?? 1;
+
                 if ($view == 'table') {
-                    $cases = LegalCase::paginate(10);
+                    $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(10, ['*'], 'page', $page);
                 } elseif ($view == 'mycases') {
 
                     $user_id = $request->input('user_id');
@@ -373,8 +391,9 @@ class CaseController extends Controller
                 } elseif ($view == 'review') {
                     $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
                 } elseif ($view == 'all-list') {
-                    $cases = LegalCase::where('status', 'accepted')
-                        ->paginate(10);
+                    // $cases = LegalCase::where('status', 'accepted')
+                    //     ->paginate(10);
+                    $cases = LegalCase::where('status', 'accepted')->paginate(10, ['*'], 'page', $page);
                 }
             }
             if (count($cases) > 0) {
@@ -515,7 +534,6 @@ class CaseController extends Controller
 
         try {
             $user->notify(new CaseAccepted($case));
-
         } catch (\Exception $exception) {
             return redirect()->route('cases.review')->with('info', "Juicio " . $id . " aprobado correctamente. Sin embargo, no se pudo enviar la notificación por correo electrónico al digitador debido a que tiene un correo no válido.");
         }
@@ -560,7 +578,6 @@ class CaseController extends Controller
 
         try {
             $user->notify(new CaseAccepted($case));
-
         } catch (\Exception $exception) {
             return redirect()->route('cases.review')->with('info', "Juicio " . $id . " rechazado correctamente. Sin embargo, no se pudo enviar la notificación por correo electrónico al digitador debido a que tiene un correo no válido.");
         }
@@ -641,11 +658,11 @@ class CaseController extends Controller
             ->setPaper('A4', 'landscape');
 
         $pdfName = "Caso: " . $case->title . ".pdf";
-//
+        //
         return $pdf->download($pdfName);
 
-//        Pdf::view('pdf.case', ['case' => $case])
-//            ->save('/some/directory/invoice.pdf');
+        //        Pdf::view('pdf.case', ['case' => $case])
+        //            ->save('/some/directory/invoice.pdf');
 
 
     }
