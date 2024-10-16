@@ -8,6 +8,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Icon -->
+    <link rel="shortcut icon" href="{{ asset('img/logo-utn.png') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -31,17 +33,17 @@
     </style>
 </head>
 
-<body class="h-full bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
-    <section class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full mx-4">
+<body class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
+    <section class="my-8 bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full mx-4">
         <div class="py-12 px-6 text-center">
-            <div class=" mb-8 drop-shadow-xl animate-float">
+            <div class=" mb-4 lg:mb-8 drop-shadow-xl animate-float">
                 <img src="{{ asset('svg/closed.svg') }}" alt="No disponible icon"
                     class="mx-auto w-96 h-96 object-contain">
             </div>
             <h1
                 class="mb-6 text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800">
                 503</h1>
-            <h2 class="mb-4 text-4xl font-bold text-gray-800">Servicio no disponsible</h2>
+            <h2 class="mb-4 text-4xl font-bold text-gray-800">Servicio no disponible</h2>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">La aplicación está bajo mantenimiento temporalmente.</p>
             <p class="mb-8 text-xl text-gray-600 max-w-2xl mx-auto">Por favor intenta ingresar más tarde.</p>
             {{-- <div class="flex justify-center gap-6 my-8">

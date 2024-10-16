@@ -8,6 +8,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Icon -->
+    <link rel="shortcut icon" href="{{ asset('img/logo-utn.png') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -31,10 +33,10 @@
     </style>
 </head>
 
-<body class="h-full bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
-    <section class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full mx-4">
+<body class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
+    <section class="my-8 bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full mx-4">
         <div class="py-12 px-6 text-center">
-            <div class=" mb-8 drop-shadow-xl animate-float lg:flex lg:justify-center">
+            <div class=" mb-4 lg:mb-8 drop-shadow-xl animate-float lg:flex lg:justify-center">
                 <img src="{{ asset('img/broken-justice.png') }}" alt="Balanza de justicia rota"
                     class="ml-4 lg:ml-24 w-96 h-96 object-contain">
             </div>
