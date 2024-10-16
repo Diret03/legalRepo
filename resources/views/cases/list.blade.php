@@ -163,12 +163,26 @@
         </div>
     </div>
     <script>
+        const $filter = $('#filterToggle');
+        const $subjectCheckboxes = $('.subject-checkbox');
+        const $trialCheckboxes = $('.trial-checkbox');
+
+        function getCheckedValues(checkboxes) {
+            return checkboxes.filter(':checked').map(function() {
+                return this.value;
+            }).get();
+        }
+
         $(document).ready(function () {
             const $loadingSpinner = $('#loading-spinner');
             const $casesData = $('#cases-data');
+
+
             let debounceTimer;
 
             $('#search').on('keyup', function () {
+                const subjectIds = getCheckedValues($subjectCheckboxes);
+                const trialIds = getCheckedValues($trialCheckboxes);
                 let query = $(this).val();
                 // Clear the previous timer
                 clearTimeout(debounceTimer);
@@ -178,6 +192,9 @@
                 } else {
                     $('.pagination').show();
                 }
+
+                console.log(subjectIds);
+                console.log(trialIds);
 
                 // Set a new timer
                 debounceTimer = setTimeout(function () {
@@ -190,6 +207,8 @@
                         data: {
                             'search': query,
                             'view' : 'all-list',
+                            'subject_ids' : subjectIds,
+                            'trial_ids': trialIds,
                         },
                         success: function (data) {
                             $('#cases-data').html(data);
@@ -208,23 +227,15 @@
                 }, 300); // delay time
             });
 
-            const $filter = $('#filterToggle');
-            const $subjectCheckboxes = $('.subject-checkbox');
-            const $trialCheckboxes = $('.trial-checkbox');
 
-            function getCheckedValues(checkboxes) {
-                return checkboxes.filter(':checked').map(function() {
-                    return this.value;
-                }).get();
-            }
 
             function updateResults() {
                 const query = $filter.val();
                 const subjectIds = getCheckedValues($subjectCheckboxes);
                 const trialIds = getCheckedValues($trialCheckboxes);
 
-                console.log(subjectIds);
-                console.log(trialIds);
+                // console.log(subjectIds);
+                // console.log(trialIds);
 
                 clearTimeout(debounceTimer);
 

@@ -146,7 +146,7 @@ class CaseController extends Controller
         $subjects = Subject::all();
         $users = User::orderBy('last_name', 'asc')
             ->where('status', true)->get();
-        return view('cases.edit', compact('case', 'trials', 'users','subjects'));
+        return view('cases.edit', compact('case', 'trials', 'users', 'subjects'));
     }
 
     public function update(Request $request, $id)
@@ -252,7 +252,6 @@ class CaseController extends Controller
                     </div>';
             }
         }
-
         return $output;
     }
 
@@ -273,32 +272,75 @@ class CaseController extends Controller
                 // Perform search query
                 if ($view == 'mycases') {
                     $cases = LegalCase::where('user_id', Auth::id()) // Mandatory condition
-                        ->where(function ($queryBuilder) use ($query, $likeOperator) {
-                            $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                ->orWhere('date', $likeOperator, '%' . $query . '%')
-                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                        });
-                                });
-                        })
+                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                            ->orWhere('date', $likeOperator, '%' . $query . '%')
+                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                    });
+                            });
+                    })
                         ->get();
                 } elseif ($view == 'all-list') {
-                    $cases = LegalCase::where('status', 'accepted') // Mandatory condition
-                        ->where(function ($queryBuilder) use ($query, $likeOperator) {
-                            $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                ->orWhere('date', $likeOperator, '%' . $query . '%')
-                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                        });
-                                });
-                        })
-                        ->get();
+
+                    $queryBuilder = LegalCase::query()->where('status', 'accepted');
+
+                    $subjectIds = $request->input('subject_ids', []);
+                    $trialIds = $request->input('trial_ids', []);
+
+                    $queryBuilder->where(function ($mainQuery) use ($query, $likeOperator, $subjectIds, $trialIds) {
+                        // Apply subject and trial filters if provided
+                        if (!empty($subjectIds)) {
+                            $mainQuery->whereHas('trial.subject', function ($q) use ($subjectIds) {
+                                $q->whereIn('id', $subjectIds);
+                            });
+                        }
+
+                        if (!empty($trialIds)) {
+                            $mainQuery->whereIn('trial_id', $trialIds);
+                        }
+
+                        // If no filters were applied, allow searching by case attributes, trial name, or subject name
+                        if (empty($subjectIds) && empty($trialIds)) {
+                            $mainQuery->where(function ($q) use ($query, $likeOperator) {
+                                $q->where('title', $likeOperator, '%' . $query . '%')
+                                    ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                    ->orWhere('date', $likeOperator, '%' . $query . '%')
+                                    ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                        $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                            ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                                $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                            });
+                                    });
+                            });
+                        } else {
+                            // If filters were applied, only search within case attributes
+                            $mainQuery->where(function ($q) use ($query, $likeOperator) {
+                                $q->where('title', $likeOperator, '%' . $query . '%')
+                                    ->orWhere('origin', $likeOperator, '%' . $query . '%')
+                                    ->orWhere('date', $likeOperator, '%' . $query . '%');
+                            });
+                        }
+                    });
+
+
+                    $cases = $queryBuilder->get();
+//                    $cases = LegalCase::where('status', 'accepted') // Mandatory condition
+//                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
+//                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+//                            ->orWhere('origin', $likeOperator, '%' . $query . '%')
+//                            ->orWhere('date', $likeOperator, '%' . $query . '%')
+//                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+//                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+//                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+//                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+//                                    });
+//                            });
+//                    })
+//                        ->get();
                 } else {
                     $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
                         ->orWhere('title', $likeOperator, '%' . $query . '%')
@@ -441,14 +483,11 @@ class CaseController extends Controller
     }
 
 
-
-
     public function listUser()
     {
         $cases = LegalCase::paginate(10);
         return view('cases.list', compact('cases'));
     }
-
 
 
     public function review(Request $request)
@@ -477,7 +516,7 @@ class CaseController extends Controller
         try {
             $user->notify(new CaseAccepted($case));
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return redirect()->route('cases.review')->with('info', "Juicio " . $id . " aprobado correctamente. Sin embargo, no se pudo enviar la notificación por correo electrónico al digitador debido a que tiene un correo no válido.");
         }
 
@@ -522,12 +561,13 @@ class CaseController extends Controller
         try {
             $user->notify(new CaseAccepted($case));
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return redirect()->route('cases.review')->with('info', "Juicio " . $id . " rechazado correctamente. Sin embargo, no se pudo enviar la notificación por correo electrónico al digitador debido a que tiene un correo no válido.");
         }
 
         return redirect()->route('cases.review')->with('success', "Juicio " . $id . " rechazado correctamente.");
     }
+
     public function showByTag($id)
     {
 
@@ -560,8 +600,6 @@ class CaseController extends Controller
     }
 
 
-
-
     public function destroy($id, Request $request)
     {
         $case = LegalCase::findOrFail($id);
@@ -590,7 +628,8 @@ class CaseController extends Controller
         return redirect()->back()->with('success', 'Caso eliminado definitivamente.');
     }
 
-    public function generatePDF($id){
+    public function generatePDF($id)
+    {
 
         $case = LegalCase::findOrFail($id);
 
@@ -601,7 +640,7 @@ class CaseController extends Controller
         $pdf = Pdf::loadView('pdf.case', $data)
             ->setPaper('A4', 'landscape');
 
-        $pdfName = "Caso: " . $case->title.".pdf";
+        $pdfName = "Caso: " . $case->title . ".pdf";
 //
         return $pdf->download($pdfName);
 
