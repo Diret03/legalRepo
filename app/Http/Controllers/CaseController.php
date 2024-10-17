@@ -41,8 +41,8 @@ class CaseController extends Controller
 
     public function list(Request $request)
     {
-        $sortField = $request->query('sort', 'updated_at'); // default sort field
-        $sortDirection = $request->query('direction', 'desc'); // default sort direction
+        $sortField = $request->query('sort', 'id'); // default sort field
+        $sortDirection = $request->query('direction', 'asc'); // default sort direction
 
         $cases = LegalCase::where('status', 'accepted')
             ->orderBy($sortField, $sortDirection)
