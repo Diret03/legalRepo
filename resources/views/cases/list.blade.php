@@ -102,14 +102,18 @@
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                             aria-labelledby="dropdownActionButton2">
                             <li>
-                                <a href="{{ route('cases.list') }}?sort=updated_at&direction=desc"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
-                                    recientes</a>
+                                <a href="{{ route('cases.list', ['sort' => 'updated_at', 'direction' => 'desc']) }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white 
+                                           {{ $sortField == 'updated_at' && $sortDirection == 'desc' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                    Más recientes
+                                </a>
                             </li>
                             <li>
-                                <a href="{{ route('cases.list') }}?sort=updated_at&direction=asc"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
-                                    antiguos</a>
+                                <a href="{{ route('cases.list', ['sort' => 'updated_at', 'direction' => 'asc']) }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white
+                                           {{ $sortField == 'updated_at' && $sortDirection == 'asc' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                    Más antiguos
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -184,8 +188,6 @@
         $(document).ready(function() {
             const $loadingSpinner = $('#loading-spinner');
             const $casesData = $('#cases-data');
-
-
             let debounceTimer;
 
             $('#search').on('keyup', function() {
@@ -194,6 +196,8 @@
                 let query = $(this).val();
                 const searchParams = new URLSearchParams(window.location.search);
                 let page = searchParams.get('page');
+                let sort = searchParams.get('sort') || 'id';
+                let direction = searchParams.get('direction') || 'asc';
 
                 // Clear the previous timer
                 clearTimeout(debounceTimer);
@@ -203,10 +207,6 @@
                 } else {
                     $('.pagination').show();
                 }
-
-                // console.log(subjectIds);
-                // console.log(trialIds);
-
                 // Set a new timer
                 debounceTimer = setTimeout(function() {
                     // Show the loading spinner
@@ -221,13 +221,24 @@
                             'subject_ids': subjectIds,
                             'trial_ids': trialIds,
                             'page': page,
+                            'sort': sort,
+                            'direction': direction
                         },
                         success: function(data) {
                             $('#cases-data').html(data);
+                            // Update URL with current parameters
+                            const newUrl = new URL(window.location);
+                            newUrl.searchParams.set('page', page);
+                            newUrl.searchParams.set('sort', sort);
+                            newUrl.searchParams.set('direction', direction);
+                            if (query) newUrl.searchParams.set('search', query);
+                            else newUrl.searchParams.delete('search');
+                            window.history.pushState({}, '', newUrl);
                         },
                         complete: function() {
                             // Hide the loading spinner
                             $loadingSpinner.addClass('hidden');
+
                         },
                         error: function(xhr, status, error) {
                             console.error('Error al buscar:', error);
@@ -246,8 +257,10 @@
                 const subjectIds = getCheckedValues($subjectCheckboxes);
                 const trialIds = getCheckedValues($trialCheckboxes);
                 let querySearch = $('#search').val();
-                // console.log(subjectIds);
-                // console.log(trialIds);
+                const searchParams = new URLSearchParams(window.location.search);
+                let page = searchParams.get('page') || 1;
+                let sort = searchParams.get('sort') || 'id';
+                let direction = searchParams.get('direction') || 'asc';
 
                 clearTimeout(debounceTimer);
 
@@ -267,9 +280,20 @@
                             'subject_ids': subjectIds,
                             'trial_ids': trialIds,
                             'search': querySearch,
+                            'page': page,
+                            'sort': sort,
+                            'direction': direction
                         },
                         success: function(data) {
                             $('#cases-data').html(data);
+                            // Update URL with current parameters
+                            const newUrl = new URL(window.location);
+                            newUrl.searchParams.set('page', page);
+                            newUrl.searchParams.set('sort', sort);
+                            newUrl.searchParams.set('direction', direction);
+                            if (query) newUrl.searchParams.set('search', query);
+                            else newUrl.searchParams.delete('search');
+                            window.history.pushState({}, '', newUrl);
                         },
                         complete: function() {
                             // Hide the loading spinner
@@ -341,7 +365,10 @@
 
                 const cases_data = document.getElementById("cases-data");
                 const searchParams = new URLSearchParams(window.location.search);
-                let page = searchParams.get('page');
+                let page = searchParams.get('page') || 1;
+                let sort = searchParams.get('sort') || 'id';
+                let direction = searchParams.get('direction') || 'asc';
+
 
                 loadingSpinner.classList.remove("hidden");
                 fetch('/casos/clean-filters', {
@@ -354,6 +381,8 @@
                         },
                         body: JSON.stringify({
                             'page': page,
+                            'sort': sort,
+                            'direction': direction
                         })
                     })
                     .then(response => response.text())
@@ -361,6 +390,13 @@
                         cases_data.innerHTML = response;
                         paginationBtn.style.display = '';
                         loadingSpinner.classList.add("hidden");
+
+                        // Update URL with current page and sorting parameters
+                        const newUrl = new URL(window.location);
+                        newUrl.searchParams.set('page', page);
+                        newUrl.searchParams.set('sort', sort);
+                        newUrl.searchParams.set('direction', direction);
+                        window.history.pushState({}, '', newUrl);
                     })
                     .catch(error => console.error('Error:', error))
             });

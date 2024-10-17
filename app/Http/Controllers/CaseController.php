@@ -43,10 +43,15 @@ class CaseController extends Controller
     {
         $sortField = $request->query('sort', 'id'); // default sort field
         $sortDirection = $request->query('direction', 'asc'); // default sort direction
+        $page = $request->query("page", 1);
 
         $cases = LegalCase::where('status', 'accepted')
             ->orderBy($sortField, $sortDirection)
             ->paginate(10);
+
+        // Append sort parameters to pagination links
+        $cases->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
 
         $trials = Trial::withCount(['cases' => function ($query) {
             $query->where('status', 'accepted');
@@ -64,10 +69,8 @@ class CaseController extends Controller
             $subject->cases_count = $subject->trials->sum('cases_count');
         }
 
-        //        $subjects = Subject::all();
-
         // Return the data to the view
-        return view('cases.list', compact('cases', 'trials', 'subjects'));
+        return view('cases.list', compact('cases', 'trials', 'subjects', 'sortField', 'sortDirection'));
     }
 
     public function create()
@@ -215,11 +218,15 @@ class CaseController extends Controller
 
             $subjectIds = $request->input('subject_ids', []);
             $trialIds = $request->input('trial_ids', []);
-
             $query = $request->input('search');
             $dbDriver = DB::getDriverName();
             // Use ILIKE for PostgreSQL and LIKE for others
             $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
+
+
+            $page = max(1, intval($request->input('page', 1))); // Ensure page is an integer and at least 1
+            $sortField = $request->input('sort', 'id');
+            $sortDirection = $request->input('direction', 'asc');
 
             $queryBuilder->where(function ($mainQuery) use ($query, $likeOperator, $subjectIds, $trialIds) {
                 // Apply subject and trial filters if provided
@@ -258,15 +265,33 @@ class CaseController extends Controller
                 }
             });
 
+            $queryBuilder->orderBy($sortField, $sortDirection);
 
-            $page = $request->input('page') ?? 1;
+            $totalCount = $queryBuilder->count();
+
+            // Adjust page if it exceeds the last possible page
+            $perPage = 10;
+            $lastPage = max(1, ceil($totalCount / $perPage));
+            $page = min($page, $lastPage);
+
+
             // $renderedCases = $queryBuilder->paginate(10, ['*'], 'page', $page);
-            $cases = $queryBuilder->get();
+            // Paginate the results
+            $cases = $queryBuilder->paginate($perPage, ['*'], 'page', $page);
 
 
             if (count($cases) > 0) {
+                $cases->appends([
+                    'search' => $query,
+                    'sort' => $sortField,
+                    'direction' => $sortDirection
+                ]);
                 // Render the view with the retrieved data
-                $output = view('cases.partials.all-list', ['cases' => $cases])->render();
+                $output = view('cases.partials.all-list', [
+                    'cases' => $cases,
+                    'sortField' => $sortField,
+                    'sortDirection' => $sortDirection
+                ])->render();
             } else {
                 $output =
                     '<div
@@ -293,6 +318,9 @@ class CaseController extends Controller
         if ($request->ajax()) {
             $query = $request->input('search');
             $view = $request->input('view');
+            $page = max(1, intval($request->input('page', 1))); // Ensure page is an integer and at least 1
+            $sortField = $request->input('sort', 'id');
+            $sortDirection = $request->input('direction', 'asc');
 
             if (!empty($query)) {
                 $dbDriver = DB::getDriverName();
@@ -371,7 +399,6 @@ class CaseController extends Controller
                         ->get();
                 }
             } else {
-                $page = $request->input('page') ?? 1;
 
                 if ($view == 'table') {
                     $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(10, ['*'], 'page', $page);
@@ -391,12 +418,20 @@ class CaseController extends Controller
                 } elseif ($view == 'review') {
                     $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
                 } elseif ($view == 'all-list') {
-                    // $cases = LegalCase::where('status', 'accepted')
-                    //     ->paginate(10);
-                    $cases = LegalCase::where('status', 'accepted')->paginate(10, ['*'], 'page', $page);
+                    $cases = LegalCase::where('status', 'accepted')
+                        ->orderBy($sortField, $sortDirection)
+                        ->paginate(10, ['*'], 'page', $page);
+
+                    $cases->appends([
+                        'search' => $query,
+                        'view' => $view,
+                        'sort' => $sortField,
+                        'direction' => $sortDirection
+                    ]);
                 }
             }
             if (count($cases) > 0) {
+
 
                 if ($view == 'table') {
                     $output = view('cases.partials.row', ['cases' => $cases])->render();
@@ -405,7 +440,11 @@ class CaseController extends Controller
                 } elseif ($view == 'review') {
                     $output = view('cases.partials.reviewlist', ['cases' => $cases])->render();
                 } elseif ($view == 'all-list') {
-                    $output = view('cases.partials.all-list', ['cases' => $cases])->render();
+                    $output = view('cases.partials.all-list', [
+                        'cases' => $cases,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection
+                    ])->render();
                 }
             } else {
 
@@ -437,12 +476,24 @@ class CaseController extends Controller
 
     public function cleanFilters(Request $request)
     {
+        $page = $request->input('page', 1);
+        $sortField = $request->input('sort', 'id');
+        $sortDirection = $request->input('direction', 'asc');
 
-        $page = $request->input('page') ?? 1;
-        $cases = LegalCase::where('status', 'accepted')->paginate(10, ['*'], 'page', $page);
-        $output = view('cases.partials.all-list', ['cases' => $cases])->render();
+        $cases = LegalCase::where('status', 'accepted')
+            ->orderBy($sortField, $sortDirection)
+            ->paginate(10, ['*'], 'page', $page);
 
-        return $output;
+        $cases->appends([
+            'sort' => $sortField,
+            'direction' => $sortDirection
+        ]);
+
+        return view('cases.partials.all-list', [
+            'cases' => $cases,
+            'sortField' => $sortField,
+            'sortDirection' => $sortDirection
+        ])->render();
     }
 
     public function getAllTags()
