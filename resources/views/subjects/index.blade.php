@@ -2,53 +2,9 @@
 
     <div class="flex">
         <x-sidebar/>
-
         <!-- Main Content -->
-
-
         <div class="flex-1 m-10 relative overflow-x-auto border-t rounded-lg">
-            @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-                     role="alert">
-                    <strong class="font-bold">Éxito!</strong>
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                     role="alert">
-                    <strong class="font-bold">Error!</strong>
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-            <!-- success json message -->
-            <div id="message"
-                 class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 mt-2 rounded relative"
-                 role="alert">
-                <strong class="font-bold">Éxito!</strong>
-                <span class="block sm:inline" id="message-text"></span>
-                <ul class="list-disc list-inside">
-                </ul>
-            </div>
-            <!-- error json message -->
-            <div id="message-error"
-                 class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-2 rounded relative"
-                 role="alert">
-                <strong class="font-bold">Error!</strong>
-                <span class="block sm:inline" id="message-text-error"></span>
-                <ul class="list-disc list-inside">
-                </ul>
-            </div>
-            @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Error!</strong>
-                    <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                            <li class="mb-1">{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <x-success-error-alert/>
             <div
                 class="flex p-10 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
 

@@ -91,7 +91,7 @@
 
         <span class="sr-only">Danger</span>
         <div>
-            <span class="font-medium">Error! :</span>
+            <span class="font-bold ml-2">Error! :</span>
             <ul class="mt-1.5 list-disc list-inside">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
