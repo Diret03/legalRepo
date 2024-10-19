@@ -69,7 +69,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'ver casos', 'eliminar cualquier caso', 'restaurar casos', 'eliminar casos definitivamente', 'ver casos archivados',
                 'crear materias', 'editar materias', 'eliminar materias', 'ver materias',
                 'crear juicios', 'editar juicios', 'eliminar juicios', 'ver juicios',
-                'crear usuarios', 'editar usuarios', 'eliminar usuarios', 'ver usuarios', 'activar usuarios', 'desactivar usuarios',
+                'crear usuarios', 'editar usuarios', 'ver usuarios', 'activar usuarios', 'desactivar usuarios',
             ]);
 
         $roleReviewer = Role::create(['name' => 'revisor'])

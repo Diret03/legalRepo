@@ -48,20 +48,23 @@
         @if(Auth::user()->can('editar usuarios') || Auth::user()->can('eliminar usuarios'))
             <td class="px-6 py-4">
                 <div class="flex items-center">
-
-                    <a href="{{route('users.edit',$user->id)}}"
-                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
-                        <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
-                    </a>
-                    <form action="{{route('users.destroy',$user->id)}}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
-                            <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
-                        </button>
-                    </form>
+                    @can('editar usuarios')
+                        <a href="{{route('users.edit',$user->id)}}"
+                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-5">
+                            <img src="{{asset('svg/edit.svg')}}" class="size-7" alt="Editar icon">
+                        </a>
+                    @endcan
+                    @can('eliminar usuarios')
+                        <form action="{{route('users.destroy',$user->id)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
+                                <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </td>
         @endif
