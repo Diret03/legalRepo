@@ -168,9 +168,15 @@ class TrialController extends Controller
     public function destroy($id)
     {
         $trial = Trial::findOrFail($id);
-        $trial->delete();
 
-        return redirect()->back()->with('success', 'Juicio eliminado exitosamente.');
+        if ($trial->cases->count() > 0) {
+            return redirect()->back()->with('error', 'No se puede eliminar el juicio debido a que tiene casos asociados.');
+        }
+        else{
+            $trial->delete();
+            return redirect()->back()->with('success', 'Juicio eliminado exitosamente.');
+        }
+
     }
 
 
