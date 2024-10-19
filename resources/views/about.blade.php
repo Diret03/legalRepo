@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/tags/magicsuggest.css') }}">
-    
+
     <!-- Icon -->
     <link rel="shortcut icon" href="{{asset('img/logo-utn.png')}}" type="image/x-icon">
     <!-- Scripts -->
@@ -106,6 +106,23 @@
                     </div>
                 </div>
             </div>
+
+            @if(count($judges) > 0)
+                <section class="mt-20">
+                    <h2 class=" font-bold text-3xl text-gray-900 mb-8 text-center">Jueces involucrados</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        @foreach($judges as $judge)
+                            <div class="flex flex-col items-center">
+                                <div class="w-48 h-48 mb-4 overflow-hidden rounded-full">
+                                    <img src="{{ $judge->image ? asset($judge->image) : asset('svg/person.svg') }}" alt="{{ $judge->name }} {{ $judge->last_name }}" class="w-full h-full object-cover object-center">
+                                </div>
+                                <h3 class="font-bold text-xl mb-2 text-center">{{ $judge->name }} {{ $judge->last_name }}</h3>
+                                <p class="text-gray-700 text-base text-center">{{ $judge->job_title }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
         </div>
     </section>
 

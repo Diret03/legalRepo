@@ -35,13 +35,15 @@
                                       >{{$subject->description}}</textarea>
                         </div>
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="edit_image">Subir imagen</label>
-                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none" aria-describedby="image_help" id="edit_image" name="image" type="file">
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">JPEG, JPG o PNG.</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Dejar en blanco para mantener la foto actual </p>
+                            <label class="block mb-2 text-sm font-medium text-gray-900" for="edit_image">Subir imagen</label>
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none" aria-describedby="image_help" id="edit_image" name="image" type="file">
+                            <p class="mt-1 text-sm text-gray-500" id="file_input_help">JPEG, JPG, PNG o WEBP.</p>
+                            <p class="mt-1 text-sm text-gray-500" id="size_input_help">
+                                Tamaño máximo: 5MB.</p>
+                            <p class="mt-1 text-sm text-gray-500">Dejar en blanco para mantener la foto actual </p>
                         </div>
                         <button type="submit"
-                                class="w-full text-white bg-red-650 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                class="w-full text-white bg-red-650 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                             Guardar cambios
                         </button>
                     </form>

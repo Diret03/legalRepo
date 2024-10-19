@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class,
             TrialSeeder::class,
             LegalCaseSeeder::class,
+            JudgeSeeder::class,
         ]);
 
 

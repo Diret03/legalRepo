@@ -137,8 +137,8 @@
         </tr>
     @endforeach
 @else
-    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-        <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No hay casos registrados</td>
+    <tr class="bg-white border-b hover:bg-gray-50">
+        <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No hay casos archivados</td>
     </tr>
 @endif
 

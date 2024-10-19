@@ -7,6 +7,8 @@ use App\Http\Controllers\CaseController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JudgeController;
+use App\Models\Judge;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,7 +49,8 @@ Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filt
 Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
 
 Route::get('/acerca', function () {
-    return view('about');
+    $judges = Judge::orderBy('last_name', 'asc')->get();
+    return view('about', compact('judges'));
 })->name('about');
 
 Route::get('/error-500', function () {
@@ -135,6 +138,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/dashboard/juicios/{trial}', [TrialController::class, 'destroy'])->name('trials.destroy');
         Route::delete("/dashboard/selected-trials", [TrialController::class, 'deleteSelected'])->name('trials.delete');
     });
+
+
+    //Judges routes
+    Route::group(['middleware' => ['can:ver jueces']], function () {
+        Route::get('/dashboard/jueces', [JudgeController::class, 'index'])->name('judges.index');
+        Route::get('/dashboard/jueces/{judge}', [JudgeController::class, 'show'])->name('judges.show');
+    });
+
+    Route::get("/judges/search", [JudgeController::class, 'search'])->name('judges.search');
+
+    Route::group(['middleware' => ['can:crear jueces']], function () {
+        Route::get('/dashboard/jueces/crear', [JudgeController::class, 'create'])->name('judges.create');
+        Route::post('/dashboard/jueces', [JudgeController::class, 'store'])->name('judges.store');
+    });
+
+    Route::group(['middleware' => ['can:editar jueces']], function () {
+        Route::get('/dashboard/jueces/{judge}/editar', [JudgeController::class, 'edit'])->name('judges.edit');
+        Route::put('/dashboard/jueces/{judge}', [JudgeController::class, 'update'])->name('judges.update');
+    });
+
+    Route::group(['middleware' => ['can:eliminar jueces']], function () {
+        Route::delete('/dashboard/jueces/{judge}', [JudgeController::class, 'destroy'])->name('judges.destroy');
+        Route::delete("/dashboard/selected-trials", [JudgeController::class, 'deleteSelected'])->name('judges.delete');
+    });
+
 
     // Cases routes
     Route::get('/dashboard/casos', [CaseController::class, 'index'])->name('cases.index');

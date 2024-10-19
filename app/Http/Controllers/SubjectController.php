@@ -57,7 +57,7 @@ class SubjectController extends Controller
         $validated_data = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
 
@@ -96,7 +96,7 @@ class SubjectController extends Controller
         $validated_data = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $path = NULL;
@@ -171,7 +171,6 @@ class SubjectController extends Controller
         }
 
         return response()->json($response);
-
     }
 
     public function destroy($id)

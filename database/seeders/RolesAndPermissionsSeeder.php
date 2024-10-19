@@ -58,6 +58,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'activar usuarios']);
         Permission::create(['name' => 'desactivar usuarios']);
 
+        //jueces
+        Permission::create(['name' => 'ver jueces']);
+        Permission::create(['name' => 'crear jueces']);
+        Permission::create(['name' => 'editar jueces']);
+        Permission::create(['name' => 'eliminar jueces']);
+
         // create roles and assign created permissions
 
         $roleDigitador = Role::create(['name' => 'digitador'])
@@ -70,6 +76,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'crear materias', 'editar materias', 'eliminar materias', 'ver materias',
                 'crear juicios', 'editar juicios', 'eliminar juicios', 'ver juicios',
                 'crear usuarios', 'editar usuarios', 'ver usuarios', 'activar usuarios', 'desactivar usuarios',
+                'ver jueces', 'crear jueces', 'editar jueces', 'eliminar jueces',
             ]);
 
         $roleReviewer = Role::create(['name' => 'revisor'])

@@ -1,0 +1,55 @@
+<x-app-dash-layout>
+    <div class="flex md:flex-row">
+        <x-sidebar/>
+        <div class="flex-1 p-4 md:p-10">
+            <x-success-error-alert/>
+            <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        Editar juez
+                    </h3>
+                    <x-go-back route="{{ route('judges.index') }}"/>
+                </div>
+                <div class="p-4 md:p-5">
+                    <form id="edit-user-form" class="space-y-4" method="POST"
+                          action="{{ route('judges.update', $judge->id) }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div>
+                            <label for="edit-name" class="block mb-2 text-sm font-medium text-gray-900">Nombre</label>
+                            <input type="text" name="name" id="edit-name" value="{{$judge->name}}"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+                        </div>
+                        <div>
+                            <label for="edit-last_name"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Apellido</label>
+                            <input type="text" name="last_name" id="edit-last_name" value="{{$judge->last_name}}"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+                        </div>
+                        <div>
+                            <label for="edit-job_title"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Nombre</label>
+                            <input type="text" name="job_title" id="edit-job_title" value="{{$judge->job_title}}"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900" for="edit_image">Subir
+                                imagen</label>
+                            <input
+                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none"
+                                aria-describedby="image_help" id="edit_image" name="image" type="file">
+                            <p class="mt-1 text-sm text-gray-500" id="file_input_help">JPEG, JPG, PNG o WEBP.</p>
+                            <p class="mt-1 text-sm text-gray-500" id="size_input_help">
+                                Tamaño máximo: 2MB.</p>
+                            <p class="mt-1 text-sm text-gray-500">Dejar en blanco para mantener la foto actual </p>
+                        </div>
+                        <button type="submit"
+                                class="w-full text-white bg-red-650 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            Guardar cambios
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-dash-layout>

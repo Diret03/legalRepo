@@ -65,7 +65,6 @@
                 title="Juicios"
                 :activeRoutes="['trials.index', 'trials.create', 'trials.edit']"
             />
-
         @endcan
 
         @can('ver usuarios')
@@ -75,22 +74,30 @@
                 title="Usuarios"
                 :activeRoutes="['users.index', 'users.create', 'users.edit']"
             />
-
         @endcan
 
-            <form action="{{ route('logout') }}" method="post">
-                @csrf
-                <button type="submit"
-                   class="group flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start
+        @can('ver jueces')
+            <x-dash-link
+                href="{{ route('judges.index') }}"
+                icon="svg/judges.svg"
+                title="Jueces"
+                :activeRoutes="['judges.index', 'judges.create', 'judges.edit']"
+            />
+        @endcan
+
+        <form action="{{ route('logout') }}" method="post">
+            @csrf
+            <button type="submit"
+                    class="group flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start
                            hover:bg-zinc-100 hover:bg-opacity-80 hover:text-black focus:bg-opacity-80 focus:text-blue-gray-900">
-                    <img src="{{ asset('svg/logout.svg') }}"
-                         class="size-5 mr-4 transition-all duration-300 invert group-hover:invert-0"
-                         alt="Salir icon">
-                    <p class="title-nav transition-opacity duration-300 ease-in-out">Cerrar sesión</p>
-                </button>
+                <img src="{{ asset('svg/logout.svg') }}"
+                     class="size-5 mr-4 transition-all duration-300 invert group-hover:invert-0"
+                     alt="Salir icon">
+                <p class="title-nav transition-opacity duration-300 ease-in-out">Cerrar sesión</p>
+            </button>
 
 
-            </form>
+        </form>
 
         {{--        <x-dash-link href="{{ route('subjects.index') }}" icon="svg/subjects.svg" title="Materias" activeRoute="subjects.index"/>--}}
 

@@ -8,7 +8,7 @@
             <div class="p-4 md:p-10 bg-white dark:bg-gray-900">
                 <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                     <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                        @can('eliminar materias')
+                        @can('eliminar jueces')
                             <div>
                                 <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
                                         class="w-full sm:w-auto inline-flex items-center justify-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-3"
@@ -54,12 +54,12 @@
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                     aria-labelledby="dropdownActionButton2">
                                     <li>
-                                        <a href="{{route('subjects.index')}}?sort=updated_at&direction=desc"
+                                        <a href="{{route('judges.index')}}?sort=updated_at&direction=desc"
                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                             recientes</a>
                                     </li>
                                     <li>
-                                        <a href="{{route('subjects.index')}}?sort=updated_at&direction=asc"
+                                        <a href="{{route('judges.index')}}?sort=updated_at&direction=asc"
                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                             antiguos</a>
                                     </li>
@@ -73,12 +73,12 @@
                     <label for="table-search" class="sr-only">Search</label>
                     <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
 
-                        @can('crear materias')
-                            <a href="#" data-modal-target="authentication-modal"
-                               data-modal-toggle="authentication-modal"
+                        @can('crear jueces')
+                            <a href="#" data-modal-target="add-judge-modal"
+                               data-modal-toggle="add-judge-modal"
                                class="w-full sm:w-auto flex items-center justify-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 mr-5">
                                 <img src="{{asset('svg/add.svg')}}" class="size-7 mr-3" alt="Agregar icon">
-                                <p>Agregar Materia</p>
+                                <p>Agregar Juez</p>
                             </a>
                         @endcan
 
@@ -91,8 +91,8 @@
                                 </svg>
                             </div>
                             <input type="text" id="search" name="search"
-                                   class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                   placeholder="Buscar materias">
+                                   class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rojudges bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="Buscar jueces">
                         </div>
                     </div>
                 </div>
@@ -124,34 +124,37 @@
                     <th scope="col" class="px-6 py-3">
                         Nombre
                     </th>
-                    <th scope="col" class="desc px-6 py-3">
-                        Descripción
+                    <th scope="col" class="px-6 py-3">
+                        Apellido
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Título
                     </th>
                     <th scope="col" class="desc px-6 py-3">
                         Imagen
                     </th>
-                    @if(Auth::user()->can('editar materias') || Auth::user()->can('eliminar materias'))
+                    @if(Auth::user()->can('editar jueces') || Auth::user()->can('eliminar jueces'))
                         <th scope="col" class="px-6 py-3">
                             Acción
                         </th>
                     @endif
                 </tr>
                 </thead>
-                <tbody id="subjects-data">
-                @include('subjects.subject-row', ['subjects' => $subjects])
+                <tbody id="judges-data">
+                @include('judges.row', ['judges' => $judges])
                 </tbody>
             </table>
             <div class="pagination mt-4 pb-10">
-                {{ $subjects->links() }}
+                {{ $judges->links() }}
             </div>
         </div>
 
     </div>
 </x-app-dash-layout>
 
-@can('crear materias')
-    <!-- Add subject modal -->
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
+@can('crear jueces')
+    <!-- Add judge modal -->
+    <div id="add-judge-modal" tabindex="-1" aria-hidden="true"
          class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <!-- Modal content -->
@@ -159,11 +162,11 @@
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Agregar materia
+                        Agregar juez
                     </h3>
                     <button type="button"
                             class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                            data-modal-hide="authentication-modal">
+                            data-modal-hide="add-judge-modal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                              viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -174,7 +177,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-4 md:p-5">
-                    <form class="space-y-4" action="{{ route('subjects.store') }}" method="POST"
+                    <form class="space-y-4" action="{{ route('judges.store') }}" method="POST"
                           enctype="multipart/form-data">
                         @csrf
                         <div>
@@ -185,11 +188,18 @@
                                    placeholder="Escribir nombre" required value="{{ old('name') }}"/>
                         </div>
                         <div>
-                            <label for="description"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
-                            <textarea name="description" id="description"
-                                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                      required>{{ old('description') }}</textarea>
+                            <label for="last_name"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
+                            <input type="text" name="last_name" id="last_name"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   placeholder="Escribir apellido" required value="{{ old('last_name') }}"/>
+                        </div>
+                        <div>
+                            <label for="job_title"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
+                            <input type="text" name="job_title" id="job_title"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    required value="{{ old('job_title') }}"/>
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900" for="image">Subir
@@ -200,7 +210,7 @@
                                 accept=".jpg,.jpeg,.png,.webp">
                             <p class="mt-1 text-sm text-gray-500" id="file_input_help">JPEG, JPG, PNG o WEBP.</p>
                             <p class="mt-1 text-sm text-gray-500" id="size_input_help">
-                                Tamaño máximo: 5MB.</p>
+                                Tamaño máximo: 2MB.</p>
                         </div>
 
                         <button type="submit"
@@ -217,26 +227,11 @@
 <script src="{{asset('js/parseRow.js')}}"></script>
 <script>
 
-    function setupToggleDescriptionListeners() {
-        document.querySelectorAll('.toggle-description').forEach(button => {
-            button.addEventListener('click', function () {
-                const descriptionContent = this.nextElementSibling;
-                if (descriptionContent.classList.contains('hidden')) {
-                    descriptionContent.classList.remove('hidden');
-                    this.querySelector('img').src = '{{ asset('svg/minus.svg') }}';
-                } else {
-                    descriptionContent.classList.add('hidden');
-                    this.querySelector('img').src = '{{ asset('svg/plus.svg') }}';
-                }
-            });
-        });
-    }
-
     $(document).ready(function () {
-        setupToggleDescriptionListeners();
+
 
         const $loadingSpinner = $('#loading-spinner');
-        const $data = $('#subjects-data');
+        const $data = $('#judges-data');
         let debounceTimer;
 
         $('#search').on('keyup', function () {
@@ -256,7 +251,7 @@
                 $loadingSpinner.removeClass('hidden');
 
                 $.ajax({
-                    url: "{{ route('subjects.search') }}",
+                    url: "{{ route('judges.search') }}",
                     type: "GET",
                     data: {
                         'search': query,
@@ -267,7 +262,6 @@
                     complete: function () {
                         // Hide the loading spinner
                         $loadingSpinner.addClass('hidden');
-                        setupToggleDescriptionListeners();
                     },
                     error: function (xhr, status, error) {
                         console.error('Error al buscar:', error);
@@ -282,5 +276,5 @@
 </script>
 <script src="{{ asset('js/deleteSelected.js') }}"></script>
 <script>
-    initializeDeleteFunction("{{ route('subjects.deleteSelected') }}", "subject_ids");
+    initializeDeleteFunction("{{ route('judges.delete') }}", "judge_ids");
 </script>

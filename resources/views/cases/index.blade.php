@@ -12,7 +12,6 @@
         <div class="flex-1 m-10 relative overflow-x-auto border-t rounded-lg">
             <x-success-error-alert/>
 
-
             <div class="p-4 md:p-10 bg-white dark:bg-gray-900">
                 <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                     <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
