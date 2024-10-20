@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use App\Notifications\AccountCreated;
 
 class UserController extends Controller
 {
@@ -87,6 +88,10 @@ class UserController extends Controller
             $user->syncRoles($validated_data['roles']);
             $user->save();
         }
+
+
+            $user->notify(new AccountCreated());
+
 
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');
 

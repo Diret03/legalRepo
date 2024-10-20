@@ -165,7 +165,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // Cases routes
-    Route::get('/dashboard/casos', [CaseController::class, 'index'])->name('cases.index');
+    Route::group(['middleware' => ['can:ver casos']], function () {
+        Route::get('/dashboard/casos', [CaseController::class, 'index'])->name('cases.index');
+    });
     Route::get('/dashboard/casos/crear', [CaseController::class, 'create'])->name('cases.create');
     Route::post('/dashboard/casos', [CaseController::class, 'store'])->name('cases.store');
     Route::get('/dashboard/casos/{case}/edit', [CaseController::class, 'edit'])->name('cases.edit');

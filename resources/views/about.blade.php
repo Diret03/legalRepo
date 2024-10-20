@@ -113,7 +113,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         @foreach($judges as $judge)
                             <div class="flex flex-col items-center">
-                                <div class="w-48 h-48 mb-4 overflow-hidden rounded-full">
+                                <div class="w-48 h-48 mb-4 overflow-hidden rounded-full border-2 lg:border-4 border-zinc-700">
                                     <img src="{{ $judge->image ? asset($judge->image) : asset('svg/person.svg') }}" alt="{{ $judge->name }} {{ $judge->last_name }}" class="w-full h-full object-cover object-center">
                                 </div>
                                 <h3 class="font-bold text-xl mb-2 text-center">{{ $judge->name }} {{ $judge->last_name }}</h3>
@@ -149,7 +149,6 @@
                 <div>
                     <h3 class="text-xl font-bold mb-4">Enlaces Rápidos</h3>
                     <ul>
-
                         <li class="mb-2">
                             <div class="flex items-center gap-2">
                                 <img src="{{ asset('svg/home.svg') }}" alt="Inicio icono" class="w-5 invert">
