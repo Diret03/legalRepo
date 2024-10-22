@@ -1,4 +1,4 @@
-<x-app-dash-layout>
+<x-app-dash-layout title="Gestión de casos">
     <style>
         .modal-body {
             max-height: calc(100vh - 210px);

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Etiquetas">
     {{--        {{ Breadcrumbs::render('tags') }} --}}
     <div class="flex items-center flex-wrap mb-8">
         {{--            <x-go-back/> --}}

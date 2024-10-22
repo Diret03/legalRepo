@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Juicios de {{$subject->name}}">
     {{--    <x-breadcrumbs/>--}}
 
     {{ Breadcrumbs::render('trials', $subject) }}

@@ -1,4 +1,4 @@
-<x-app-dash-layout>
+<x-app-dash-layout title="Revisión de casos">
 
     <div class="flex">
         <x-sidebar />

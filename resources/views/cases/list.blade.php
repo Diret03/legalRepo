@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Todos los casos">
 
     <div class="flex items-center flex-wrap mb-4">
         <x-go-back route="{{ route('home') }}" />

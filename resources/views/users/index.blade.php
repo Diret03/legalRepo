@@ -1,4 +1,4 @@
-<x-app-dash-layout>
+<x-app-dash-layout title="Gestión de usuarios">
 
     <div class="flex">
         <x-sidebar/>

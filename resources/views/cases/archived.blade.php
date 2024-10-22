@@ -1,4 +1,4 @@
-<x-app-dash-layout>
+<x-app-dash-layout title="Gestión de casos archivados">
     <div class="flex">
         <x-sidebar />
 

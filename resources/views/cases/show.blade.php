@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Caso {{$case->title}}">
     @if ($accessedBy === 'trial')
         {{ Breadcrumbs::render('caseByTrial', $case) }}
     @elseif ($accessedBy === 'tag')

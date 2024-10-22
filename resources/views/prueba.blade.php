@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Inicio">
     <x-success-error-alert/>
     <!-- Start block -->
     <section class="min-h-screen flex items-center">
