@@ -102,8 +102,6 @@
                 <p><span class="label">Número de caso:</span> {{ $case->id }}</p>
                 <p><span class="label">Materia:</span> {{ $case->trial->subject->name }}</p>
                 <p><span class="label">Juicio:</span> {{ $case->trial->name }}</p>
-                <p><span class="label">Fecha:</span> {{ \Carbon\Carbon::parse($case->date)->format('d/m/Y') }}</p>
-                <p><span class="label">Origen:</span> {{ $case->origin }}</p>
                 <div class="tags">
                     <span class="label">Etiquetas:</span>
                     @foreach ($case->tags as $tag)

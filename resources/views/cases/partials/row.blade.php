@@ -10,6 +10,9 @@
                 </div>
             </td>
             <td class="px-6 py-4">
+                {{$case->id}}
+            </td>
+            <td class="px-6 py-4">
                 <div class="text-black">
                     <div class="text-base font-semibold">{{$case->user->name}} {{$case->user->last_name}}</div>
                     <div class="font-normal text-gray-500">{{$case->user->email}}</div>
@@ -23,12 +26,6 @@
             </td>
             <td class="px-6 py-4">
                 {{$case->trial->name}}
-            </td>
-            <td class="px-6 py-4">
-                {{\Carbon\Carbon::parse($case->date)->format('d/m/Y')}}
-            </td>
-            <td class="px-6 py-4">
-                {{$case->origin}}
             </td>
             <td class="px-6 py-4">
                 <button data-modal-target="case-modal-{{$case->id}}" data-modal-toggle="case-modal-{{$case->id}}"

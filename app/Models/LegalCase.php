@@ -16,8 +16,6 @@ class LegalCase extends Model
         'user_id',
         'trial_id',
         'title',
-        'date',
-        'origin',
         'status',
         'context',
         'analysis',

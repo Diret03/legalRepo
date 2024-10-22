@@ -22,9 +22,7 @@ class LegalCaseFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            'date' => $this->faker->date(),
             'status' => $this->faker->randomElement(['pending', 'accepted', 'rejected']),
-            'origin' => $this->faker->city(),
             'context' => $this->faker->paragraph(),
             'analysis' => $this->faker->text(),
             'resolution' => $this->faker->text(),

@@ -34,20 +34,6 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="Escribir nombre" required value="{{ old('title') }}" />
                         </div>
-                        <div>
-                            <label for="date"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
-                            <input type="date" name="date" id="date"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-sm p-2.5"
-                                value="{{ old('date') }}" />
-                        </div>
-                        <div>
-                            <label for="origin"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Origen</label>
-                            <input type="text" name="origin" id="origin"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="Escribir origen" required value="{{ old('origin') }}" />
-                        </div>
                         @can('editar cualquier caso')
                             <div>
                                 <label for="status"

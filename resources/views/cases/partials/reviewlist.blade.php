@@ -30,7 +30,7 @@
                     <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                         {{ $case->title }}</h5>
                 </a>
-                <div class="flex items-center">
+                <div class="flex items-center mb-1">
                     <p class="text-gray-700 font-extrabold">Materia:</p>
                     <p class="font-normal text-gray-700 ml-1">{{ $case->trial->subject->name }}</p>
                 </div>

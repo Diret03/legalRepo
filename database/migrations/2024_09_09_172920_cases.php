@@ -17,9 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('trial_id');
             $table->string('title');
-            $table->date('date');
             $table->enum('status', ['pending', 'accepted', 'rejected']);
-            $table->string('origin');
             $table->text('context');
             $table->text('analysis');
             $table->text('resolution');

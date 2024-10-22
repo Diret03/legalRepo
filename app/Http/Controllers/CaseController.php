@@ -89,8 +89,6 @@ class CaseController extends Controller
             'title' => 'required|string',
             'user_id' => 'nullable|exists:users,id',
             'trial_id' => 'required|exists:trials,id',
-            'date' => 'required|date',
-            'origin' => 'required|string',
             'status' => 'nullable|string|in:pending,accepted,rejected',
             'context' => 'required|string',
             'analysis' => 'required|string',
@@ -113,8 +111,6 @@ class CaseController extends Controller
             'title' => $validated_data['title'],
             'user_id' => $user_id,
             'trial_id' => $validated_data['trial_id'],
-            'date' => $validated_data['date'],
-            'origin' => $validated_data['origin'],
             'status' => $status,
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
@@ -158,8 +154,6 @@ class CaseController extends Controller
             'title' => 'required|string',
             'user_id' => 'nullable|exists:users,id',
             'trial_id' => 'required|exists:trials,id',
-            'date' => 'required|date',
-            'origin' => 'required|string',
             'status' => 'nullable|string|in:pending,accepted,rejected',
             'context' => 'required|string',
             'analysis' => 'required|string',
@@ -182,8 +176,6 @@ class CaseController extends Controller
             'title' => $validated_data['title'],
             'user_id' => $user_id,
             'trial_id' => $validated_data['trial_id'],
-            'date' => $validated_data['date'],
-            'origin' => $validated_data['origin'],
             'status' => $status,
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
@@ -245,8 +237,6 @@ class CaseController extends Controller
                     if (empty($subjectIds) && empty($trialIds)) {
                         $mainQuery->where(function ($q) use ($query, $likeOperator) {
                             $q->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                ->orWhere('date', $likeOperator, '%' . $query . '%')
                                 ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
                                     $trialQuery->where('name', $likeOperator, '%' . $query . '%')
                                         ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
@@ -257,9 +247,7 @@ class CaseController extends Controller
                     } else {
                         // If filters were applied, only search within case attributes
                         $mainQuery->where(function ($q) use ($query, $likeOperator) {
-                            $q->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                ->orWhere('date', $likeOperator, '%' . $query . '%');
+                            $q->where('title', $likeOperator, '%' . $query . '%');
                         });
                     }
                 }
@@ -333,8 +321,6 @@ class CaseController extends Controller
                     $cases = LegalCase::where('user_id', Auth::id()) // Mandatory condition
                         ->where(function ($queryBuilder) use ($query, $likeOperator) {
                             $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                ->orWhere('date', $likeOperator, '%' . $query . '%')
                                 ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
                                     $trialQuery->where('name', $likeOperator, '%' . $query . '%')
                                         ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
@@ -366,8 +352,6 @@ class CaseController extends Controller
                         if (empty($subjectIds) && empty($trialIds)) {
                             $mainQuery->where(function ($q) use ($query, $likeOperator) {
                                 $q->where('title', $likeOperator, '%' . $query . '%')
-                                    ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                    ->orWhere('date', $likeOperator, '%' . $query . '%')
                                     ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
                                         $trialQuery->where('name', $likeOperator, '%' . $query . '%')
                                             ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
@@ -378,9 +362,7 @@ class CaseController extends Controller
                         } else {
                             // If filters were applied, only search within case attributes
                             $mainQuery->where(function ($q) use ($query, $likeOperator) {
-                                $q->where('title', $likeOperator, '%' . $query . '%')
-                                    ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                                    ->orWhere('date', $likeOperator, '%' . $query . '%');
+                                $q->where('title', $likeOperator, '%' . $query . '%');
                             });
                         }
                     });
@@ -388,8 +370,6 @@ class CaseController extends Controller
                 } else {
                     $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
                         ->orWhere('title', $likeOperator, '%' . $query . '%')
-                        ->orWhere('origin', $likeOperator, '%' . $query . '%')
-                        ->orWhere('date', $likeOperator, '%' . $query . '%')
                         ->orWhereHas('trial', function ($queryBuilder) use ($query, $likeOperator) {
                             $queryBuilder->where('name', $likeOperator, '%' . $query . '%')
                                 ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {

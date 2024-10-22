@@ -130,6 +130,9 @@
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Nro.
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Usuario
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -140,12 +143,6 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Juicio
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Fecha
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Origen
                         </th>
                         <th scope="col" class="desc px-6 py-3">
                             Detalles

@@ -17,8 +17,6 @@ class LegalCaseSeeder extends Seeder
             'user_id' => 1,
             'trial_id' => 1,
             'title' => "Pago mixto de la pensión alimenticia",
-            'date' => date("Y/m/d"),
-            'origin' => 'Ibarra',
             'status' => 'accepted',
             'context' =>'<p class="MsoNormal" style="text-align: justify;"><span lang="ES-TRAD" style="font-size: 12pt; font-family: figtree;">La se&ntilde;ora A (madre) presenta una demanda de Alimentos en contra del se&ntilde;or B (padre) en la que se reclama la pensi&oacute;n alimenticia a favor de su hijo en com&uacute;n NNA, seg&uacute;n la legislaci&oacute;n ecuatoriana.</span></p>
                         <p class="MsoNormal" style="text-align: justify;"><span lang="ES-TRAD" style="font-size: 12pt; font-family: figtree;">&nbsp;</span></p>

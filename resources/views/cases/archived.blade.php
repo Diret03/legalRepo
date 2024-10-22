@@ -95,12 +95,12 @@
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                     aria-labelledby="dropdownActionButton2">
                                     <li>
-                                        <a href="{{ route('cases.archived') }}?sort=date&direction=desc"
+                                        <a href="{{ route('cases.archived') }}?sort=updated_at&direction=desc"
                                             class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                             recientes</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('cases.archived') }}?sort=date&direction=asc"
+                                        <a href="{{ route('cases.archived') }}?sort=updated_at&direction=asc"
                                             class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
                                             antiguos</a>
                                     </li>
@@ -149,6 +149,9 @@
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Nro.
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Usuario
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -159,12 +162,6 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Juicio
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Fecha
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Origen
                         </th>
                         <th scope="col" class="desc px-6 py-3">
                             Detalles

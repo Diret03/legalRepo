@@ -115,12 +115,10 @@
         <div class="flex flex-col lg:flex-row">
             <div class="w-full lg:w-1/2">
                 <x-colon-text label="Número de caso" :value="$case->id"/>
-                <x-colon-text label="Fecha" :value="\Carbon\Carbon::parse($case->date)->format('d/m/Y')"/>
                 <x-colon-text label="Materia" :value="$case->trial->subject->name"/>
                 <x-colon-text label="Juicio" :value="$case->trial->name"/>
             </div>
             <div class="w-full lg:w-1/2">
-                <x-colon-text label="Origen" value="{{$case->origin}}"/>
                 <div class="mb-3 flex items-center">
                     <p class="text-gray-700 font-extrabold mr-3">Etiquetas:</p>
                     <div class="flex flex-wrap gap-1">
