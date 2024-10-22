@@ -36,10 +36,10 @@
 
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch mb-20">
                 <div class="order-2 lg:order-1 rounded-xl shadow-lg p-8 lg:p-12 border-2 lg:border-4 border-zinc-700">
                     <h2 class="font-bold text-3xl text-gray-900 mb-6">Nuestra Misión</h2>
-                    <p class=" text-lg text-gray-700 leading-relaxed mb-6">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
                         La Universidad Técnica del Norte y la Corte Provincial de Imbabura se unen firmemente para
                         fortalecer la transparencia y la participación ciudadana en el ámbito judicial. Nuestro objetivo
                         es convertirnos en una herramienta esencial para estudiantes y profesionales, promoviendo la
@@ -47,9 +47,9 @@
                         relevantes de la provincia.
                     </p>
                 </div>
-                <div class="order-1 lg:order-2">
-                    <img src="{{ asset('img/consultorio.jpg') }}" alt="Imagen consultorio juridico"
-                        class="w-full h-auto object-cover rounded-lg shadow-xl">
+                <div class="order-1 lg:order-2 h-full">
+                    <img src="{{ asset('img/ecuador.jpg') }}" alt="Imagen consultorio juridico"
+                        class="w-full h-full object-cover rounded-lg shadow-xl">
                 </div>
             </div>
 
