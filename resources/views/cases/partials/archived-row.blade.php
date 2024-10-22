@@ -77,15 +77,15 @@
                                     <textarea class="editor-modal" name="context">{{$case->context}}</textarea>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 dark:text-white">Análisis</h4>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Problema Jurídico</h4>
                                     <textarea class="editor-modal" name="context">{{$case->analysis}}</textarea>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 dark:text-white">Resolución</h4>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Respuesta</h4>
                                     <textarea class="editor-modal" name="context">{{$case->resolution}}</textarea>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 dark:text-white">Notas</h4>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">Recomendaciones</h4>
                                     <textarea class="editor-modal" name="context">{{$case->note}}</textarea>
                                 </div>
                             </div>

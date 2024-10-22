@@ -93,12 +93,13 @@ class CaseController extends Controller
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
-            'note' => 'nullable|string',
+            'note' => 'required|string',
             'tags' => 'nullable'
         ], [
             'context.required' => 'El campo contexto es obligatorio.',
-            'analysis.required' => 'El campo de análisis jurídico es obligatorio.',
-            'resolution.required' => 'El campo de resolución es obligatorio.',
+            'analysis.required' => 'El campo de problema jurídico es obligatorio.',
+            'resolution.required' => 'El campo de respuesta es obligatorio.',
+            'note.required' => 'El campo de recomendaciones es obligatorio.',
         ]);
 
         // null coalescing to check if 'user_id' exists in $validated_data
@@ -115,12 +116,9 @@ class CaseController extends Controller
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],
+            'note' => $validated_data['note'],
         ]);
 
-        if (!empty($validated_data['note'])) {
-            $case->note = $validated_data['note'];
-            $case->save(); // Save the updated note to the case
-        }
 
         if (!empty($validated_data['tags'])) {
             $tags = json_decode($validated_data['tags']);
@@ -158,12 +156,13 @@ class CaseController extends Controller
             'context' => 'required|string',
             'analysis' => 'required|string',
             'resolution' => 'required|string',
-            'note' => 'nullable|string',
+            'note' => 'required|string',
             'tags' => 'nullable'
         ], [
             'context.required' => 'El campo contexto es obligatorio.',
-            'analysis.required' => 'El campo de análisis jurídico es obligatorio.',
-            'resolution.required' => 'El campo de resolución es obligatorio.',
+            'analysis.required' => 'El campo de problema jurídico es obligatorio.',
+            'resolution.required' => 'El campo de respuesta es obligatorio.',
+            'note.required' => 'El campo de recomendaciones es obligatorio.',
         ]);
 
         // null coalescing to check if 'user_id' exists in $validated_data
@@ -180,12 +179,9 @@ class CaseController extends Controller
             'context' => $validated_data['context'],
             'analysis' => $validated_data['analysis'],
             'resolution' => $validated_data['resolution'],
+            'note' => $validated_data['note'],
         ]);
 
-        if (!empty($validated_data['note'])) {
-            $case->note = $validated_data['note'];
-            $case->save();
-        }
 
         if (!empty($validated_data['tags'])) {
             $tags = json_decode($validated_data['tags']);
@@ -699,12 +695,7 @@ class CaseController extends Controller
             ->setPaper('A4', 'landscape');
 
         $pdfName = "Caso: " . $case->title . ".pdf";
-        //
+        
         return $pdf->download($pdfName);
-
-        //        Pdf::view('pdf.case', ['case' => $case])
-        //            ->save('/some/directory/invoice.pdf');
-
-
     }
 }

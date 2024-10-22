@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('context');
             $table->text('analysis');
             $table->text('resolution');
-            $table->text('note')->nullable();
+            $table->text('note');
             $table->text('rejection_message')->nullable();
 
             $table->softDeletes();

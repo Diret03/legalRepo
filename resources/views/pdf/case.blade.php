@@ -4,11 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ $case->title }}</title>
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        @font-face {
+            font-family: 'Figtree';
+            src: url({{ storage_path('fonts/Figtree-Regular.ttf') }}) format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Figtree';
+            src: url({{ storage_path('fonts/Figtree-Bold.ttf') }}) format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
         body {
-            font-family: Figtree, "Times New Roman", sans-serif;
+            font-family: 'Figtree', "Times New Roman", sans-serif;
             line-height: 1.6;
             color: #333;
             margin: 0;
@@ -115,15 +129,15 @@
                 {!! htmlspecialchars_decode($case->context) !!}
             </div>
             <div class="context">
-                <h2>Analisis</h2>
+                <h2>Problema Jurídico</h2>
                 {!! htmlspecialchars_decode($case->analysis) !!}
             </div>
             <div class="context">
-                <h2>Resolucion</h2>
+                <h2>Respuesta</h2>
                 {!! htmlspecialchars_decode($case->resolution) !!}
             </div>
             <div class="context">
-                <h2>Nota</h2>
+                <h2>Recomendaciones</h2>
                 {!! htmlspecialchars_decode($case->note) !!}
             </div>
         </main>

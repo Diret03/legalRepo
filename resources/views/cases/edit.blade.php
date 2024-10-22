@@ -107,20 +107,20 @@
                                     <button
                                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300"
                                         id="analysis-tab" data-tabs-target="#analysis" type="button" role="tab"
-                                        aria-controls="analysis" aria-selected="false">Análisis Jurídico</button>
+                                        aria-controls="analysis" aria-selected="false">Problema Jurídico</button>
                                 </li>
                                 <li class="me-2" role="presentation">
                                     <button
                                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300"
                                         id="resolution-tab" data-tabs-target="#resolution" type="button"
                                         role="tab" aria-controls="resolution"
-                                        aria-selected="false">Resolución</button>
+                                        aria-selected="false">Respuesta</button>
                                 </li>
                                 <li role="presentation">
                                     <button
                                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
                                         id="note-tab" data-tabs-target="#note" type="button" role="tab"
-                                        aria-controls="note" aria-selected="false">Nota</button>
+                                        aria-controls="note" aria-selected="false">Recomendaciones</button>
                                 </li>
                             </ul>
                         </div>
