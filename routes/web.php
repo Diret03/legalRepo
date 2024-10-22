@@ -160,7 +160,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['middleware' => ['can:eliminar jueces']], function () {
         Route::delete('/dashboard/jueces/{judge}', [JudgeController::class, 'destroy'])->name('judges.destroy');
-        Route::delete("/dashboard/selected-trials", [JudgeController::class, 'deleteSelected'])->name('judges.delete');
+        Route::delete("/dashboard/selected-judges", [JudgeController::class, 'deleteSelected'])->name('judges.delete');
     });
 
 
