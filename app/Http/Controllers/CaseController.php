@@ -298,7 +298,6 @@ class CaseController extends Controller
 
     public function search(Request $request)
     {
-
         if ($request->ajax()) {
             $query = $request->input('search');
             $view = $request->input('view');
@@ -315,53 +314,51 @@ class CaseController extends Controller
                 // Perform search query
                 if ($view == 'mycases') {
                     $cases = LegalCase::where('user_id', Auth::id()) // Mandatory condition
-                        ->where(function ($queryBuilder) use ($query, $likeOperator) {
-                            $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                        });
-                                });
-                        })
+                    ->where(function ($queryBuilder) use ($query, $likeOperator) {
+                        $queryBuilder->where('title', $likeOperator, '%' . $query . '%')
+                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                $trialQuery->where('name', $likeOperator, '%' . $query . '%')
+                                    ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
+                                        $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
+                                    });
+                            });
+                    })
                         ->get();
                 } elseif ($view == 'all-list') {
-
                     $queryBuilder = LegalCase::query()->where('status', 'accepted');
 
                     $subjectIds = $request->input('subject_ids', []);
                     $trialIds = $request->input('trial_ids', []);
 
-                    $queryBuilder->where(function ($mainQuery) use ($query, $likeOperator, $subjectIds, $trialIds) {
-                        // Apply subject and trial filters if provided
-                        if (!empty($subjectIds)) {
-                            $mainQuery->whereHas('trial.subject', function ($q) use ($subjectIds) {
-                                $q->whereIn('id', $subjectIds);
-                            });
-                        }
+                    // Apply subject filter if provided
+                    if (!empty($subjectIds)) {
+                        $queryBuilder->whereHas('trial.subject', function ($q) use ($subjectIds) {
+                            $q->whereIn('id', $subjectIds);
+                        });
+                    }
 
-                        if (!empty($trialIds)) {
-                            $mainQuery->whereIn('trial_id', $trialIds);
-                        }
+                    // Apply trial filter if provided, as an OR condition within the filtered subjects
+                    if (!empty($trialIds)) {
+                        $queryBuilder->orWhere(function ($q) use ($trialIds, $subjectIds) {
+                            $q->whereIn('trial_id', $trialIds);
+                            // If subjects are selected, maintain that filter
+                            if (!empty($subjectIds)) {
+                                $q->whereHas('trial.subject', function ($sq) use ($subjectIds) {
+                                    $sq->whereIn('id', $subjectIds);
+                                });
+                            }
+                        });
+                    }
 
-                        // If no filters were applied, allow searching by case attributes, trial name, or subject name
-                        if (empty($subjectIds) && empty($trialIds)) {
-                            $mainQuery->where(function ($q) use ($query, $likeOperator) {
-                                $q->where('title', $likeOperator, '%' . $query . '%')
-                                    ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                        $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                            ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                                $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                            });
-                                    });
+
+                    $queryBuilder->where(function ($q) use ($query, $likeOperator) {
+                        $q->where('title', $likeOperator, '%' . $query . '%')
+                            ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
+                                $trialQuery->where('name', $likeOperator, '%' . $query . '%');
                             });
-                        } else {
-                            // If filters were applied, only search within case attributes
-                            $mainQuery->where(function ($q) use ($query, $likeOperator) {
-                                $q->where('title', $likeOperator, '%' . $query . '%');
-                            });
-                        }
                     });
+
+
                     $cases = $queryBuilder->get();
                 } else {
                     $cases = LegalCase::where('id', $likeOperator, '%' . $query . '%')
@@ -423,8 +420,6 @@ class CaseController extends Controller
                     ])->render();
                 }
             } else {
-
-
                 if ($view == 'table') {
                     $output = '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron resultados</td>
@@ -445,7 +440,6 @@ class CaseController extends Controller
                     </div>';
                 }
             }
-
             return $output;
         }
     }
@@ -695,7 +689,7 @@ class CaseController extends Controller
             ->setPaper('A4', 'landscape');
 
         $pdfName = "Caso: " . $case->title . ".pdf";
-        
+
         return $pdf->download($pdfName);
     }
 }
