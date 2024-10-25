@@ -9,6 +9,7 @@ use App\Models\LegalCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\CaseAccepted;
 use Spatie\Tags\Tag;
@@ -197,103 +198,6 @@ class CaseController extends Controller
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
     }
 
-    public function filter(Request $request)
-    {
-        $output = null;
-
-        if ($request->ajax()) {
-            $queryBuilder = LegalCase::query()->where('status', 'accepted');
-
-            $subjectIds = $request->input('subject_ids', []);
-            $trialIds = $request->input('trial_ids', []);
-            $query = $request->input('search');
-            $dbDriver = DB::getDriverName();
-            // Use ILIKE for PostgreSQL and LIKE for others
-            $likeOperator = $dbDriver === 'pgsql' ? 'ILIKE' : 'LIKE';
-
-
-            $page = max(1, intval($request->input('page', 1))); // Ensure page is an integer and at least 1
-            $sortField = $request->input('sort', 'id');
-            $sortDirection = $request->input('direction', 'asc');
-
-            $queryBuilder->where(function ($mainQuery) use ($query, $likeOperator, $subjectIds, $trialIds) {
-                // Apply subject and trial filters if provided
-                if (!empty($subjectIds)) {
-                    $mainQuery->whereHas('trial.subject', function ($q) use ($subjectIds) {
-                        $q->whereIn('id', $subjectIds);
-                    });
-                }
-
-                if (!empty($trialIds)) {
-                    $mainQuery->orWhereIn('trial_id', $trialIds);
-                }
-
-                if (!empty($query)) {
-                    // If no filters were applied, allow searching by case attributes, trial name, or subject name
-                    if (empty($subjectIds) && empty($trialIds)) {
-                        $mainQuery->where(function ($q) use ($query, $likeOperator) {
-                            $q->where('title', $likeOperator, '%' . $query . '%')
-                                ->orWhereHas('trial', function ($trialQuery) use ($query, $likeOperator) {
-                                    $trialQuery->where('name', $likeOperator, '%' . $query . '%')
-                                        ->orWhereHas('subject', function ($subjectQuery) use ($query, $likeOperator) {
-                                            $subjectQuery->where('name', $likeOperator, '%' . $query . '%');
-                                        });
-                                });
-                        });
-                    } else {
-                        // If filters were applied, only search within case attributes
-                        $mainQuery->where(function ($q) use ($query, $likeOperator) {
-                            $q->where('title', $likeOperator, '%' . $query . '%');
-                        });
-                    }
-                }
-            });
-
-            $queryBuilder->orderBy($sortField, $sortDirection);
-
-            $totalCount = $queryBuilder->count();
-
-            // Adjust page if it exceeds the last possible page
-            $perPage = 10;
-            $lastPage = max(1, ceil($totalCount / $perPage));
-            $page = min($page, $lastPage);
-
-
-            // $renderedCases = $queryBuilder->paginate(10, ['*'], 'page', $page);
-            // Paginate the results
-            $cases = $queryBuilder->paginate($perPage, ['*'], 'page', $page);
-
-
-            if (count($cases) > 0) {
-                $cases->appends([
-                    'search' => $query,
-                    'sort' => $sortField,
-                    'direction' => $sortDirection
-                ]);
-                // Render the view with the retrieved data
-                $output = view('cases.partials.all-list', [
-                    'cases' => $cases,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection
-                ])->render();
-            } else {
-                $output =
-                    '<div
-                        class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
-                        role="alert">
-                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
-                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                        </svg>
-                        <span class="sr-only">Info</span>
-                        <div> No se encontraron resultados</div>
-
-                    </div>';
-            }
-        }
-        return $output;
-    }
 
 
     public function search(Request $request)
@@ -339,14 +243,8 @@ class CaseController extends Controller
 
                     // Apply trial filter if provided, as an OR condition within the filtered subjects
                     if (!empty($trialIds)) {
-                        $queryBuilder->orWhere(function ($q) use ($trialIds, $subjectIds) {
+                        $queryBuilder->orWhere(function ($q) use ($trialIds) {
                             $q->whereIn('trial_id', $trialIds);
-                            // If subjects are selected, maintain that filter
-                            if (!empty($subjectIds)) {
-                                $q->whereHas('trial.subject', function ($sq) use ($subjectIds) {
-                                    $sq->whereIn('id', $subjectIds);
-                                });
-                            }
                         });
                     }
 
@@ -443,6 +341,7 @@ class CaseController extends Controller
             return $output;
         }
     }
+
 
     public function cleanFilters(Request $request)
     {
@@ -692,4 +591,90 @@ class CaseController extends Controller
 
         return $pdf->download($pdfName);
     }
+
+    public function filter(Request $request)
+    {
+        try {
+            // Log incoming request data
+            Log::info('Filter request received', [
+                'subject_ids' => $request->input('subject_ids'),
+                'trial_ids' => $request->input('trial_ids'),
+                'search' => $request->input('search'),
+                'sort' => $request->input('sort'),
+                'direction' => $request->input('direction')
+            ]);
+
+            $query = LegalCase::query()
+                ->where('status', 'accepted');
+
+            // Apply search if provided
+            if ($request->filled('search')) {
+                $searchTerm = $request->search;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('id', 'ILIKE', "%{$searchTerm}%")
+                        ->orWhere('title', 'ILIKE', "%{$searchTerm}%");
+                });
+            }
+
+            // Apply subject and trial filters with OR condition
+            if ($request->filled('subject_ids') || $request->filled('trial_ids')) {
+                $query->where(function ($query) use ($request) {
+                    // Add subject filter if present
+                    if ($request->filled('subject_ids')) {
+                        $query->orWhereHas('trial', function ($q) use ($request) {
+                            $q->whereIn('subject_id', $request->subject_ids);
+                        });
+                    }
+
+                    // Add trial filter if present
+                    if ($request->filled('trial_ids')) {
+                        $query->orWhereIn('trial_id', $request->trial_ids);
+                    }
+                });
+            }
+
+            // Apply sorting
+            $sortField = $request->input('sort', 'updated_at');
+            $sortDirection = $request->input('direction', 'desc');
+            $query->orderBy($sortField, $sortDirection);
+
+            // Log the SQL query being executed
+            Log::info('SQL Query:', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
+            $cases = $query->paginate(10);
+
+            // Log the number of results
+            Log::info('Query results', [
+                'total' => $cases->total(),
+                'current_page' => $cases->currentPage()
+            ]);
+
+            if ($request->ajax()) {
+                $view = view('cases.partials.all-list', compact('cases'))->render();
+                return response($view)->header('Content-Type', 'text/html');
+            }
+
+            return view('cases.list', compact('cases'));
+
+        } catch (\Exception $e) {
+            Log::error('Error in filter method', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            throw $e;
+        }
+    }
+
+
+
 }

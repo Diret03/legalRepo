@@ -42,4 +42,5 @@ class LegalCase extends Model
     public function trial(){
         return $this->belongsTo(Trial::class);
     }
+
 }
