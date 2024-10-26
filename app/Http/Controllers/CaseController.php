@@ -65,7 +65,10 @@ class CaseController extends Controller
         // Get subjects along with the count of accepted cases via trials
         $subjects = Subject::with(['trials' => function ($query) {
             $query->withCount(['cases' => function ($caseQuery) {
-                $caseQuery->where('status', 'accepted');
+                $caseQuery->where('status', 'accepted')
+                    ->whereHas('user', function ($q) {
+                        $q->where('status', true);
+                    });
             }]);
         }])->get();
 

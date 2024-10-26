@@ -23,7 +23,9 @@ class TagController extends Controller
     {
         // Retrieve tags that are associated with at least one accepted case
         $acceptedTags = Tag::whereHas('cases', function ($query) {
-            $query->where('status', 'accepted');
+            $query->where('status', 'accepted')->whereHas('user', function ($q) {
+                $q->where('status', true);
+            });
         })
             ->withCount(['cases as accepted_cases_count' => function ($query) {
                 $query->where('status', 'accepted');
@@ -38,7 +40,6 @@ class TagController extends Controller
         $groupedTags = $acceptedTags->groupBy(function ($tag) {
             return strtoupper(substr($tag->name, 0, 1));
         });
-
 
 
         $perPage = 8;
