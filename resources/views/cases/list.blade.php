@@ -197,6 +197,7 @@
                 .map(checkbox => checkbox.value);
             const searchQuery = document.getElementById('search').value;
 
+
             // Get current sort parameters from URL
             const urlParams = new URLSearchParams(window.location.search);
             const sortField = urlParams.get('sort') || 'id';
@@ -210,6 +211,9 @@
             // Prepare query parameters
             const params = new URLSearchParams();
 
+            const pagination = document.getElementById('pagination');
+            const loadingSpinner = document.getElementById('loading-spinner');
+
             // Only add parameters if they have values
             if (subjectIds.length > 0) {
                 subjectIds.forEach(id => params.append('subject_ids[]', id));
@@ -217,16 +221,25 @@
             if (trialIds.length > 0) {
                 trialIds.forEach(id => params.append('trial_ids[]', id));
             }
+
             if (searchQuery) {
                 params.append('search', searchQuery);
+            } else {
+                pagination.style.display = '';
             }
             params.append('page', page);
             params.append('sort', sortField);
             params.append('direction', sortDirection);
 
+            if(searchQuery.length>0 || (subjectIds.length>0 || trialIds.length>0)){
+                pagination.style.display = 'none';
+            } else {
+                pagination.style.display = '';
+            }
+
             // Log the request URL for debugging
             console.log('Request URL:', `/cases/filter?${params.toString()}`);
-
+            loadingSpinner.classList.remove('hidden');
             // Make API request
             fetch(`/cases/filter?${params.toString()}`, {
                 headers: {
@@ -236,6 +249,8 @@
                 credentials: 'same-origin' // Include cookies if using Laravel's CSRF protection
             })
                 .then(response => {
+
+
                     console.log('Response status:', response.status);
                     console.log('Response headers:', [...response.headers.entries()]);
 
@@ -252,24 +267,27 @@
                     casesContainer.innerHTML = html;
                     casesContainer.style.opacity = '1';
 
-
                     // Update URL with current filters
                     const newUrl = `${window.location.pathname}?${params.toString()}`;
-                    window.history.pushState({ path: newUrl }, '', newUrl);
+                    window.history.pushState({path: newUrl}, '', newUrl);
+
+                    loadingSpinner.classList.add('hidden');
                 })
                 .catch(error => {
                     console.error('Detailed error:', error);
                     casesContainer.style.opacity = '1';
                     casesContainer.innerHTML = `
-            <div class="p-4 text-center">
-                <div class="text-red-500 mb-2">Error loading cases</div>
-                <div class="text-sm text-gray-500">${error.message}</div>
-            </div>`;
+                        <div class="p-4 text-center">
+                            <div class="text-red-500 mb-2">Error loading cases</div>
+                            <div class="text-sm text-gray-500">${error.message}</div>
+                        </div>`;
+
+                    loadingSpinner.classList.add('hidden');
                 });
         }
 
         // Initialize all event listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Initialize filter toggle for mobile
             const filterToggle = document.getElementById('filterToggle');
             const filterContainer = document.getElementById('filterContainer');
@@ -330,7 +348,16 @@
 
             // Initial load if there are URL parameters
             if (window.location.search) {
+                const searchQuery = document.getElementById('search').value;
                 filterCases();
+
+                // if(searchQuery){
+                //     console.log("QUE ESTA PASANDO")
+                //     pagination.style.display = 'none';
+                // }
+                // else{
+                //     pagination.style.display = '';
+                // }
             }
         });
 

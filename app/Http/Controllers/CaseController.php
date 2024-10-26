@@ -24,7 +24,11 @@ class CaseController extends Controller
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
-        $cases = LegalCase::orderBy($sortField, $sortDirection)->paginate(10);
+        $cases = LegalCase::orderBy($sortField, $sortDirection)
+            ->whereHas('user', function ($q) {
+                $q->where('status', true);
+            })
+            ->paginate(10);
         $trials = Trial::all();
         return view('cases.index', compact('cases', 'trials'));
     }
@@ -197,7 +201,6 @@ class CaseController extends Controller
 
         return redirect()->route('cases.index')->with('success', 'Juicio actualizado exitosamente.');
     }
-
 
 
     public function search(Request $request)
@@ -392,6 +395,9 @@ class CaseController extends Controller
 
         $cases = LegalCase::where('trial_id', $trial_id)
             ->where('status', 'accepted')
+            ->whereHas('user', function ($q) {
+                $q->where('status', true);
+            })
             ->paginate(5);
         $trial = Trial::findOrFail($trial_id);
         $trial_name = $trial->name;
@@ -407,7 +413,9 @@ class CaseController extends Controller
         // Only allow public access if the case is 'accepted'
         //        dd(Auth::check());
         //        dd($case->status);
-        if ($case->status !== 'Aceptado' && !Auth::check()) {
+
+        //don't show case if it is not accepted or its user is inactive
+        if (($case->status !== 'Aceptado' && !Auth::check()) || (!$case->user->status && !Auth::check())) {
             abort(404); // Show 404 for unauthorized users
         }
 
@@ -522,6 +530,9 @@ class CaseController extends Controller
         $tag_name = $tag->name;
         $cases = LegalCase::withAnyTags([$tag_name])
             ->where('status', 'accepted')
+            ->whereHas('user', function ($q) {
+                $q->where('status', true);
+            })
             ->paginate(10);
 
         return view('cases.byTag', compact('cases', 'tag', 'tag_name'));
@@ -595,17 +606,22 @@ class CaseController extends Controller
     public function filter(Request $request)
     {
         try {
+
             // Log incoming request data
             Log::info('Filter request received', [
                 'subject_ids' => $request->input('subject_ids'),
                 'trial_ids' => $request->input('trial_ids'),
                 'search' => $request->input('search'),
                 'sort' => $request->input('sort'),
-                'direction' => $request->input('direction')
+                'direction' => $request->input('direction'),
+                'page' => $request->input('page'),
             ]);
 
             $query = LegalCase::query()
-                ->where('status', 'accepted');
+                ->where('status', 'accepted')
+                ->whereHas('user', function ($q) {
+                    $q->where('status', true);
+                });
 
             // Apply search if provided
             if ($request->filled('search')) {
@@ -634,8 +650,10 @@ class CaseController extends Controller
             }
 
             // Apply sorting
-            $sortField = $request->input('sort', 'updated_at');
-            $sortDirection = $request->input('direction', 'desc');
+            $sortField = $request->input('sort', 'id');
+            $sortDirection = $request->input('direction', 'asc');
+            $page = intval($request->input('page', 1));
+
             $query->orderBy($sortField, $sortDirection);
 
             // Log the SQL query being executed
@@ -644,20 +662,31 @@ class CaseController extends Controller
                 'bindings' => $query->getBindings()
             ]);
 
-            $cases = $query->paginate(10);
+            $totalCount = $query->count();
+
+            // Adjust page if it exceeds the last possible page
+            $perPage = 10;
+            $lastPage = max(1, ceil($totalCount / $perPage));
+            $page = min($page, $lastPage);
+
+            //paginate results
+            $cases = $query->paginate($perPage, ['*'], 'page', $page);
 
             // Log the number of results
-            Log::info('Query results', [
-                'total' => $cases->total(),
-                'current_page' => $cases->currentPage()
-            ]);
+//            Log::info('Query results', [
+//                'total' => $cases->total(),
+//                'current_page' => $cases->currentPage()
+//            ]);
 
             if ($request->ajax()) {
-                $view = view('cases.partials.all-list', compact('cases'))->render();
-                return response($view)->header('Content-Type', 'text/html');
+                if ($cases->isEmpty()) {
+                    return response()->view('cases.partials.empty-results')->header('Content-Type', 'text/html');
+                }
+                return response()->view('cases.partials.all-list', compact('cases'))->header('Content-Type', 'text/html');
             }
 
             return view('cases.list', compact('cases'));
+
 
         } catch (\Exception $e) {
             Log::error('Error in filter method', [
@@ -674,7 +703,6 @@ class CaseController extends Controller
             throw $e;
         }
     }
-
 
 
 }
