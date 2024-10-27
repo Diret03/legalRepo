@@ -179,7 +179,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/revisar', [CaseController::class, 'review'])->name('cases.review');
     Route::patch('/cases/{id}/approve', [CaseController::class, 'approve'])->name('cases.approve');
     Route::patch('/cases/{id}/reject', [CaseController::class, 'reject'])->name('cases.reject');
-    Route::get('/dashboard/mis-casos/{user_id}', [CaseController::class, 'myCases'])->name('cases.mycases');
+
+    Route::get('/dashboard/mis-casos', [CaseController::class, 'myCases'])->name('cases.mycases');
+
 
 
     Route::get('/dashboard/casos/archivados', [CaseController::class, 'archived'])->name('cases.archived');

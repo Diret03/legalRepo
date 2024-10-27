@@ -39,7 +39,7 @@
                         }
                     @endphp
                     <a id="accepted-link" type="button"
-                        href="{{ route('cases.mycases', Auth::user()->id) }}?status=accepted"
+                        href="{{ route('cases.mycases') }}?status=accepted"
                         class="flex items-center px-4 py-2 focus:outline-none text-white {{ $bgAccepted }} hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm mx-1 mb-2
 
                         ">
@@ -47,18 +47,18 @@
                         Aceptados
                     </a>
                     <a id="pending-link" type="button"
-                        href="{{ route('cases.mycases', Auth::user()->id) }}?status=pending"
+                        href="{{ route('cases.mycases') }}?status=pending"
                         class="flex items-center px-4 py-1 focus:outline-none text-white {{ $bgPending }} hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm mx-1 mb-2">
                         <img src="{{ asset('svg/pending.svg') }}" class="h-8 w-8 mr-2 invert" alt="Pendiente icon">
                         Pendientes
                     </a>
                     <a id="rejected-link" type="button"
-                        href="{{ route('cases.mycases', Auth::user()->id) }}?status=rejected"
+                        href="{{ route('cases.mycases') }}?status=rejected"
                         class="flex items-center px-4 py-2 focus:outline-none text-white {{ $bgRejected }} hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm mx-1 mb-2">
                         <img src="{{ asset('svg/rejected.svg') }}" class="h-6 w-6 mr-2 invert" alt="Rechazado icon">
                         Rechazados
                     </a>
-                    <a type="button" href="{{ route('cases.mycases', Auth::user()->id) }}?status=all"
+                    <a type="button" href="{{ route('cases.mycases') }}?status=all"
                         class="px-4 py-2 focus:outline-none text-white {{ $bgAll }} hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm mx-1 mb-2">
                         Todos
                     </a>

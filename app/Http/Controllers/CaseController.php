@@ -482,23 +482,19 @@ class CaseController extends Controller
         return redirect()->route('cases.review')->with('success', "Juicio " . $id . " aprobado correctamente.");
     }
 
-    public function myCases(Request $request, $user_id)
+    public function myCases(Request $request)
     {
 
-        $status = $request->query('status', 'accepted'); // default sort field
+        $status = $request->query('status', 'accepted');
 
-        $cases = LegalCase::where('user_id', $user_id)
-            ->where('status', $status)
-            ->orderBy('updated_at', 'desc')->paginate(12);
+        $query = LegalCase::query()
+            ->where('user_id', Auth::id());
 
-        if ($status == 'all') {
-            $cases = LegalCase::where('user_id', $user_id)
-                ->orderBy('updated_at', 'desc')->paginate(12);
-        }
+        $query->when($status !== 'all', function ($q) use ($status) {
+            return $q->where('status', $status);
+        });
 
-        if ($user_id != Auth::id()) {
-            abort(404); // Show 404 for unauthorized users
-        }
+        $cases = $query->orderBy('updated_at', 'desc')->paginate(12);
 
         return view('cases.mycases', compact('cases'));
     }

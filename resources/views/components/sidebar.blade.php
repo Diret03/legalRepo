@@ -26,7 +26,7 @@
         @endcan
         @can('ver casos propios')
             <x-dash-link
-                href="{{ route('cases.mycases', Auth::user()->id) }}"
+                href="{{ route('cases.mycases')}}"
                 icon="svg/review-case.svg"
                 title="Mis Casos"
                 :activeRoutes="['cases.mycases']"
