@@ -61,13 +61,16 @@
                                     aria-labelledby="dropdownActionButton2">
                                     <li>
                                         <a href="{{ route('cases.index') }}?sort=updated_at&direction=desc"
-                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
-                                            recientes</a>
+                                            class="block px-4 py-2 hover:bg-gray-100"
+                                            {{ request('sort') === 'updated_at' && request('direction')  === 'desc' ? 'bg-gray-100' : '' }}>
+                                            Más recientes</a>
                                     </li>
+
                                     <li>
                                         <a href="{{ route('cases.index') }}?sort=updated_at&direction=asc"
-                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
-                                            antiguos</a>
+                                            class="block px-4 py-2 hover:bg-gray-100"
+                                            {{ request('sort') === 'updated_at' && request('direction')  === 'asc' ? 'bg-gray-100' : '' }}>
+                                            Más antiguos</a>
                                     </li>
                                 </ul>
                             </div>

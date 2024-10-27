@@ -1,17 +1,25 @@
 <x-app-layout title="Caso {{$case->title}}">
-    @if ($accessedBy === 'trial')
-        {{ Breadcrumbs::render('caseByTrial', $case) }}
-    @elseif ($accessedBy === 'tag')
+    {{--    @if ($accessedBy === 'trial')--}}
+    {{--        {{ Breadcrumbs::render('caseByTrial', $case) }}--}}
+    {{--    @elseif ($accessedBy === 'tag')--}}
+    {{--        {{ Breadcrumbs::render('caseByTag', $case, $tagId) }}--}}
+    {{--    @endif--}}
+    @if(isset($tagId))
         {{ Breadcrumbs::render('caseByTag', $case, $tagId) }}
     @endif
 
 
     <div class="flex flex-col space-y-4 md:space-y-6 mb-8">
         <div class="flex items-center flex-wrap">
-            @if ($accessedBy === 'trial')
-                <x-go-back route="{{ route('cases.showByTrial',$case->trial->id) }}"/>
-            @elseif ($accessedBy === 'tag')
-                <x-go-back route="{{ url()->previous() }}"/>
+            {{--            @if ($accessedBy === 'trial')--}}
+            {{--                <x-go-back route="{{ route('cases.showByTrial',$case->trial->id) }}"/>--}}
+            {{--            @elseif ($accessedBy === 'tag')--}}
+            {{--                <x-go-back route="{{ url()->previous() }}"/>--}}
+            {{--            @else--}}
+            {{--                <x-go-back route="{{ url()->previous() }}"/>--}}
+            {{--            @endif--}}
+            @if(isset($tagId))
+                <x-go-back route="{{ route('cases.showByTag', $tagId)}}"/>
             @else
                 <x-go-back route="{{ url()->previous() }}"/>
             @endif

@@ -30,7 +30,11 @@ class CaseController extends Controller
             })
             ->paginate(10);
         $trials = Trial::all();
-        return view('cases.index', compact('cases', 'trials'));
+
+        // Append sort parameters to pagination links
+        $cases->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
+        return view('cases.index', compact('cases', 'trials','sortField', 'sortDirection'));
     }
 
     public function archived(Request $request)
@@ -41,6 +45,10 @@ class CaseController extends Controller
         $cases = LegalCase::onlyTrashed()
             ->orderBy($sortField, $sortDirection)
             ->paginate(10);
+
+        // Append sort parameters to pagination links
+        $cases->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
         return view('cases.archived', compact('cases'));
     }
 
@@ -52,6 +60,9 @@ class CaseController extends Controller
 
         $cases = LegalCase::where('status', 'accepted')
             ->orderBy($sortField, $sortDirection)
+            ->whereHas('user', function ($q) {
+                $q->where('status', true);
+            })
             ->paginate(10);
 
         // Append sort parameters to pagination links
@@ -65,10 +76,7 @@ class CaseController extends Controller
         // Get subjects along with the count of accepted cases via trials
         $subjects = Subject::with(['trials' => function ($query) {
             $query->withCount(['cases' => function ($caseQuery) {
-                $caseQuery->where('status', 'accepted')
-                    ->whereHas('user', function ($q) {
-                        $q->where('status', true);
-                    });
+                $caseQuery->where('status', 'accepted');
             }]);
         }])->get();
 
@@ -410,21 +418,22 @@ class CaseController extends Controller
     public function show($id, Request $request)
     {
         $case = LegalCase::findOrFail($id);
+
         //don't show case if it is not accepted or its user is inactive
-        if (($case->status !== 'Aceptado' && !Auth::check()) || (!$case->user->status && !Auth::check())) {
+        if (($case->status !== 'Aceptado' && !Auth::check()) || (!$case->user->status && !Auth::user()->can('revisar casos'))) {
             abort(404); // Show 404 for unauthorized users
         }
 
-        $accessedBy = $request->query('accessedBy', 'all');
+        $tag = $request->query('tag');
 
-        if($accessedBy == 'tag') {
+        if($tag) {
 
-            $tagId = intval($request->query('tagId'));
+            $tagId = intval($tag);
 //            $tag = Tag::findOrFail($tagId);
-            return view('cases.show', compact('case', 'tagId', 'accessedBy'));
+            return view('cases.show', compact('case', 'tagId'));
         }
 
-        return view('cases.show', compact('case', 'accessedBy'));
+        return view('cases.show', compact('case' ));
     }
 
 
@@ -456,12 +465,16 @@ class CaseController extends Controller
     {
         $status = $request->query('status', 'pending'); // default sort field
 
-        $cases = LegalCase::where('status', $status)
-            ->orderBy('updated_at', 'desc')->paginate(12);
+        $query = LegalCase::query();
 
-        if ($status == 'all') {
-            $cases = LegalCase::orderBy('updated_at', 'desc')->paginate(12);
-        }
+        $query -> when($status !== 'all', function ($q) use ($status) {
+            return $q->where('status', $status);
+        });
+
+        $cases = $query->orderBy('updated_at', 'desc')->paginate(12);
+
+        // Append sort parameters to pagination links
+        $cases->appends(['status' => $status]);
 
         return view('cases.review', compact('cases'));
     }
@@ -497,6 +510,9 @@ class CaseController extends Controller
         });
 
         $cases = $query->orderBy('updated_at', 'desc')->paginate(12);
+
+        // Append sort parameters to pagination links
+        $cases->appends(['status' => $status]);
 
         return view('cases.mycases', compact('cases'));
     }
