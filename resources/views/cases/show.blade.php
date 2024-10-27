@@ -2,7 +2,7 @@
     @if ($accessedBy === 'trial')
         {{ Breadcrumbs::render('caseByTrial', $case) }}
     @elseif ($accessedBy === 'tag')
-        {{ Breadcrumbs::render('caseByTag', $case, $tag) }}
+        {{ Breadcrumbs::render('caseByTag', $case, $tagId) }}
     @endif
 
 

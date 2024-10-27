@@ -407,19 +407,21 @@ class CaseController extends Controller
         return view('cases.byTrial', compact('cases', 'trial', 'trial_name'));
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
-
         $case = LegalCase::findOrFail($id);
-        $accessedBy = 'all';
-
-        // Only allow public access if the case is 'accepted'
-        //        dd(Auth::check());
-        //        dd($case->status);
-
         //don't show case if it is not accepted or its user is inactive
         if (($case->status !== 'Aceptado' && !Auth::check()) || (!$case->user->status && !Auth::check())) {
             abort(404); // Show 404 for unauthorized users
+        }
+
+        $accessedBy = $request->query('accessedBy', 'all');
+
+        if($accessedBy == 'tag') {
+
+            $tagId = intval($request->query('tagId'));
+//            $tag = Tag::findOrFail($tagId);
+            return view('cases.show', compact('case', 'tagId', 'accessedBy'));
         }
 
         return view('cases.show', compact('case', 'accessedBy'));

@@ -37,10 +37,12 @@
                 {{--                        @php --}}
                 {{--                            dd($tag->name); --}}
                 {{--                        @endphp --}}
-                <a href="{{ route('tag.cases.show', ['id' => $case->id, 'tag' => $tag]) }}">
+                <a href="{{ route('cases.show', $case->id) }}?accessedBy=tag&tagId={{$tag->id}}">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 underline">
-                        {{ $case->title }}</h5>
+                        {{ $case->title }}
+                    </h5>
                 </a>
+
                 <div class="mb-1 flex items-center gap-1">
                     <p class="text-gray-700 font-extrabold">Caso:</p>
                     <p class="font-normal text-gray-700">{{ $case->id }}</p>
@@ -54,7 +56,7 @@
                     <p class="font-normal text-gray-700">{{ $case->trial->name }}</p>
                 </div>
 
-                <a href="{{ route('tag.cases.show', ['id' => $case->id, 'tag' => $tag]) }}"
+                <a href="{{ route('cases.show', $case->id) }}?accessedBy=tag&tagId={{$tag->id}}"
                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-stone-700 rounded-lg hover:bg-stone-400 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300">
                     Ver más
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
