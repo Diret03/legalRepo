@@ -43,7 +43,7 @@
                     @endauth
                 @endif
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('subjects.list')" :active="request()->routeIs('subjects.list') || request()->is('materias/*')">
+                    <x-nav-link :href="route('subjects.list')" :active="request()->routeIs('subjects.list') || request()->is('materia/*')">
                         {{ __('Materias') }}
                     </x-nav-link>
                 </div>
@@ -142,7 +142,7 @@
                 <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
                     {{ __('Acerca') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('subjects.list')" :active="request()->routeIs('subjects.list') || request()->is('materias/*')">
+                <x-responsive-nav-link :href="route('subjects.list')" :active="request()->routeIs('subjects.list') || request()->is('materia/*')">
                     {{ __('Materias') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('tags.list')" :active="request()->routeIs('tags.list') || request()->is('etiquetas/*')">

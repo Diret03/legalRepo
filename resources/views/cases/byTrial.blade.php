@@ -30,7 +30,7 @@
                 <div
                     class="py-6 px-10 bg-white border border-gray-200 rounded-lg shadow mb-4 transform transition-transform duration-300 hover:translate-x-2 hover:-translate-y-2 hover:shadow-lg">
 
-                    <a href="{{route('trial.cases.show',$case->id)}}">
+                    <a href="{{route('cases.show', $case->id)}}?juicio={{$trial->id}}">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 underline">{{$case->title}}</h5>
                     </a>
                     <div class="mb-1 flex items-center gap-1">
@@ -42,7 +42,7 @@
                         <p class="font-normal text-gray-700">{{$case->trial->subject->name}}</p>
                     </div>
 
-                    <a href="{{route('trial.cases.show',$case->id)}}"
+                    <a href="{{route('cases.show', $case->id)}}?juicio={{$trial->id}}"
                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-stone-700 rounded-lg hover:bg-stone-400 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300">
                         Ver más
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"

@@ -6,6 +6,8 @@
     {{--    @endif--}}
     @if(isset($tagId))
         {{ Breadcrumbs::render('caseByTag', $case, $tagId) }}
+    @elseif(isset($trialId))
+        {{ Breadcrumbs::render('caseByTrial', $case, $trialId) }}
     @endif
 
 
@@ -20,6 +22,8 @@
             {{--            @endif--}}
             @if(isset($tagId))
                 <x-go-back route="{{ route('cases.showByTag', $tagId)}}"/>
+            @elseif(isset($trialId))
+                <x-go-back route="{{ route('cases.showByTrial', $trialId)}}"/>
             @else
                 <x-go-back route="{{ url()->previous() }}"/>
             @endif
@@ -156,12 +160,19 @@
                 <div class="mb-3 flex items-center">
                     <p class="text-gray-700 font-extrabold mr-3">Etiquetas:</p>
                     <div class="flex flex-wrap gap-1">
-                        @foreach ($case->tags as $tag)
-                            <a href="{{ route('cases.showByTag', $tag->id) }}"
-                               class="bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-                                {{ $tag->name }}
-                            </a>
-                        @endforeach
+                        @if(count($case->tags) > 0)
+                            @foreach ($case->tags as $tag)
+                                <a href="{{ route('cases.showByTag', $tag->id) }}"
+                                class="bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                                    {{ $tag->name }}
+                                </a>
+                            @endforeach
+                        @else
+                            <p 
+                            class="bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                                No tiene etiquetas
+                            </p>
+                        @endif
                     </div>
                 </div>
                 @if (Auth::check())

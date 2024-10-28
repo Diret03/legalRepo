@@ -425,12 +425,15 @@ class CaseController extends Controller
         }
 
         $tag = $request->query('tag');
+        $trial = $request->query('juicio');
 
         if($tag) {
-
             $tagId = intval($tag);
-//            $tag = Tag::findOrFail($tagId);
             return view('cases.show', compact('case', 'tagId'));
+        }
+        elseif($trial){
+            $trialId = intval($trial);
+            return view('cases.show', compact('case', 'trialId'));
         }
 
         return view('cases.show', compact('case' ));

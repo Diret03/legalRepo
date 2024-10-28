@@ -29,9 +29,9 @@ Route::get('/test-email', function () {
 
 Route::get('/materias',  [SubjectController::class, 'list'])->name('subjects.list');
 
-Route::get('/materias/juicio/{id}',  [TrialController::class, 'showTrials'])->name('trials.bySubject');
+Route::get('/materia/{id}/juicios',  [TrialController::class, 'showTrials'])->name('trials.bySubject');
 
-Route::get('/materias/juicio/casos/{id}',  [CaseController::class, 'showCasesbyTrial'])->name('cases.showByTrial');
+Route::get('/materia/juicio/{id}/casos',  [CaseController::class, 'showCasesbyTrial'])->name('cases.showByTrial');
 
 Route::get('/casos/{id}', [CaseController::class, 'show'])->name('cases.show');
 Route::get('/tags/caso/{id}/{tag}', [CaseController::class, 'showCaseByTag'])->name('tag.cases.show');

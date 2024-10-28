@@ -28,7 +28,10 @@ class TagController extends Controller
             });
         })
             ->withCount(['cases as accepted_cases_count' => function ($query) {
-                $query->where('status', 'accepted');
+                $query->where('status', 'accepted')
+                        ->whereHas('user', function ($q) {
+                            $q->where('status', true);
+                        });
             }])
             ->get()
             ->sortBy('name');
