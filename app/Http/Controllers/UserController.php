@@ -19,6 +19,10 @@ class UserController extends Controller
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
         $users = User::orderBy($sortField, $sortDirection)->paginate(10);
+
+        // Append sort parameters to pagination links
+        $users->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
         $roles = Role::all()->pluck('name');
 
         return view('users.index', compact('users', 'roles'));

@@ -19,6 +19,9 @@ class SubjectController extends Controller
 
         $subjects = Subject::orderBy($sortField, $sortDirection)->paginate(10);
 
+        // Append sort parameters to pagination links
+        $subjects->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
         return view('subjects.index', compact('subjects'));
     }
 

@@ -17,6 +17,8 @@ class TrialController extends Controller
 //        $subject = Subject::find($id);
         $subject = Subject::findOrFail($id);
         $subject_name = $subject->name;
+
+
         return view('trials', compact('trials','subject','subject_name'));
     }
 
@@ -35,6 +37,10 @@ class TrialController extends Controller
 
         $trials = Trial::orderBy($sortField, $sortDirection)->paginate(10);
         $subjects = Subject::all();
+
+        // Append sort parameters to pagination links
+        $trials->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
         return view('trials.index', compact('trials','subjects'));
     }
 

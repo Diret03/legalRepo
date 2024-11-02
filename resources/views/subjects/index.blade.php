@@ -55,12 +55,15 @@
                                     aria-labelledby="dropdownActionButton2">
                                     <li>
                                         <a href="{{route('subjects.index')}}?sort=updated_at&direction=desc"
-                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
+                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600
+                                            {{ (request('sort') == 'updated_at' && request('direction') == 'desc') || (!request()->has('sort') && !request()->has('direction')) ? 'bg-gray-100' : '' }}"
+                                           >Más
                                             recientes</a>
                                     </li>
                                     <li>
                                         <a href="{{route('subjects.index')}}?sort=updated_at&direction=asc"
-                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Más
+                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600
+                                            {{ request('sort') == 'updated_at' &&  request('direction') == 'asc' ? 'bg-gray-100' : '' }}">Más
                                             antiguos</a>
                                     </li>
                                 </ul>

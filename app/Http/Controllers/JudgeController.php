@@ -17,6 +17,9 @@ class JudgeController extends Controller
 
         $judges = Judge::orderBy($sortField, $sortDirection)->paginate(10);
 
+        // Append sort parameters to pagination links
+        $judges->appends(['sort' => $sortField, 'direction' => $sortDirection]);
+
         return view('judges.index', compact('judges'));
     }
 
