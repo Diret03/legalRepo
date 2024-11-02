@@ -55,7 +55,7 @@
 </head>
 <body style="font-family: 'Figtree', sans-serif; margin: 0; width: 100%; background-color: #f8fafc; padding: 0; -webkit-font-smoothing: antialiased; word-break: break-word">
   <div style="display: none">
-    Tu cuenta ha sido creada exitosamente
+    Debido a que has iniciado sesión recientemente, puedes confirmar si quieres reactivar tu cuenta.
     &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847;
   </div>
   <div role="article" aria-roledescription="email" aria-label lang="en">
@@ -75,42 +75,32 @@
                     Hola, {{$user->name}}
                   </h1>
                   <p style="margin: 0; line-height: 24px">
-                    Tu cuenta ha sido creada exitosamente
+                    ¿Deseas reactivar tu cuenta?
                     <br>
                   </p>
                   <div role="separator" style="line-height: 24px">&zwj;</div>
                   <p style="margin: 0; line-height: 24px;">
-                    Puedes iniciar sesión con tu correo o cambiar la contraseña establecida por el administrador.
+                    Debido a que has iniciado sesión recientemente, puedes confirmar si quieres reactivar tu cuenta.
+                    <br>
+                  </p>
+                  <div role="separator" style="line-height: 12px">&zwj;</div>
+                  <p style="margin: 0; line-height: 24px;">
+                    Si reactivas tu cuenta todos tus casos aceptados volverán a ser públicos.
                     <br>
                   </p>
                   <div role="separator" style="line-height: 24px">&zwj;</div>
-                  <div style="display: flex; align-items: center">
-                    <div>
-                      <a href="{{$loginUrl}}" style="color: #f8fafc; margin-right: 12px; display: inline-block; border-radius: 4px; background-color: #dc2626; padding: 16px 24px; font-size: 16px; line-height: 1; font-weight: 600; text-decoration: none">
-                        <!--[if mso]>
+                  <div>
+                    <a href="{{$reactivateUrl}}" style="color: #f8fafc; display: inline-block; border-radius: 4px; background-color: #dc2626; padding: 16px 24px; font-size: 16px; line-height: 1; font-weight: 600; text-decoration: none">
+                      <!--[if mso]>
       <i style="mso-font-width: 150%; mso-text-raise: 30px" hidden>&emsp;</i>
     <![endif]-->
-                        <span style="mso-text-raise: 16px">
-                    Iniciar sesión
+                      <span style="mso-text-raise: 16px">
+                    Reactivar Cuenta
                   </span>
-                        <!--[if mso]>
+                      <!--[if mso]>
       <i hidden style="mso-font-width: 150%;">&emsp;&#8203;</i>
     <![endif]-->
-                      </a>
-                    </div>
-                    <div>
-                      <a href="{{$resetUrl}}" style="color: #f8fafc; display: inline-block; border-radius: 4px; background-color: #dc2626; padding: 16px 24px; font-size: 16px; line-height: 1; font-weight: 600; text-decoration: none;">
-                        <!--[if mso]>
-      <i style="mso-font-width: 150%; mso-text-raise: 30px;" hidden>&emsp;</i>
-    <![endif]-->
-                        <span style="mso-text-raise: 16px">
-                    Cambiar contraseña
-                  </span>
-                        <!--[if mso]>
-      <i hidden style="mso-font-width: 150%;">&emsp;&#8203;</i>
-    <![endif]-->
-                      </a>
-                    </div>
+                    </a>
                   </div>
                   <div role="separator" style="height: 1px; line-height: 1px; margin: 32px 0; background-color: #e2e8f0">&zwj;</div>
                   <p style="margin: 0;">

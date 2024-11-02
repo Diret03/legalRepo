@@ -73,6 +73,26 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
+    public function deactivate(Request $request): RedirectResponse
+    {
+        $request->validateWithBag('userDeactivation', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+
+        Auth::logout();
+
+        $user->update([
+            'status' => false,
+        ]);
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
+    }
+
     public function goBack(){
 
         redirect()->back();

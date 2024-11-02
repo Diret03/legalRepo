@@ -94,7 +94,7 @@ class UserController extends Controller
         }
 
 
-            $user->notify(new AccountCreated());
+        $user->notify(new AccountCreated());
 
 
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');

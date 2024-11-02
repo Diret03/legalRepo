@@ -1,5 +1,5 @@
 ---
-preheader: "Tu cuenta ha sido creada exitosamente"
+preheader: "Debido a que has iniciado sesión recientemente, puedes confirmar si quieres reactivar tu cuenta."
 bodyClass: bg-slate-50
 ---
 
@@ -42,26 +42,26 @@ bodyClass: bg-slate-50
                 </h1>
 
                 <p class="m-0 leading-6">
-                  Tu cuenta ha sido creada exitosamente
+                  ¿Deseas reactivar tu cuenta?
                   <br>
                 </p>
                 <x-spacer height="24px" />
                 <p class="m-0 leading-6">
-                  Puedes iniciar sesión con tu correo o cambiar la contraseña establecida por el administrador.
+                  Debido a que has iniciado sesión recientemente, puedes confirmar si quieres reactivar tu cuenta.
+                  <br>
+                </p>
+                <x-spacer height="12px" />
+                <p class="m-0 leading-6">
+                  Si reactivas tu cuenta todos tus casos aceptados volverán a ser públicos.
                   <br>
                 </p>
 
                 <x-spacer height="24px" />
 
+                  <x-button href="@{{$reactivateUrl}}" class="bg-red-600">
+                    Reactivar Cuenta
+                  </x-button>
 
-                <div class="flex items-center">
-                  <x-button href="@{{$loginUrl}}" class="bg-red-600 mr-3">
-                    Iniciar sesión
-                  </x-button>
-                  <x-button href="@{{$resetUrl}}" class="bg-red-600">
-                    Cambiar contraseña
-                  </x-button>
-                </div>
 
                 <x-divider space-y="32px" class="bg-slate-200" />
 

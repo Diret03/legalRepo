@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Notifications\ReactivateAccount;
 
 class LoginRequest extends FormRequest
 {
@@ -56,8 +57,10 @@ class LoginRequest extends FormRequest
         if ($user->status === false) {
             Auth::logout();
 
+            $user->notify(new ReactivateAccount());
+
             throw ValidationException::withMessages([
-                'email' => 'Tu cuenta está inactiva. Por favor contacta a un administrador.',
+                'email' => 'Tu cuenta está inactiva. Se ha enviado un correo de confirmación para reactivar tu cuenta.',
             ]);
         }
 
