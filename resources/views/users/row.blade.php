@@ -45,6 +45,16 @@
                 @endif
             </div>
         </td>
+        <td class="px-6 py-4">
+            @if(empty($user->last_login_at))
+                <span
+                    class="inline-flex bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                    Aún no ha iniciado sesión
+                </span>
+            @else
+                {{$user->last_login_at}}
+            @endif
+        </td>
         @if(Auth::user()->can('editar usuarios') || Auth::user()->can('eliminar usuarios'))
             <td class="px-6 py-4">
                 <div class="flex items-center">

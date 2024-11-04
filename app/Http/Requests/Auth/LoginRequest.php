@@ -50,10 +50,10 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        // Get the authenticated user
+        // get authenticated user
         $user = Auth::user();
 
-        // Check if the user's status is not false
+        // check if user is inactive
         if ($user->status === false) {
             Auth::logout();
 
@@ -71,6 +71,9 @@ class LoginRequest extends FormRequest
                 'email' => 'Tu cuenta no tiene roles. Por favor contacta a un administrador.',
             ]);
         }
+
+        $user->last_login_at = now();
+        $user->save();
 
         RateLimiter::clear($this->throttleKey());
     }

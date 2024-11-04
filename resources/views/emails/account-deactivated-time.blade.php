@@ -55,11 +55,7 @@
 </head>
 <body style="font-family: 'Figtree', sans-serif; margin: 0; width: 100%; background-color: #f8fafc; padding: 0; -webkit-font-smoothing: antialiased; word-break: break-word">
   <div style="display: none">
-      @if($case->status==='Aceptado')
-          Ahora que tu caso ha sido aceptado, ha sido publicado en el repositorio.
-      @else
-          Puedes editar tu caso para enviar el caso de nuevo a revisión.
-      @endif
+    Tu cuenta ha sido desactivada por inactividad
     &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847; &#8199;&#65279;&#847;
   </div>
   <div role="article" aria-roledescription="email" aria-label lang="en">
@@ -78,45 +74,34 @@
                   <h1 class="sm-leading-8" style="margin: 0 0 24px; font-size: 24px; font-weight: 600; color: #000001">
                     Hola, {{$user->name}}
                   </h1>
+                  <div role="separator" style="line-height: 24px">&zwj;</div>
                   <p style="margin: 0; line-height: 24px">
-                    @if($case->status === 'Aceptado')
-                    Tu caso "{{$case->title}}" ha sido aceptado!
-                    @else
-                    Tu caso "{{$case->title}}" ha sido rechazado!
-                    @endif
+                    Debido a que no has iniciado sesión por más de 60 días, <span style="font-weight: 700">tu cuenta ha sido desactivada</span>.
                     <br>
+                  </p>
+                  <div role="separator" style="line-height: 12px">&zwj;</div>
+                  <p style="margin: 0; line-height: 24px;">
+                    Puedes iniciar sesión de nuevo para solicitar reactivar tu cuenta o contactar a un administrador.
                     <br>
-                    @if($case->status === 'Aceptado')
-                    Puedes visualizar tu caso aquí:
-                    @endif
-                  </p>
-                  <div role="separator" style="line-height: 24px">&zwj;</div> @if($case->status === 'Rechazado')
-                  <p style="margin: 0; line-height: 24px;">
-                    Tu caso fue rechazado debido al siguiente motivo:
-                  </p>
-                  <div style="margin-top: 8px; display: flex; justify-content: center; border-radius: 8px; background-color: #e2e8f0; padding: 20px">
-                    <p style="font-size: 14px; font-style: italic">"{{$case->rejection_message}}"</p>
-                  </div>
-                  <p style="margin: 0; line-height: 24px;">
-                    Puedes visualizar tu caso aquí:
                   </p>
                   <div role="separator" style="line-height: 24px">&zwj;</div>
-                  @endif<div>
-                    <a href="{{$caseUrl}}" style="color: #f8fafc; display: inline-block; border-radius: 4px; background-color: #dc2626; padding: 16px 24px; font-size: 16px; line-height: 1; font-weight: 600; text-decoration: none">
+                  <div>
+                    <a href="{{$loginUrl}}" style="color: #f8fafc; margin-right: 12px; display: inline-block; border-radius: 4px; background-color: #dc2626; padding: 16px 24px; font-size: 16px; line-height: 1; font-weight: 600; text-decoration: none">
                       <!--[if mso]>
       <i style="mso-font-width: 150%; mso-text-raise: 30px" hidden>&emsp;</i>
     <![endif]-->
                       <span style="mso-text-raise: 16px">
-                  Ver caso &rarr;
+                    Iniciar sesión
                 </span>
                       <!--[if mso]>
       <i hidden style="mso-font-width: 150%;">&emsp;&#8203;</i>
     <![endif]-->
                     </a>
                   </div>
-                  <div role="separator" style="height: 1px; line-height: 1px; margin: 32px 0; background-color: #e2e8f0;">&zwj;</div>
+                  <div role="separator" style="height: 1px; line-height: 1px; margin: 32px 0; background-color: #e2e8f0">&zwj;</div>
                   <p style="margin: 0;">
-                    Gracias por utilizar la aplicación, <br>Repositorio Jurídico UTN
+                    Gracias por utilizar la aplicación, <br>
+                    Repositorio Jurídico UTN
                   </p>
                 </td>
               </tr>

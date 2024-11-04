@@ -1,0 +1,81 @@
+---
+preheader: "Tu cuenta ha sido desactivada por inactividad"
+bodyClass: bg-slate-50
+---
+
+<push name="head">
+  <style>
+    @font-face {
+      font-family: 'Figtree';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Figtree Regular'), local('Figtree-Regular'), url('https://fonts.gstatic.com/s/figtree/v10/_Xmt-HQyrFIqCz9NXe6p0nFssHqB.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Figtree';
+      font-style: normal;
+      font-weight: 700;
+      src: local('Figtree Bold'), local('Figtree-Bold'), url('https://fonts.gstatic.com/s/figtree/v10/_Xmt-HQyrFIqCz9NXe6p0nFsssHqB.woff2') format('woff2');
+    }
+
+    body {
+      font-family: 'Figtree', sans-serif;
+    }
+  </style>
+</push>
+<x-main>
+  <div class="bg-slate-50 sm:px-4 font-sans">
+    <table align="center">
+      <tr>
+        <td class="w-[552px] max-w-full">
+          <div class="my-12 sm:my-8 text-center">
+            <a href="https://maizzle.com">
+              <img src="@{{$message->embed(public_path('img/logo-utn.png'))}}" width="70" alt="UTN Logo">
+            </a>
+          </div>
+
+          <table class="w-full">
+            <tr>
+              <td class="p-12 sm:px-6 text-base text-slate-700 bg-white rounded shadow-sm">
+                <h1 class="m-0 mb-6 text-2xl sm:leading-8 text-black font-semibold">
+                  Hola, @{{$user->name}}
+                </h1>
+
+                <x-spacer height="24px" />
+                <p class="m-0 leading-6">
+                    Debido a que no has iniciado sesión por más de 60 días, <span class="font-bold">tu cuenta ha sido desactivada</span>.
+                  <br>
+                </p>
+
+                <x-spacer height="12px" />
+                <p class="m-0 leading-6">
+                   Puedes iniciar sesión de nuevo para solicitar reactivar tu cuenta o contactar a un administrador.
+                  <br>
+                </p>
+
+                <x-spacer height="24px" />
+
+
+
+                <x-button href="@{{$loginUrl}}" class="bg-red-600 mr-3">
+                    Iniciar sesión
+                </x-button>
+
+
+                <x-divider space-y="32px" class="bg-slate-200" />
+
+                <p class="m-0">
+                  Gracias por utilizar la aplicación, <br />
+                  Repositorio Jurídico UTN
+                </p>
+              </td>
+            </tr>
+            <tr role="separator">
+              <td class="leading-12">&zwj;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</x-main>

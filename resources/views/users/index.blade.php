@@ -153,6 +153,9 @@
                     <th scope="col" class="px-6 py-3">
                         Estado
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                        Últ. inicio de sesión
+                    </th>
                     @if(Auth::user()->can('editar usuarios') || Auth::user()->can('eliminar usuarios'))
                         <th scope="col" class="px-6 py-3">
                             Acción
