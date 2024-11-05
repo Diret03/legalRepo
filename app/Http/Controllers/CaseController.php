@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\Trial;
 use App\Models\LegalCase;
 use App\Models\User;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\CaseAccepted;
-use Spatie\Tags\Tag;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class CaseController extends Controller
@@ -85,8 +85,15 @@ class CaseController extends Controller
             $subject->cases_count = $subject->trials->sum('cases_count');
         }
 
+        $tags = Tag::whereHas('cases', function ($query) {
+            $query->where('status', 'accepted')
+                ->whereHas('user', function ($q) {
+                    $q->where('status', true);
+                });
+        })->get();
+
         // Return the data to the view
-        return view('cases.list', compact('cases', 'trials', 'subjects', 'sortField', 'sortDirection'));
+        return view('cases.list', compact('cases', 'trials', 'subjects', 'sortField', 'sortDirection', 'tags'));
     }
 
     public function create()
@@ -379,11 +386,7 @@ class CaseController extends Controller
         ])->render();
     }
 
-    public function getAllTags()
-    {
-        $orderedTags = Tag::all();
-        return response()->json(['tags' => $orderedTags->pluck('name')]);
-    }
+
 
     public function getTags($id)
     {
@@ -631,7 +634,8 @@ class CaseController extends Controller
             Log::info('Filter request received', [
                 'subject_ids' => $request->input('subject_ids'),
                 'trial_ids' => $request->input('trial_ids'),
-                'search' => $request->input('search'),
+                'tag_ids' => $request->input('tag_ids'),
+                'search' => $request->input('q'),
                 'sort' => $request->input('sort'),
                 'direction' => $request->input('direction'),
                 'page' => $request->input('page'),
@@ -644,8 +648,8 @@ class CaseController extends Controller
                 });
 
             // Apply search if provided
-            if ($request->filled('search')) {
-                $searchTerm = $request->search;
+            if ($request->filled('q')) {
+                $searchTerm = $request->q;
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('id', 'ILIKE', "%{$searchTerm}%")
                         ->orWhere('title', 'ILIKE', "%{$searchTerm}%");
@@ -653,7 +657,7 @@ class CaseController extends Controller
             }
 
             // Apply subject and trial filters with OR condition
-            if ($request->filled('subject_ids') || $request->filled('trial_ids')) {
+            if ($request->filled('subject_ids') || $request->filled('trial_ids') || $request->filled('tag_ids') ) {
                 $query->where(function ($query) use ($request) {
                     // Add subject filter if present
                     if ($request->filled('subject_ids')) {
@@ -665,6 +669,13 @@ class CaseController extends Controller
                     // Add trial filter if present
                     if ($request->filled('trial_ids')) {
                         $query->orWhereIn('trial_id', $request->trial_ids);
+                    }
+
+                    //Add tag filter if present
+                    if ($request->filled('tag_ids')) {
+                        $query->orWhereHas('tags', function($q) use ($request) {
+                           $q->whereIn('id', $request->tag_ids);
+                        });
                     }
                 });
             }

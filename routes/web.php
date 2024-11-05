@@ -45,6 +45,7 @@ Route::get('/etiquetas', [TagController::class, 'list'])->name('tags.list');
 
 Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.search');
 Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
+Route::get('/cases/tags/accepted', [TagController::class, 'getAcceptedTags']);
 Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
 
 Route::get('/acerca', function () {
@@ -173,7 +174,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/dashboard/casos/{case}', [CaseController::class, 'update'])->name('cases.update');
     Route::delete('/dashboard/casos/{case}', [CaseController::class, 'destroy'])->name('cases.destroy');
     Route::delete("/dashboard/selected-cases", [CaseController::class, 'deleteSelected'])->name('cases.delete');
-    Route::get('/cases/tags', [CaseController::class, 'getAllTags']);
+    Route::get('/cases/tags', [TagController::class, 'getAllTags']);
+
     Route::get('/cases/{id}/tags', [CaseController::class, 'getTags']);
     Route::get('/dashboard/revisar', [CaseController::class, 'review'])->name('cases.review');
     Route::patch('/cases/{id}/approve', [CaseController::class, 'approve'])->name('cases.approve');

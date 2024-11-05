@@ -175,8 +175,6 @@
                 success: function(response) {
                     myData = response.tags;
 
-
-
                     // Initialize MagicSuggest only after data is received
                     instance = $('#tags-input').magicSuggest({
                         data: myData,
@@ -193,8 +191,6 @@
                 method: 'GET',
                 success: function(response) {
                     let caseTags = response.tags;
-
-
                     instance.setSelection(caseTags);
                 },
                 error: function(xhr, status, error) {

@@ -244,7 +244,7 @@
             /**
              * The text displayed when there are no suggestions.
              */
-            noSuggestionText: 'No suggestions',
+            noSuggestionText: 'No hay sugerencias',
 
             /**
              * The default placeholder text when nothing has been entered

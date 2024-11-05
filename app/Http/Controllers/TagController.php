@@ -58,4 +58,31 @@ class TagController extends Controller
 
         return view('tags', compact('paginatedTags'));
     }
+
+    public function getAllTags(): \Illuminate\Http\JsonResponse
+    {
+        $orderedTags = Tag::all();
+        return response()->json(['tags' => $orderedTags->pluck('name')]);
+    }
+
+    public function getAcceptedTags(): \Illuminate\Http\JsonResponse
+    {
+        $acceptedTags = Tag::whereHas('cases', function ($query) {
+            $query->where('status', 'accepted')
+                ->whereHas('user', function ($q) {
+                    $q->where('status', true);
+                });
+        })->get();
+
+        $formattedTags = $acceptedTags->map(function($tag) {
+            return [
+                'id' => $tag->id,
+                'name' => $tag->name,
+            ];
+        });
+
+//        return response()->json(['tags' => $formattedTags]);
+        return response()->json(['tags' => $formattedTags]);
+    }
+
 }

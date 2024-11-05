@@ -13,12 +13,14 @@
         </button>
 
         <!-- Left Filter Container -->
-        <div id="filterContainer" class="w-full md:w-1/4 pr-4 mb-4 md:mb-0 hidden md:block">
+        <div id="filterContainer" class="w-full md:w-2/6 pr-4 mb-4 md:mb-0 hidden md:block">
             <div class="bg-white p-4 rounded-lg shadow">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center">
                         <img src="{{ asset('svg/filter.svg') }}" class="size-6 mr-1 " alt="Filtro icon">
-                        <h3 class="text-2xl font-bold">Filtros</h3>
+                        <h3 class="text-2xl font-bold">Filtros
+{{--                            <span class="font-light text-sm text-gray-500">(Acumulativo)</span>--}}
+                        </h3>
                     </div>
                     <button id="cleanFilters" class="text-sm text-gray-500 hover:text-gray-700">
                         <div class="flex items-center">
@@ -54,7 +56,7 @@
                 </div>
 
                 <!-- Trials Filter -->
-                <div>
+                <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center">
                             <img src="{{ asset('svg/trials.svg') }}" class="size-5 mr-1" alt="Juicios icon">
@@ -75,6 +77,23 @@
                                 </label>
                             </div>
                         @endforeach
+                    </div>
+                </div>
+
+                <!-- Tags Filter -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center">
+                            <img src="{{ asset('svg/tags.svg') }}" class="size-5 mr-1" alt="Tags icon">
+                            <h4 class="font-medium">Etiquetas</h4>
+                        </div>
+                    </div>
+                    <div id="tagsContainer" class="space-y-2">
+                        <select id="select-tags" name="tags[]" multiple autocomplete="off">
+                        @foreach($tags as $tag)
+                                <option value="{{$tag->id}}">{{$tag->name}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -174,7 +193,58 @@
         </div>
     </div>
 
-    <script>
+    <script type='module'>
+
+        // fetch('cases/tags/accepted')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         let tags = data.tags
+        //         const tagNames = tags.map(tag => tag.name);
+        //         // console.log("TAG NAMES")
+        //         // console.log(tagNames)
+        //         console.log(tags)
+        //         var settings = {
+        //             valueField: 'id',
+        //             searchField: 'name',
+        //             create: false,
+        //             persist: false,
+        //             createOnBlur: true,
+        //             placeholder: "Buscar etiquetas",
+        //         };
+        //         new TomSelect('#input-tags',settings);
+        //     })
+        //     .catch(error => console.error('Error:', error));
+
+        // console.log("TAGS RETRIEVED");
+        // console.log(tags);
+        // const tagNames = tags.map(tag => tag.name);
+
+
+    </script>
+
+    <script type="module">
+
+        var settings = {
+            plugins: {
+                'clear_button':{
+                    'title':'Eliminar todas las etiquetas',
+                },
+                remove_button:{
+                    title:'Eliminar este elemento',
+                }
+            },
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            searchField: 'text',
+            create: false,
+            persist: false,
+            placeholder: "Buscar etiquetas",
+        };
+
+        let tagSelector = new TomSelect('#select-tags', settings);
+
         // Initialize debounce function
         function debounce(func, wait) {
             let timeout;
@@ -195,8 +265,9 @@
                 .map(checkbox => checkbox.value);
             const trialIds = Array.from(document.querySelectorAll('.trial-checkbox:checked'))
                 .map(checkbox => checkbox.value);
-            const searchQuery = document.getElementById('search').value;
+            const tagIds= tagSelector.items;
 
+            const searchQuery = document.getElementById('search').value;
 
             // Get current sort parameters from URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -221,17 +292,20 @@
             if (trialIds.length > 0) {
                 trialIds.forEach(id => params.append('trial_ids[]', id));
             }
+            if (tagIds.length > 0){
+                tagIds.forEach(id => params.append('tag_ids[]', id))
+            }
 
             if (searchQuery) {
-                params.append('search', searchQuery);
+                params.append('q', searchQuery);
             } else {
                 pagination.style.display = '';
             }
-            params.append('page', page);
             params.append('sort', sortField);
             params.append('direction', sortDirection);
+            params.append('page', page);
 
-            if(searchQuery.length>0 || (subjectIds.length>0 || trialIds.length>0)){
+            if (searchQuery.length > 0 || (subjectIds.length > 0 || trialIds.length > 0 || tagIds.length > 0)) {
                 pagination.style.display = 'none';
             } else {
                 pagination.style.display = '';
@@ -288,6 +362,8 @@
 
         // Initialize all event listeners
         document.addEventListener('DOMContentLoaded', function () {
+
+
             // Initialize filter toggle for mobile
             const filterToggle = document.getElementById('filterToggle');
             const filterContainer = document.getElementById('filterContainer');
@@ -320,6 +396,7 @@
                 });
             }
 
+
             // Clean filters button
             const cleanFilters = document.getElementById('cleanFilters');
             if (cleanFilters) {
@@ -329,6 +406,9 @@
                         .forEach(checkbox => checkbox.checked = false);
                     // Clear search
                     document.getElementById('search').value = '';
+                    //Clear tags
+                    tagSelector.clear();
+
                     // Trigger filter update
                     filterCases();
                 });
@@ -340,6 +420,9 @@
                     checkbox.addEventListener('change', filterCases);
                 });
 
+            // Add event listener for tag select
+            tagSelector.on('change', filterCases);
+
             // Add event listener for search input with debounce
             const searchInput = document.getElementById('search');
             if (searchInput) {
@@ -348,19 +431,12 @@
 
             // Initial load if there are URL parameters
             if (window.location.search) {
-                const searchQuery = document.getElementById('search').value;
                 filterCases();
 
-                // if(searchQuery){
-                //     console.log("QUE ESTA PASANDO")
-                //     pagination.style.display = 'none';
-                // }
-                // else{
-                //     pagination.style.display = '';
-                // }
             }
         });
 
     </script>
+
 
 </x-app-layout>

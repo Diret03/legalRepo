@@ -43,4 +43,8 @@ class LegalCase extends Model
         return $this->belongsTo(Trial::class);
     }
 
+    public function tags(){
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
 }
