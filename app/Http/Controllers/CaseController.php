@@ -102,12 +102,18 @@ class CaseController extends Controller
         $subjects = Subject::all();
         $users = User::orderBy('last_name', 'asc')
             ->where('status', true)->get();
-        return view('cases.create', compact('trials', 'users', 'subjects'));
+        $tags = Tag::whereHas('cases', function ($query) {
+            $query->where('status', 'accepted')
+                ->whereHas('user', function ($q) {
+                    $q->where('status', true);
+                });
+        })->get();
+
+        return view('cases.create', compact('trials', 'users', 'subjects', 'tags'));
     }
 
     public function store(Request $request)
     {
-
         $validated_data = $request->validate([
             'title' => 'required|string',
             'user_id' => 'nullable|exists:users,id',
@@ -117,12 +123,15 @@ class CaseController extends Controller
             'analysis' => 'required|string',
             'resolution' => 'required|string',
             'note' => 'required|string',
-            'tags' => 'nullable'
+            'tags' => 'nullable|array|max:5', // must be an array and has at most 5 items
+            'tags.*' => 'string|distinct|min:3|max:50', // each tag must be a string, at least 3 characters, and at most 50 characters
         ], [
             'context.required' => 'El campo contexto es obligatorio.',
             'analysis.required' => 'El campo de problema jurídico es obligatorio.',
             'resolution.required' => 'El campo de respuesta es obligatorio.',
             'note.required' => 'El campo de recomendaciones es obligatorio.',
+            'tags.*.min' => 'La etiqueta :position debe tener al menos :min caracteres.',
+            'tags.*.max' => 'La etiqueta :attribute no debe ser mayor que :max caracteres.',
         ]);
 
         // null coalescing to check if 'user_id' exists in $validated_data
@@ -142,12 +151,12 @@ class CaseController extends Controller
             'note' => $validated_data['note'],
         ]);
 
-
         if (!empty($validated_data['tags'])) {
-            $tags = json_decode($validated_data['tags']);
-            if (!empty($tags)) {
-                $case->syncTags($tags);
+            $formattedTags = [];
+            foreach ($validated_data['tags'] as $tag) {
+                $formattedTags[] = strtolower($tag);
             }
+            $case->syncTags($formattedTags);
         }
 
         if (!$isAdmin) {
@@ -160,13 +169,26 @@ class CaseController extends Controller
 
     public function edit($id)
     {
-
         $case = LegalCase::findOrFail($id);
+
+        if($case->status == 'Aceptado' || $case->user_id !== Auth::id()){
+            abort(403);
+        }
+
         $trials = Trial::all();
         $subjects = Subject::all();
         $users = User::orderBy('last_name', 'asc')
             ->where('status', true)->get();
-        return view('cases.edit', compact('case', 'trials', 'users', 'subjects'));
+        $tags = Tag::whereHas('cases', function ($query) {
+            $query->where('status', 'accepted')
+                ->whereHas('user', function ($q) {
+                    $q->where('status', true);
+                });
+        })->get();
+
+        $myTags = $case->tags->pluck('name')->toArray();
+
+        return view('cases.edit', compact('case', 'trials', 'users', 'subjects', 'tags', 'myTags'));
     }
 
     public function update(Request $request, $id)
@@ -180,12 +202,15 @@ class CaseController extends Controller
             'analysis' => 'required|string',
             'resolution' => 'required|string',
             'note' => 'required|string',
-            'tags' => 'nullable'
+            'tags' => 'nullable|array|max:5', // must be an array and has at most 5 items
+            'tags.*' => 'string|distinct|min:3|max:50', // each tag must be a string, at least 3 characters, and at most 50 characters
         ], [
             'context.required' => 'El campo contexto es obligatorio.',
             'analysis.required' => 'El campo de problema jurídico es obligatorio.',
             'resolution.required' => 'El campo de respuesta es obligatorio.',
             'note.required' => 'El campo de recomendaciones es obligatorio.',
+            'tags.*.min' => 'La etiqueta :attribute debe tener al menos :min caracteres.',
+            'tags.*.max' => 'La etiqueta :attribute no debe ser mayor que :max caracteres.',
         ]);
 
         // null coalescing to check if 'user_id' exists in $validated_data
@@ -207,10 +232,11 @@ class CaseController extends Controller
 
 
         if (!empty($validated_data['tags'])) {
-            $tags = json_decode($validated_data['tags']);
-            if (!empty($tags)) {
-                $case->syncTags($tags);
+            $formattedTags = [];
+            foreach ($validated_data['tags'] as $tag) {
+                $formattedTags[] = strtolower($tag);
             }
+            $case->syncTags($formattedTags);
         }
 
         if (!$isAdmin) {
