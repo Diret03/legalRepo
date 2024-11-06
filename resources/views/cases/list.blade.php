@@ -241,6 +241,11 @@
             create: false,
             persist: false,
             placeholder: "Buscar etiquetas",
+            render:{
+                no_results: function( data, escape ){
+                    return '<div class="no-results">No se han encontrado resultados</div>';
+                },
+            }
         };
 
         let tagSelector = new TomSelect('#select-tags', settings);
