@@ -14,7 +14,7 @@ Artisan::command('users:deactivate-inactive', function () {
 
     $users = User::where('status', true)
         ->where(function ($query) {
-            $query->where('last_login_at', '<', Carbon::now()->subDays(60))
+            $query->where('last_login_at', '<', Carbon::now()->subMinute())
                 ->orWhereNull('last_login_at');
         })
         ->get();
@@ -31,11 +31,21 @@ Artisan::command('users:deactivate-inactive', function () {
         $user->status = false;
         $user->save();
 
-        $user->notify(new AccountDeactivatedTime());
+        // $user->notify(new AccountDeactivatedTime());
+        try {
+            $user->notify(new AccountDeactivatedTime());
+        } catch (\Exception $e) {
+            // Log::error("Error sending notification to user: " . $user->email, [
+            //     'error' => $e->getMessage(),
+            //     'user_id' => $user->id,
+            // ]);
+            $this->info("Error al enviar notificación al usuario: ".$user->email);
+            $this->info($e->getMessage());
+        }
 
         $this->info($user->email);
     }
 
 })->purpose('Deactivate users who haven\'t logged in for 60 days')
-    ->daily()
+    ->everyMinute()
     ->appendOutputTo(storage_path('logs/scheduler.log'));
