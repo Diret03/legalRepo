@@ -185,7 +185,7 @@
                 </div>
             </div> --}}
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Buzon de sugerencias</h3>
+                    <h3 class="text-xl font-bold mb-4">Buzón de sugerencias</h3>
                     <p class="mb-4">Escríbenos para dejar tu feedback y mejorar la aplicación.</p>
                     <form class="flex">
 

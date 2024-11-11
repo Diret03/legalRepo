@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\CaseAccepted;
@@ -39,6 +40,8 @@ class CaseController extends Controller
 
     public function archived(Request $request)
     {
+        Gate::authorize('viewArchived', LegalCase::class);
+
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
@@ -98,6 +101,8 @@ class CaseController extends Controller
 
     public function create()
     {
+        Gate::authorize('create',  LegalCase::class);
+
         $trials = Trial::all();
         $subjects = Subject::all();
         $users = User::orderBy('last_name', 'asc')
@@ -160,7 +165,7 @@ class CaseController extends Controller
         }
 
         if (!$isAdmin) {
-            return redirect()->route('cases.mycases', ['user_id' => Auth::user()->id, 'status' => 'pending'])->with('success', 'Juicio subido exitosamente, espera a que sea aprobado.');
+            return redirect()->route('cases.mycases', ['status' => 'pending'])->with('success', 'Juicio subido exitosamente, espera a que sea aprobado.');
         }
 
         return redirect()->route('cases.index')->with('success', 'Juicio creado exitosamente.');
@@ -171,9 +176,10 @@ class CaseController extends Controller
     {
         $case = LegalCase::findOrFail($id);
 
-        if($case->status == 'Aceptado' || $case->user_id !== Auth::id()){
-            abort(403);
-        }
+//        if($case->status == 'Aceptado' || $case->user_id !== Auth::id()){
+//            abort(403);
+//        }
+        Gate::authorize('update', $case);
 
         $trials = Trial::all();
         $subjects = Subject::all();
@@ -193,6 +199,9 @@ class CaseController extends Controller
 
     public function update(Request $request, $id)
     {
+        $case = LegalCase::findOrFail($id);
+        Gate::authorize('update', $case);
+
         $validated_data = $request->validate([
             'title' => 'required|string',
             'user_id' => 'nullable|exists:users,id',
@@ -218,7 +227,7 @@ class CaseController extends Controller
         $isAdmin = isset($validated_data['user_id']); // Admin if 'user_id' was explicitly set
         $status = $validated_data['status'] ?? 'pending';
 
-        $case = LegalCase::findOrFail($id);
+
         $case->update([
             'title' => $validated_data['title'],
             'user_id' => $user_id,
@@ -447,11 +456,7 @@ class CaseController extends Controller
     public function show($id, Request $request)
     {
         $case = LegalCase::findOrFail($id);
-
-        //don't show case if it is not accepted or its user is inactive
-        if (($case->status !== 'Aceptado' && !Auth::check()) || (!$case->user->status && !Auth::user()->can('revisar casos'))) {
-            abort(404); // Show 404 for unauthorized users
-        }
+        Gate::authorize('view', $case);
 
         $tag = $request->query('tag');
         $trial = $request->query('juicio');
@@ -495,6 +500,8 @@ class CaseController extends Controller
 
     public function review(Request $request)
     {
+        Gate::authorize('review', LegalCase::class);
+
         $status = $request->query('status', 'pending'); // default sort field
 
         $query = LegalCase::query();
@@ -514,6 +521,7 @@ class CaseController extends Controller
     public function approve($id)
     {
         $case = LegalCase::findOrFail($id);
+        Gate::authorize('approve', $case);
 
         $case->status = 'accepted';
         $case->save();
@@ -531,6 +539,7 @@ class CaseController extends Controller
 
     public function myCases(Request $request)
     {
+        Gate::authorize('viewMyCases', LegalCase::class);
 
         $status = $request->query('status', 'accepted');
 
@@ -552,6 +561,7 @@ class CaseController extends Controller
     public function reject(Request $request, $id)
     {
         $case = LegalCase::findOrFail($id);
+        Gate::authorize('reject', $case);
 
         $validated_data = $request->validate([
             'rejection_message' => 'required|string'
@@ -610,6 +620,8 @@ class CaseController extends Controller
     public function destroy($id, Request $request)
     {
         $case = LegalCase::findOrFail($id);
+        Gate::authorize('delete', $case);
+
         $case->delete();
 
         if ($request->query('from')) {
@@ -622,6 +634,9 @@ class CaseController extends Controller
     public function restore($id)
     {
         $case = LegalCase::onlyTrashed()->findOrFail($id);
+
+        Gate::authorize('restore', $case);
+
         $case->restore();
 
         return redirect()->back()->with('success', 'Caso restaurado exitosamente.');
@@ -630,6 +645,9 @@ class CaseController extends Controller
     public function forceDelete($id)
     {
         $case = LegalCase::onlyTrashed()->findOrFail($id);
+
+        Gate::authorize('forceDelete', $case);
+
         $case->forceDelete();
 
         return redirect()->back()->with('success', 'Caso eliminado definitivamente.');
