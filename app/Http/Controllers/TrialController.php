@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 class TrialController extends Controller
 {
@@ -31,6 +32,8 @@ class TrialController extends Controller
     }
 
     public function index(Request $request){
+
+        Gate::authorize('viewAny',Trial::class);
 
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
@@ -83,6 +86,8 @@ class TrialController extends Controller
 
     public function store(Request $request){
 
+        Gate::authorize('create', Trial::class);
+
         $validated_data = $request->validate([
             'name' => 'required|string',
             'subject_id' => 'required|exists:subjects,id',
@@ -102,12 +107,16 @@ class TrialController extends Controller
 
     public function edit($id){
 
+        Gate::authorize('edit', Trial::class);
+
         $trial = Trial::findOrFail($id);
         $subjects = Subject::all();
         return view('trials.edit', compact('trial','subjects'));
     }
 
     public function update(Request $request, $id){
+
+        Gate::authorize('edit', Trial::class);
 
         $trial = Trial::findOrFail($id);
 
@@ -133,6 +142,8 @@ class TrialController extends Controller
 //        return response()->json(['success'=>'Juicios eliminados correctamente.']);
 //    }
     public function deleteSelected(Request $request){
+
+        Gate::authorize('delete', Trial::class);
 
         $ids = $request->ids;
         $invalidNames = [];
@@ -173,6 +184,7 @@ class TrialController extends Controller
 
     public function destroy($id)
     {
+        Gate::authorize('delete', Trial::class);
         $trial = Trial::findOrFail($id);
 
         if ($trial->cases->count() > 0) {

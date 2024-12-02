@@ -22,6 +22,8 @@ class CaseController extends Controller
     public function index(Request $request)
     {
 
+        Gate::authorize('viewAny', LegalCase::class);
+
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
@@ -520,7 +522,7 @@ class CaseController extends Controller
 
     public function approve($id)
     {
-        $case = LegalCase::findOrFail($id);
+        $case = LegalCase::findOrFail($id  );
         Gate::authorize('approve', $case);
 
         $case->status = 'accepted';

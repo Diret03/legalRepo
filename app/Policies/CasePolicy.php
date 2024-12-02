@@ -16,6 +16,10 @@ class CasePolicy
         //
     }
 
+    public function viewAny(User $user){
+        return $user->can('ver casos');
+    }
+
     public function view(?User $user, LegalCase $case){
 //        return ($case->status !== 'Aceptado' && !Auth::check()) || (!$case->user->status && !Auth::user()->can('revisar casos'));
 

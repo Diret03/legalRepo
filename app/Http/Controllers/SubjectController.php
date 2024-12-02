@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\Trial;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class SubjectController extends Controller
 {
 
     public function index(Request $request){
+
+        Gate::authorize('viewAny', Subject::class);
 
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
@@ -57,6 +60,8 @@ class SubjectController extends Controller
 
     public function store(Request $request){
 
+        Gate::authorize('create', Subject::class);
+
         $validated_data = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
@@ -87,6 +92,8 @@ class SubjectController extends Controller
 
     public function edit($id){
 
+        Gate::authorize('edit', Subject::class);
+
         $subject = Subject::findOrFail($id);
         return view('subjects.edit', compact('subject'));
     }
@@ -94,6 +101,7 @@ class SubjectController extends Controller
 
     public function update(Request $request, $id){
 
+        Gate::authorize('edit', Subject::class);
         $subject = Subject::findOrFail($id);
 
         $validated_data = $request->validate([
@@ -140,6 +148,8 @@ class SubjectController extends Controller
 
     public function deleteSelected(Request $request){
 
+        Gate::authorize('delete', Subject::class);
+
         $ids = $request->ids;
         $invalidNames = [];
         $deletedNames = [];
@@ -178,6 +188,7 @@ class SubjectController extends Controller
 
     public function destroy($id)
     {
+        Gate::authorize('delete', Subject::class);
         $subject = Subject::findOrFail($id);
 
         if($subject->trials->count() > 0){

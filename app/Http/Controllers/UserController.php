@@ -10,10 +10,13 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Notifications\AccountCreated;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
     public function index(Request $request){
+
+        Gate::authorize('viewAny', User::class);
 
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
@@ -67,6 +70,8 @@ class UserController extends Controller
 
     public function store(Request $request){
 
+        Gate::authorize('create', User::class);
+
         $validated_data = $request->validate([
             'name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
             'last_name' => ['required', 'regex:/^[a-zA-Z\s]+$/'],
@@ -103,6 +108,8 @@ class UserController extends Controller
 
     public function edit($id){
 
+        Gate::authorize('edit', User::class);
+
         $user = User::findOrFail($id);
         $roles = Role::all()->pluck('name');
         return view('users.edit', compact('user', 'roles'));
@@ -110,6 +117,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        Gate::authorize('edit', User::class);
+
         $user = User::findOrFail($id);
 
         $validated_data = $request->validate([
@@ -163,6 +172,8 @@ class UserController extends Controller
 
     public function deleteSelected(Request $request){
 
+        Gate::authorize('delete', User::class);
+
         $ids = $request->ids;
         $invalidNames = [];
         $deletedNames = [];
@@ -200,6 +211,9 @@ class UserController extends Controller
     }
 
     public function deactivateSelected(Request $request){
+
+        Gate::authorize('deactivate', User::class);
+
         $ids = $request->ids;
 
         $users = User::whereIn('id', $ids)->get();
@@ -223,6 +237,8 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        Gate::authorize('delete', User::class);
+
         $project = User::findOrFail($id);
         $project->delete();
 
