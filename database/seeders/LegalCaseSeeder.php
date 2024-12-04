@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\LegalCase;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Trial;
+use App\Models\User;
 
 class LegalCaseSeeder extends Seeder
 {
@@ -13,12 +15,13 @@ class LegalCaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $author = User::where('email', 'diegodavidrecalde@gmail.com')->first();
         LegalCase::create([
-            'user_id' => 1,
+            'user_id' => $author->id,
             'trial_id' => 1,
             'title' => "Pago mixto de la pensión alimenticia",
             'status' => 'accepted',
-            'context' =>'<p class="MsoNormal" style="text-align: justify;"><span lang="ES-TRAD" style="font-size: 12pt; font-family: figtree;">La se&ntilde;ora A (madre) presenta una demanda de Alimentos en contra del se&ntilde;or B (padre) en la que se reclama la pensi&oacute;n alimenticia a favor de su hijo en com&uacute;n NNA, seg&uacute;n la legislaci&oacute;n ecuatoriana.</span></p>
+            'context' => '<p class="MsoNormal" style="text-align: justify;"><span lang="ES-TRAD" style="font-size: 12pt; font-family: figtree;">La se&ntilde;ora A (madre) presenta una demanda de Alimentos en contra del se&ntilde;or B (padre) en la que se reclama la pensi&oacute;n alimenticia a favor de su hijo en com&uacute;n NNA, seg&uacute;n la legislaci&oacute;n ecuatoriana.</span></p>
                         <p class="MsoNormal" style="text-align: justify;"><span lang="ES-TRAD" style="font-size: 12pt; font-family: figtree;">&nbsp;</span></p>
                         <p class="MsoNormal" style="text-align: justify;"><span lang="ES-TRAD" style="font-size: 12pt; font-family: figtree;">Resulta que los padres A y B est&aacute;n casados, pero se han separado hace algunos a&ntilde;os, su hijo NNA vive con ambos progenitores en distintos d&iacute;as de la semana (m&aacute;s de dos d&iacute;as con cada uno). Los padres ven&iacute;an asumiendo los gastos de manutenci&oacute;n mientras su hijo convive con cada uno, pero la madre
 ya ten&iacute;a entablada la demanda de alimentos desde el a&ntilde;o 2015.</span></p>',
@@ -64,6 +67,25 @@ n de proseguir con la ejecuci&oacute;n del pago.</span></span></p>',
 ga a una norma expresa de car&aacute;cter prohibitiva).</span></p>',
         ]);
 
+
+        LegalCase::create([
+            'user_id' => $author->id,
+            'trial_id' => Trial::where('name', 'Incidente aumento pensión alimenticia')->first()->id,
+            'title' => 'Incidente de Aumento de Pensión Alimenticia en Segunda Instancia',
+            'status' => 'accepted',
+            'context' => '<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">En segunda instancia, a partir del escrito de contestaci&oacute;n a la fundamentaci&oacute;n del recurso de apelaci&oacute;n en el incidente de aumento de pensi&oacute;n alimenticia, la defensa t&eacute;cnica de la parte actora ha solicitado al Tribunal de Apelaciones que acepte como prueba documental el certificado de r&eacute;cord acad&eacute;mico emitido por la Universidad T&eacute;cnica del Norte, correspondiente a la carrera de Dise&ntilde;o Gr&aacute;fico.</span></p>',
+            'analysis' => '<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">El problema jur&iacute;dico que se plantea es determinar si la presentaci&oacute;n de esta prueba por parte de la actora se relaciona con hechos que cumplen los criterios establecidos en el art&iacute;culo 258 del C&oacute;digo Org&aacute;nico General de Procesos (COGEP).</span></p>',
+            'resolution' => '<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">El Tribunal de Apelaciones, en principio, debe basar su an&aacute;lisis en los mismos hechos presentados ante el juez de primera instancia, sin permitir la introducci&oacute;n de nuevos hechos o pruebas, salvo excepciones espec&iacute;ficas contempladas en el COGEP. Estas excepciones incluyen la posibilidad de presentar pruebas que acrediten hechos nuevos ocurridos despu&eacute;s de la sentencia, as&iacute; como hechos previos que no se pudieron obtener antes de esta, seg&uacute;n lo estipulado en el art&iacute;culo 258 del COGEP.</span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">Es fundamental distinguir esta regla de la posibilidad de presentar prueba nueva en otras etapas del proceso, como lo establece el art&iacute;culo 166 del mismo cuerpo normativo, donde se permite solicitar pruebas no anunciadas hasta antes de la audiencia, siempre que se justifique su desconocimiento; esta regla aplica a la primera instancia.</span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">En este caso, la titular del derecho a alimentos, de 20 a&ntilde;os, ha presentado un formulario para el aumento de pensi&oacute;n alimenticia, fundamentando su solicitud en su condici&oacute;n de estudiante, respaldada por documentos que acreditan su admisi&oacute;n en la Universidad T&eacute;cnica del Norte. Esta situaci&oacute;n se considera un requisito de legitimaci&oacute;n activa, que fue evaluado por el juez al calificar la demanda.</span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">Por lo tanto, la "nueva prueba" que se presenta en esta segunda instancia para ratificar la legitimidad de la demanda de la titular, dado su estatus de estudiante, resulta innecesaria. Esta prueba no est&aacute; vinculada a los hechos relevantes en un juicio de alimentos, como son:</span></p>
+<p class="MsoNormal" style="line-height: normal; margin: 12pt 0in; text-align: left; padding-left: 40px;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;"><strong>a)</strong> la capacidad econ&oacute;mica del obligado</span></p>
+<p class="MsoNormal" style="line-height: normal; margin: 12pt 0in; text-align: left; padding-left: 40px;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;"><strong>b)</strong> las necesidades de los titulares. </span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span lang="ES" style="font-size: 12pt; font-family: figtree; color: black;">En consecuencia, este Tribunal ha decidido negar el requerimiento en audiencia.</span></p>',
+            'note' => '<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span style="font-family: figtree;"><strong><span lang="ES" style="font-size: 12pt; color: black;">1.Diferenciar entre "prueba nueva"</span></strong><span lang="ES" style="font-size: 12pt; color: black;">: El art&iacute;culo 166 del COGEP se refiere a pruebas no anunciadas en los actos de proposici&oacute;n hasta antes de la convocatoria a la audiencia de juicio, mientras que la "nueva prueba" del art&iacute;culo 151 se refiere a la oportunidad del actor ante los hechos afirmados por el demandado al contestar la demanda; adem&aacute;s, la prueba sobre hechos del art&iacute;culo 258 se aplica a la segunda instancia.</span></span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span style="font-family: figtree;"><strong><span lang="ES" style="font-size: 12pt; color: black;">2.Distinguir la prueba para mejor resolver</span></strong><span lang="ES" style="font-size: 12pt; color: black;">: Seg&uacute;n el art&iacute;culo 168 del COGEP, el juez tiene la facultad de actuar de oficio en situaciones donde considera que la informaci&oacute;n presentada por las partes es insuficiente para tomar una decisi&oacute;n clara y solicitar pruebas adicionales.</span></span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 12.0pt 0in 12.0pt 0in;"><span style="font-family: figtree;"><strong><span lang="ES" style="font-size: 12pt; color: black;">3.Considerar la prueba anticipada</span></strong><span lang="ES" style="font-size: 12pt; color: black;">: Esta se aplica cuando es necesario asegurar su pr&aacute;ctica debido al riesgo de que no se pueda realizar en el momento oportuno, conforme al art&iacute;culo 120.2 del COGEP.</span></span></p>'
+        ]);
 
         LegalCase::factory()
             ->count(50)

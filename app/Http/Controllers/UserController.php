@@ -224,6 +224,8 @@ class UserController extends Controller
             $userNames[] = $user->name.' '.$user->last_name;
         }
 
+
+
         $output = view('users.row', ['users' => User::orderBy('updated_at', 'desc')->paginate(10)])->render();
         $response['success'] = [
             'message' => 'Se han desactivado los siguientes usuarios:',

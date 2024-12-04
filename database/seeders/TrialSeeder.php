@@ -152,5 +152,11 @@ class TrialSeeder extends Seeder
             'name' => 'Procesos De Familia',
             'description' => 'Juicios relacionados con el derecho de familia bajo el Código Orgánico General de Procesos.',
         ]);
+
+        Trial::create([
+            'subject_id' => 6,
+            'name' => 'Incidente aumento pensión alimenticia',
+            'description' => 'Busca ajustar la pensión alimenticia previamente establecida, argumentando cambios en las condiciones económicas o necesidades del beneficiario.'
+        ]);
     }
 }
