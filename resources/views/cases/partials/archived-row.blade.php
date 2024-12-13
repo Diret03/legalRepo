@@ -123,7 +123,7 @@
                                 @csrf
                                 <button type="submit"
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                        onclick="return confirm('¿Estás seguro de que deseas este caso para siempre?')">
+                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este caso para siempre?')">
                                     <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">
                                 </button>
                             </form>

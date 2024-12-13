@@ -203,7 +203,7 @@ Route::get('/inicio', function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/deactivate', [ProfileController::class, 'deactivate'])->name('profile.deactivate');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
