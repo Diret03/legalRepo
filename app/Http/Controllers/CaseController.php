@@ -601,6 +601,7 @@ class CaseController extends Controller
 
     public function deleteSelected(Request $request)
     {
+
         $ids = $request->ids;
         $cases = LegalCase::whereIn('id', $ids)->get();
         $deletedNames = [];
@@ -648,12 +649,34 @@ class CaseController extends Controller
     {
         $case = LegalCase::onlyTrashed()->findOrFail($id);
 
-        Gate::authorize('forceDelete', $case);
+        Gate::authorize('forceDelete', LegalCase::class);
 
         $case->forceDelete();
 
         return redirect()->back()->with('success', 'Caso eliminado definitivamente.');
     }
+
+    public function forceDeleteSelected(Request $request)
+    {
+        Gate::authorize('forceDelete', LegalCase::class);
+
+        $ids = $request->ids;
+        $cases = LegalCase::whereIn('id', $ids)->onlyTrashed()->get();
+        $deletedNames = [];
+
+        foreach ($cases as $case) {
+            $deletedNames[] = $case->title;
+            $case->forceDelete();
+        }
+
+        $response['success'] = [
+            'message' => 'Se han eliminado los siguientes casos permanentemente:',
+            'names' => $deletedNames,
+        ];
+
+        return response()->json($response);
+    }
+
 
     public function generatePDF($id)
     {

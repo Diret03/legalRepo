@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\LegalCase;
 
 class ProfileController extends Controller
 {
@@ -63,14 +64,20 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        if(count($user->cases) > 0){
 
+            foreach ($user->cases as $case) {
+                $case->delete();
+            }
+        }
+
+        Auth::logout();
         $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/')->with('success', 'Tu cuenta se ha eliminado exitosamente');
     }
 
     public function deactivate(Request $request): RedirectResponse
@@ -90,7 +97,7 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/')->with('success', 'Tu cuenta ha sido desactivada exitosamente');
     }
 
     public function goBack(){

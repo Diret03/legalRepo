@@ -62,11 +62,11 @@ class CasePolicy
     }
 
     public function restore(User $user, LegalCase $case){
-        return $user->can('restaurar casos') && $case->trashed();
+        return $user->can('restaurar casos') && $case->user && $case->trashed();
     }
 
-    public function forceDelete(User $user, LegalCase $case){
-        return $user->can('eliminar casos definitivamente') && $case->trashed();
+    public function forceDelete(User $user){
+        return $user->can('eliminar casos definitivamente');
     }
 
 

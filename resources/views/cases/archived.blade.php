@@ -269,7 +269,7 @@
     });
 </script>
 
-<script src="{{ asset('js/deleteSelected.js') }}"></script>
+<script src="{{ asset('js/forceDeleteSelected.js') }}"></script>
 <script>
-    initializeDeleteFunction("{{ route('cases.delete') }}", "case_ids");
+    initializeDeleteFunction("{{ route('cases.forceDeleteSelected')}}", "case_ids");
 </script>

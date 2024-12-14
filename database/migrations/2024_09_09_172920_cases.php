@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cases', function (Blueprint $table) {
 
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('trial_id');
             $table->string('title');
             $table->enum('status', ['pending', 'accepted', 'rejected']);
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->softDeletes();
 
             //constraints
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->nullOnDelete();
             $table->foreign('trial_id')->references('id')->on('trials')->onUpdate('cascade');
 
             $table->timestamps();

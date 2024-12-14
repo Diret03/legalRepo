@@ -188,6 +188,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/casos/archivados', [CaseController::class, 'archived'])->name('cases.archived');
     Route::post('dashboard/casos/{case}/restaurar', [CaseController::class, 'restore'])->name('cases.restore');
     Route::post('dashboard/casos/{case}/force-delete', [CaseController::class, 'forceDelete'])->name('cases.forceDelete');
+    Route::post('dashboard/casos/force-delete-selected', [CaseController::class, 'forceDeleteSelected'])->name('cases.forceDeleteSelected');
 });
 
 Route::get('/caso-pdf', function () {
