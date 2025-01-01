@@ -1,4 +1,5 @@
-function initializeLiveSearch(viewHeader, tagSelector = {}) {
+
+export default function initializeLiveSearch(viewHeader, tagSelector = {}, tinymce = {}) {
 
 // Initialize debounce function
     function debounce(func, wait) {
@@ -112,9 +113,9 @@ function initializeLiveSearch(viewHeader, tagSelector = {}) {
                     if (window.initFlowbite) {
                         window.initFlowbite();
                     }
-                    import tinymce from "../assets/tinymce/tinymce.js";
-
-
+                    // import tinymce from "../assets/tinymce/tinymce.js";
+                    //
+                    //
                     tinymce.remove(); // Remove any existing instances
                     tinymce.init({
                         selector: 'textarea.editor-modal',

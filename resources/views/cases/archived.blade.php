@@ -148,128 +148,18 @@
                 </tbody>
 
             </table>
-            <div class="pagination mt-4 pb-10">
+            <div id="pagination" class="pagination mt-4 pb-10">
                 {{ $cases->links() }}
             </div>
 
         </div>
     </div>
 
+    <script type="module">
+        // Use the function
+        initializeLiveSearch('archived', [], tinymce);
+    </script>
+
 </x-app-dash-layout>
 
-<script src="{{ asset('js/renderTiny.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('[data-modal-target]').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const modalId = this.getAttribute('data-modal-target');
 
-                // Call the function and pass the modalId
-                applyTailwindStyles(modalId);
-            });
-        });
-    });
-
-    // Function to initialize modal functionality
-    function initializeModals() {
-        const modalButtons = document.querySelectorAll('[data-modal-toggle]');
-        const closeButtons = document.querySelectorAll('[data-modal-hide]');
-
-        modalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetModal = document.getElementById(button.getAttribute('data-modal-target'));
-                targetModal.classList.remove('hidden');
-                targetModal.classList.add('flex');
-            });
-        });
-
-        closeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetModal = button.closest('.fixed');
-                targetModal.classList.add('hidden');
-                targetModal.classList.remove('flex');
-            });
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (event) => {
-            const modals = document.querySelectorAll('[id^="case-modal-"]');
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
-    }
-
-    function initializeTinyMCE() {
-        tinymce.remove(); // Remove any existing instances
-        tinymce.init({
-            selector: 'textarea.editor-modal',
-            readonly: true,
-            menubar: false,
-            toolbar: false,
-            branding: false,
-            license_key: 'gpl',
-            plugins: 'lists',
-            language: 'es',
-            resize: false,
-            height: 200,
-            content_style: "@import url('https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap'); body { font-family: 'Figtree', sans-serif; }",
-        });
-    }
-
-    $(document).ready(function() {
-        const $loadingSpinner = $('#loading-spinner');
-        const $casesData = $('#cases-data');
-        let debounceTimer;
-
-        $('#search').on('keyup', function() {
-            let query = $(this).val();
-            // Clear the previous timer
-            clearTimeout(debounceTimer);
-
-            if (query.length > 0) {
-                $('.pagination').hide();
-            } else {
-                $('.pagination').show();
-            }
-
-            // Set a new timer
-            debounceTimer = setTimeout(function() {
-                // Show the loading spinner
-                $loadingSpinner.removeClass('hidden');
-
-                $.ajax({
-                    url: "{{ route('cases.search') }}",
-                    type: "GET",
-                    data: {
-                        'search': query,
-                        'view': "table",
-                    },
-                    success: function(data) {
-                        $casesData.html(data);
-                    },
-                    complete: function() {
-                        // Hide the loading spinner
-                        $loadingSpinner.addClass('hidden');
-                        initializeModals();
-                        initializeTinyMCE();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error al buscar:', error);
-                        console.error('Detalles del error:', xhr, status);
-                        // Hide the loading spinner in case of error
-                        $loadingSpinner.addClass('hidden');
-                    }
-                });
-            }, 300); // delay time
-        });
-    });
-</script>
-
-<script src="{{ asset('js/forceDeleteSelected.js') }}"></script>
-<script>
-    initializeDeleteFunction("{{ route('cases.forceDeleteSelected')}}", "case_ids");
-</script>

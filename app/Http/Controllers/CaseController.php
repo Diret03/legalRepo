@@ -37,7 +37,7 @@ class CaseController extends Controller
         // Append sort parameters to pagination links
         $cases->appends(['sort' => $sortField, 'direction' => $sortDirection]);
 
-        return view('cases.index', compact('cases', 'trials','sortField', 'sortDirection'));
+        return view('cases.index', compact('cases', 'trials', 'sortField', 'sortDirection'));
     }
 
     public function archived(Request $request)
@@ -59,8 +59,18 @@ class CaseController extends Controller
 
     public function list(Request $request)
     {
-        $sortField = $request->query('sort', 'id'); // default sort field
-        $sortDirection = $request->query('direction', 'asc'); // default sort direction
+//        $sortField = $request->query('sort', 'id'); // default sort field
+//        $sortDirection = $request->query('direction', 'asc'); // default sort direction
+//        $sortField = $request->query('sort', 'id');
+        $sortField = in_array(strtolower($request->query('sort')), ['updated_at', 'id'])
+            ? strtolower($request->query('sort'))
+            : 'id';
+
+        $sortDirection = in_array(strtolower($request->query('direction')), ['asc', 'desc'])
+            ? strtolower($request->query('direction'))
+            : 'asc';
+
+
         $page = $request->query("page", 1);
 
         $cases = LegalCase::where('status', 'accepted')
@@ -75,13 +85,19 @@ class CaseController extends Controller
 
 
         $trials = Trial::withCount(['cases' => function ($query) {
-            $query->where('status', 'accepted');
+            $query->where('status', 'accepted')
+                ->whereHas('user', function ($q) {
+                    $q->where('status', true);
+                });
         }])->orderBy('name', 'asc')->get();
 
         // Get subjects along with the count of accepted cases via trials
         $subjects = Subject::with(['trials' => function ($query) {
             $query->withCount(['cases' => function ($caseQuery) {
-                $caseQuery->where('status', 'accepted');
+                $caseQuery->where('status', 'accepted')
+                    ->whereHas('user', function ($q) {
+                        $q->where('status', true);
+                    });
             }]);
         }])->get();
 
@@ -103,7 +119,7 @@ class CaseController extends Controller
 
     public function create()
     {
-        Gate::authorize('create',  LegalCase::class);
+        Gate::authorize('create', LegalCase::class);
 
         $trials = Trial::all();
         $subjects = Subject::all();
@@ -424,7 +440,6 @@ class CaseController extends Controller
     }
 
 
-
     public function getTags($id)
     {
         $case = LegalCase::findOrFail($id);
@@ -463,16 +478,15 @@ class CaseController extends Controller
         $tag = $request->query('tag');
         $trial = $request->query('juicio');
 
-        if($tag) {
+        if ($tag) {
             $tagId = intval($tag);
             return view('cases.show', compact('case', 'tagId'));
-        }
-        elseif($trial){
+        } elseif ($trial) {
             $trialId = intval($trial);
             return view('cases.show', compact('case', 'trialId'));
         }
 
-        return view('cases.show', compact('case' ));
+        return view('cases.show', compact('case'));
     }
 
 
@@ -508,7 +522,7 @@ class CaseController extends Controller
 
         $query = LegalCase::query();
 
-        $query -> when($status !== 'all', function ($q) use ($status) {
+        $query->when($status !== 'all', function ($q) use ($status) {
             return $q->where('status', $status);
         });
 
@@ -522,7 +536,7 @@ class CaseController extends Controller
 
     public function approve($id)
     {
-        $case = LegalCase::findOrFail($id  );
+        $case = LegalCase::findOrFail($id);
         Gate::authorize('approve', $case);
 
         $case->status = 'accepted';
@@ -710,23 +724,44 @@ class CaseController extends Controller
                 'page' => $request->input('page'),
             ]);
 
-            $query = LegalCase::query()
-                ->where('status', 'accepted')
-                ->whereHas('user', function ($q) {
-                    $q->where('status', true);
-                });
+            $query = LegalCase::query();
+
+
+            if ($request->header('View') === 'list') {
+                $query->where('status', 'accepted')
+                    ->whereHas('user', function ($q) {
+                        $q->where('status', true);
+                    });
+            }
+
+            if ($request->header('View') === 'archived') {
+                $query->onlyTrashed();
+            }
+
 
             // Apply search if provided
             if ($request->filled('q')) {
                 $searchTerm = $request->q;
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('id', 'ILIKE', "%{$searchTerm}%")
-                        ->orWhere('title', 'ILIKE', "%{$searchTerm}%");
+                        ->orWhere('title', 'ILIKE', "%{$searchTerm}%")
+                        //search by subject name
+                        ->orWhereHas('trial.subject', function ($q) use ($searchTerm) {
+                            $q->where('name', 'ILIKE', "%{$searchTerm}%");
+                        })
+                        //search by trial name
+                        ->orWhereHas('trial', function ($q) use ($searchTerm) {
+                            $q->where('name', 'ILIKE', "%{$searchTerm}%");
+                        })
+                        //search by tag name
+                        ->orWhereHas('tags', function ($q) use ($searchTerm) {
+                            $q->where('name', 'ILIKE', "%{$searchTerm}%");
+                        });
                 });
             }
 
             // Apply subject and trial filters with OR condition
-            if ($request->filled('subject_ids') || $request->filled('trial_ids') || $request->filled('tag_ids') ) {
+            if ($request->filled('subject_ids') || $request->filled('trial_ids') || $request->filled('tag_ids')) {
                 $query->where(function ($query) use ($request) {
                     // Add subject filter if present
                     if ($request->filled('subject_ids')) {
@@ -742,16 +777,20 @@ class CaseController extends Controller
 
                     //Add tag filter if present
                     if ($request->filled('tag_ids')) {
-                        $query->orWhereHas('tags', function($q) use ($request) {
-                           $q->whereIn('id', $request->tag_ids);
+                        $query->orWhereHas('tags', function ($q) use ($request) {
+                            $q->whereIn('id', $request->tag_ids);
                         });
                     }
                 });
             }
 
             // Apply sorting
-            $sortField = $request->input('sort', 'id');
-            $sortDirection = $request->input('direction', 'asc');
+            $sortField = in_array(strtolower($request->query('sort')), ['updated_at', 'id'])
+                ? strtolower($request->query('sort'))
+                : 'id';
+            $sortDirection = in_array(strtolower($request->query('direction')), ['asc', 'desc'])
+                ? strtolower($request->query('direction'))
+                : 'asc';
             $page = intval($request->input('page', 1));
 
             $query->orderBy($sortField, $sortDirection);
@@ -778,15 +817,35 @@ class CaseController extends Controller
 //                'current_page' => $cases->currentPage()
 //            ]);
 
+            Log::info('Obtained cases', ['cases'=>$cases]);
+
             if ($request->ajax()) {
+
+                Log::info('ENTRE AL AJAX');
+
                 if ($cases->isEmpty()) {
+
+                    switch($request->header('View')) {
+                        case 'archived':
+                            $output = '<tr class="bg-white border-b hover:bg-gray-50">
+                                            <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron casos archivados</td>
+                                        </tr>';
+                            return $output;
+
+
+                    }
+
                     return response()->view('cases.partials.empty-results')->header('Content-Type', 'text/html');
                 }
-                return response()->view('cases.partials.all-list', compact('cases'))->header('Content-Type', 'text/html');
+                if ($request->header('View') === 'archived') {
+                    return response()->view('cases.partials.archived-row', compact('cases'))->header('Content-Type', 'text/html');
+                }
+                if ($request->header('View') === 'list') {
+                    return response()->view('cases.partials.all-list', compact('cases'))->header('Content-Type', 'text/html');
+                }
             }
 
             return view('cases.list', compact('cases'));
-
 
         } catch (\Exception $e) {
             Log::error('Error in filter method', [

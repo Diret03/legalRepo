@@ -45,7 +45,7 @@
                 href="{{ route('cases.index') }}"
                 icon="svg/cases.svg"
                 title="Casos"
-                :activeRoutes="['cases.index', 'cases.create', 'cases.edit']"
+                :activeRoutes="['cases.index', 'cases.create', 'cases.edit', 'cases.archived']"
             />
         @endcan
 

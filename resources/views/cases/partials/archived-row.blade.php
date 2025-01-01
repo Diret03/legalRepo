@@ -168,14 +168,6 @@
 
                         @endif
                         @can('eliminar casos definitivamente')
-                            {{--                            <form action="{{route('cases.forceDelete',$case->id)}}" method="POST">--}}
-                            {{--                                @csrf--}}
-                            {{--                                <button type="submit"--}}
-                            {{--                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline"--}}
-                            {{--                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este caso para siempre?')">--}}
-                            {{--                                    <img src="{{asset('svg/delete.svg')}}" class="size-7" alt="Borrar icon">--}}
-                            {{--                                </button>--}}
-                            {{--                            </form>--}}
                             <button data-modal-target="popup-delete-modal" data-modal-toggle="popup-delete-modal"
                                     type="button"
                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
