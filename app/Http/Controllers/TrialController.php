@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class TrialController extends Controller
 {
@@ -39,7 +40,7 @@ class TrialController extends Controller
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
         $trials = Trial::orderBy($sortField, $sortDirection)->paginate(10);
-        $subjects = Subject::all();
+        $subjects = Subject::orderBy('name')->get();
 
         // Append sort parameters to pagination links
         $trials->appends(['sort' => $sortField, 'direction' => $sortDirection]);
@@ -81,6 +82,98 @@ class TrialController extends Controller
             }
 
             return $output;
+        }
+    }
+
+
+    public function filter(Request $request)
+    {
+
+
+        try {
+
+            // Log incoming request data
+            Log::info('Filter trial request received', [
+                'search' => $request->input('q'),
+                'sort' => $request->input('sort'),
+                'direction' => $request->input('direction'),
+                'page' => $request->input('page'),
+            ]);
+
+            $query = Trial::query();
+
+            // Apply search if provided
+            if ($request->filled('q')) {
+                $searchTerm = $request->q;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('id', 'ILIKE', "%{$searchTerm}%")
+                        ->orWhere('name', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhere('description', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhereHas('subject', function ($q) use ($searchTerm) {
+                            $q->where('name', 'ILIKE', '%' . $searchTerm . '%');
+                        });
+                });
+            }
+
+            // Apply sorting
+            $sortField = in_array(strtolower($request->query('sort')), ['updated_at'])
+                ? strtolower($request->query('sort'))
+                : 'updated_at';
+            $sortDirection = in_array(strtolower($request->query('direction')), ['asc', 'desc'])
+                ? strtolower($request->query('direction'))
+                : 'desc';
+            $page = intval($request->input('page', 1));
+
+            $query->orderBy($sortField, $sortDirection);
+
+            // Log the SQL query being executed
+            Log::info('SQL Trial Query:', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
+            $totalCount = $query->count();
+
+            // Adjust page if it exceeds the last possible page
+            $perPage = 10;
+            $lastPage = max(1, ceil($totalCount / $perPage));
+            $page = min($page, $lastPage);
+
+            //paginate results
+            $trials = $query->paginate($perPage, ['*'], 'page', $page);
+
+            Log::info('Obtained trials', ['trials' => $trials]);
+
+            $subjects = Subject::orderBy('name')->get();
+
+            if ($request->ajax()) {
+
+                if ($trials->isEmpty()) {
+
+                    return '<tr class="bg-white border-b hover:bg-gray-50">
+                                            <td colspan="6" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron juicios</td>
+                                        </tr>';
+                }
+
+
+                return response()->view('trials.row', compact('trials', 'subjects'))->header('Content-Type', 'text/html');
+            }
+
+            return view('trials.index', compact('trials', 'subjects'));
+
+        } catch (\Exception $e) {
+            Log::error('Error in filter method - trials', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            throw $e;
         }
     }
 

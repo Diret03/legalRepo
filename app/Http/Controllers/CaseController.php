@@ -734,10 +734,6 @@ class CaseController extends Controller
                     });
             }
 
-            if ($request->header('View') === 'archived') {
-                $query->onlyTrashed();
-            }
-
 
             // Apply search if provided
             if ($request->filled('q')) {
@@ -758,6 +754,19 @@ class CaseController extends Controller
                             $q->where('name', 'ILIKE', "%{$searchTerm}%");
                         });
                 });
+
+                //search by author user
+                if ($request->header('View') === 'archived' || $request->header('View') === 'index') {
+                    $query->orWhereHas('user', function ($q) use ($searchTerm) {
+                        $q->where('name', 'ILIKE', "%{$searchTerm}%")
+                            ->orWhere('last_name', 'ILIKE', "%{$searchTerm}%")
+                            ->orWhere('email', 'ILIKE', "%{$searchTerm}%");
+                    });
+                }
+            }
+
+            if ($request->header('View') === 'archived') {
+                $query->onlyTrashed();
             }
 
             // Apply subject and trial filters with OR condition
@@ -821,17 +830,12 @@ class CaseController extends Controller
 
             if ($request->ajax()) {
 
-                Log::info('ENTRE AL AJAX');
-
                 if ($cases->isEmpty()) {
 
-                    switch($request->header('View')) {
-                        case 'archived':
-                            $output = '<tr class="bg-white border-b hover:bg-gray-50">
+                    if($request->header('View') === 'archived' || $request->header('View') === 'index') {
+                        return '<tr class="bg-white border-b hover:bg-gray-50">
                                             <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron casos archivados</td>
                                         </tr>';
-                            return $output;
-
 
                     }
 
@@ -839,6 +843,9 @@ class CaseController extends Controller
                 }
                 if ($request->header('View') === 'archived') {
                     return response()->view('cases.partials.archived-row', compact('cases'))->header('Content-Type', 'text/html');
+                }
+                if ($request->header('View') === 'index') {
+                    return response()->view('cases.partials.row', compact('cases'))->header('Content-Type', 'text/html');
                 }
                 if ($request->header('View') === 'list') {
                     return response()->view('cases.partials.all-list', compact('cases'))->header('Content-Type', 'text/html');

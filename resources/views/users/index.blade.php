@@ -167,189 +167,127 @@
                 @include('users.row', ['users' => $users])
                 </tbody>
             </table>
-            <div class="pagination mt-4 pb-10">
+            <div id="pagination" class="pagination mt-4 pb-10">
                 {{ $users->links() }}
             </div>
         </div>
 
     </div>
-</x-app-dash-layout>
 
-<!-- Add user modal -->
-<div id="authentication-modal" tabindex="-1" aria-hidden="true"
-     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Agregar usuario
-                </h3>
-                <button type="button"
-                        class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="authentication-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <!-- Modal body -->
-            <div class="p-4 md:p-5">
-                @if ($errors->any())
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-                         role="alert">
-                        <strong class="font-bold">Oops!</strong>
-                        <span class="block sm:inline">Corrige los siguientes erorres:</span>
-                        <ul class="list-disc list-inside">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <form class="space-y-4" action="{{ route('users.store') }}" method="POST">
-                    @csrf
-                    <div>
-                        <label for="name"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                        <input type="text" name="name" id="name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe un nombre" value="{{ old('name') }}"/>
-                    </div>
-                    <div>
-                        <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
-                        <input type="text" name="last_name" id="last_name"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe un apellido" value="{{ old('last_name') }}"/>
-                    </div>
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
-                            electrónico</label>
-                        <input type="email" name="email" id="email"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               placeholder="Escribe un correo electrónico" value="{{ old('email') }}"/>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Roles</label>
-                        @foreach($roles as $role)
-                            <div class="flex items-center mb-4">
-                                <input
-                                    id="role_{{$role}}"
-                                    type="checkbox"
-                                    value="{{$role}}"
-                                    name="roles[]"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                >
-                                <label for="role_{{$role}}" class="ms-2 text-sm font-medium text-gray-900">
-                                    {{ucfirst($role)}}
-                                </label>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div>
-                        <label for="status"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
-                        <select name="status" id="status"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Contraseña</label>
-                        <input type="password" name="password" id="password" placeholder="••••••••"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               required/>
-                    </div>
-
-                    <button type="submit"
-                            class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        Agregar
+    <!-- Add user modal -->
+    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
+         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Agregar usuario
+                    </h3>
+                    <button type="button"
+                            class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="authentication-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
                     </button>
-                </form>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5">
+                    @if ($errors->any())
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            <span class="block sm:inline">Corrige los siguientes erorres:</span>
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form class="space-y-4" action="{{ route('users.store') }}" method="POST">
+                        @csrf
+                        <div>
+                            <label for="name"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                            <input type="text" name="name" id="name"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   placeholder="Escribe un nombre" value="{{ old('name') }}"/>
+                        </div>
+                        <div>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
+                            <input type="text" name="last_name" id="last_name"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   placeholder="Escribe un apellido" value="{{ old('last_name') }}"/>
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo
+                                electrónico</label>
+                            <input type="email" name="email" id="email"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   placeholder="Escribe un correo electrónico" value="{{ old('email') }}"/>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900">Roles</label>
+                            @foreach($roles as $role)
+                                <div class="flex items-center mb-4">
+                                    <input
+                                        id="role_{{$role}}"
+                                        type="checkbox"
+                                        value="{{$role}}"
+                                        name="roles[]"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    >
+                                    <label for="role_{{$role}}" class="ms-2 text-sm font-medium text-gray-900">
+                                        {{ucfirst($role)}}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div>
+                            <label for="status"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
+                            <select name="status" id="status"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Contraseña</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   required/>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full text-white bg-red-650 hover:bg-red-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            Agregar
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <script type="module">
+        import {initializeLiveSearchNoCases} from "{{Vite::asset('resources/js/searchNoCases.js')}}";
 
-<script>
-    $(document).ready(function () {
-        {{--$('#search').on('keyup', function () {--}}
-        {{--    let query = $(this).val();--}}
+        initializeLiveSearchNoCases('users');
+    </script>
 
-        {{--    if (query.length > 0) {--}}
-        {{--        $('.pagination').hide();--}}
-        {{--    } else {--}}
-        {{--        $('.pagination').show();--}}
-        {{--    }--}}
+    <script src="{{ asset('js/deleteSelected.js') }}"></script>
+    <script src="{{ asset('js/deactivateSelected.js') }}"></script>
+    <script>
+        initializeDeleteFunction("{{ route('users.deleteSelected') }}", "user_ids");
+        initializeDeactivateFunction("{{ route('users.deactivateSelected') }}", "user_ids");
+    </script>
 
-        {{--    $.ajax({--}}
-        {{--        url: "{{ route('users.search') }}",--}}
-        {{--        type: "GET",--}}
-        {{--        data: {'search': query},--}}
-        {{--        success: function (data) {--}}
-        {{--            $('#users-data').html(data);--}}
-        {{--        },--}}
-        {{--        error: function (xhr, status, error) {--}}
-        {{--            console.error('Error al buscar:', error);--}}
-        {{--            console.error('Detalles del error:', xhr, status);--}}
-        {{--        }--}}
-        {{--    });--}}
-        {{--});--}}
+</x-app-dash-layout>
 
-        const $loadingSpinner = $('#loading-spinner');
-        const $data = $('#users-data');
-        let debounceTimer;
-
-        $('#search').on('keyup', function () {
-            let query = $(this).val();
-            // Clear the previous timer
-            clearTimeout(debounceTimer);
-
-            if (query.length > 0) {
-                $('.pagination').hide();
-            } else {
-                $('.pagination').show();
-            }
-
-            // Set a new timer
-            debounceTimer = setTimeout(function () {
-                // Show the loading spinner
-                $loadingSpinner.removeClass('hidden');
-
-                $.ajax({
-                    url: "{{ route('users.search') }}",
-                    type: "GET",
-                    data: {
-                        'search': query,
-                    },
-                    success: function (data) {
-                        $data.html(data);
-                    },
-                    complete: function () {
-                        // Hide the loading spinner
-                        $loadingSpinner.addClass('hidden');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error al buscar:', error);
-                        console.error('Detalles del error:', xhr, status);
-                        // Hide the loading spinner in case of error
-                        $loadingSpinner.addClass('hidden');
-                    }
-                });
-            }, 300); // delay time
-        });
-    });
-</script>
-<script src="{{ asset('js/deleteSelected.js') }}"></script>
-<script src="{{ asset('js/deactivateSelected.js') }}"></script>
-<script>
-    initializeDeleteFunction("{{ route('users.deleteSelected') }}", "user_ids");
-    initializeDeactivateFunction("{{ route('users.deactivateSelected') }}", "user_ids");
-</script>

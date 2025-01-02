@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Judge;
+use Illuminate\Support\Facades\Log;
 
 class JudgeController extends Controller
 {
@@ -50,7 +51,7 @@ class JudgeController extends Controller
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $path = 'uploads/subjects/';
+            $path = 'uploads/judges/';
             $image->move($path, $filename);
         }
 
@@ -72,6 +73,91 @@ class JudgeController extends Controller
     {
         //
     }
+
+    public function filter(Request $request)
+    {
+        try {
+
+            // Log incoming request data
+            Log::info('Filter judge request received', [
+                'search' => $request->input('q'),
+                'sort' => $request->input('sort'),
+                'direction' => $request->input('direction'),
+                'page' => $request->input('page'),
+            ]);
+
+            $query = Judge::query();
+
+            // Apply search if provided
+            if ($request->filled('q')) {
+                $searchTerm = $request->q;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('id', 'ILIKE', "%{$searchTerm}%")
+                        ->orWhere('name', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhere('last_name', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhere('job_title', 'ILIKE', '%' . $searchTerm . '%');
+                });
+            }
+
+            // Apply sorting
+            $sortField = in_array(strtolower($request->query('sort')), ['updated_at'])
+                ? strtolower($request->query('sort'))
+                : 'updated_at';
+            $sortDirection = in_array(strtolower($request->query('direction')), ['asc', 'desc'])
+                ? strtolower($request->query('direction'))
+                : 'desc';
+            $page = intval($request->input('page', 1));
+
+            $query->orderBy($sortField, $sortDirection);
+
+            // Log the SQL query being executed
+            Log::info('SQL Judge Query:', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
+            $totalCount = $query->count();
+
+            // Adjust page if it exceeds the last possible page
+            $perPage = 10;
+            $lastPage = max(1, ceil($totalCount / $perPage));
+            $page = min($page, $lastPage);
+
+            //paginate results
+            $judges = $query->paginate($perPage, ['*'], 'page', $page);
+
+            Log::info('Obtained judges', ['judges' => $judges]);
+
+            if ($request->ajax()) {
+
+                if ($judges->isEmpty()) {
+
+                    return '<tr class="bg-white border-b hover:bg-gray-50">
+                                            <td colspan="6" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron jueces</td>
+                                        </tr>';
+                }
+
+                return response()->view('judges.row', compact('judges'))->header('Content-Type', 'text/html');
+            }
+
+            return view('judges.index', compact('judges'));
+
+        } catch (\Exception $e) {
+            Log::error('Error in filter method - judges', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            throw $e;
+        }
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -104,7 +190,7 @@ class JudgeController extends Controller
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $path = 'uploads/subjects/';
+            $path = 'uploads/judges/';
             $image->move($path, $filename);
 
             $judge->update([

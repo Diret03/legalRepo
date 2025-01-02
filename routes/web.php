@@ -28,6 +28,7 @@ Route::get('/test-email', function () {
 });
 
 Route::get('/materias',  [SubjectController::class, 'list'])->name('subjects.list');
+Route::get('/subjects/filter', [SubjectController::class, 'filter'])->name('subjects.filter');
 
 Route::get('/materia/{id}/juicios',  [TrialController::class, 'showTrials'])->name('trials.bySubject');
 
@@ -37,6 +38,7 @@ Route::get('/casos/{id}', [CaseController::class, 'show'])->name('cases.show');
 Route::get('/tags/caso/{id}/{tag}', [CaseController::class, 'showCaseByTag'])->name('tag.cases.show');
 Route::get('/juicio/caso/{id}', [CaseController::class, 'showCaseByTrial'])->name('trial.cases.show');
 Route::post('/casos/clean-filters', [CaseController::class, 'cleanFilters'])->name('cases.cleanFilters');
+Route::get('/trials/filter', [TrialController::class, 'filter'])->name('trials.filter');
 
 Route::get('/casos', [CaseController::class, 'list'])->name('cases.list');
 Route::get('/etiquetas/caso/{id}', [CaseController::class, 'showByTag'])->name('cases.showByTag');
@@ -47,6 +49,8 @@ Route::get("/cases/search", [CaseController::class, 'search'])->name('cases.sear
 Route::get("/cases/filter", [CaseController::class, 'filter'])->name('cases.filter');
 Route::get('/cases/tags/accepted', [TagController::class, 'getAcceptedTags']);
 Route::get('/cases/{id}/download', [CaseController::class, 'generatePDF'])->name('cases.pdf');
+
+Route::get('/judges/filter', [JudgeController::class, 'filter'])->name('judges.filter');
 
 Route::get('/acerca', function () {
     $judges = Judge::orderBy('last_name', 'asc')->get();
@@ -68,6 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User routes
     Route::group(['middleware' => ['can:ver usuarios']], function () {
         Route::get('/dashboard/usuarios', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter');
     });
 
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');

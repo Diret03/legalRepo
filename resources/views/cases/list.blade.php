@@ -217,7 +217,12 @@
             }
         };
         let tagSelector = new TomSelect('#select-tags', settings);
-        initializeLiveSearch('list', tagSelector);
+
+
+
+        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
+
+        initializeLiveSearchCases('list', tagSelector);
     </script>
 
 </x-app-layout>

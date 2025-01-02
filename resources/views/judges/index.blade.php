@@ -147,7 +147,7 @@
                 @include('judges.row', ['judges' => $judges])
                 </tbody>
             </table>
-            <div class="pagination mt-4 pb-10">
+            <div id="pagination" class="pagination mt-4 pb-10">
                 {{ $judges->links() }}
             </div>
         </div>
@@ -227,56 +227,13 @@
     </div>
 @endcan
 
-<script src="{{asset('js/parseRow.js')}}"></script>
-<script>
 
-    $(document).ready(function () {
+<script type="module">
+    import {initializeLiveSearchNoCases} from "{{Vite::asset('resources/js/searchNoCases.js')}}";
 
-
-        const $loadingSpinner = $('#loading-spinner');
-        const $data = $('#judges-data');
-        let debounceTimer;
-
-        $('#search').on('keyup', function () {
-            let query = $(this).val();
-            // Clear the previous timer
-            clearTimeout(debounceTimer);
-
-            if (query.length > 0) {
-                $('.pagination').hide();
-            } else {
-                $('.pagination').show();
-            }
-
-            // Set a new timer
-            debounceTimer = setTimeout(function () {
-                // Show the loading spinner
-                $loadingSpinner.removeClass('hidden');
-
-                $.ajax({
-                    url: "{{ route('judges.search') }}",
-                    type: "GET",
-                    data: {
-                        'search': query,
-                    },
-                    success: function (data) {
-                        $data.html(data);
-                    },
-                    complete: function () {
-                        // Hide the loading spinner
-                        $loadingSpinner.addClass('hidden');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error al buscar:', error);
-                        console.error('Detalles del error:', xhr, status);
-                        // Hide the loading spinner in case of error
-                        $loadingSpinner.addClass('hidden');
-                    }
-                });
-            }, 300); // delay time
-        });
-    });
+    initializeLiveSearchNoCases('judges');
 </script>
+
 <script src="{{ asset('js/deleteSelected.js') }}"></script>
 <script>
     initializeDeleteFunction("{{ route('judges.delete') }}", "judge_ids");

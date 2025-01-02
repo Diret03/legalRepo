@@ -1,5 +1,5 @@
 
-export default function initializeLiveSearch(viewHeader, tagSelector = {}, tinymce = {}) {
+export function initializeLiveSearchCases(viewHeader, tagSelector = {}, tinymce = {}) {
 
 // Initialize debounce function
     function debounce(func, wait) {
@@ -108,14 +108,12 @@ export default function initializeLiveSearch(viewHeader, tagSelector = {}, tinym
                 loadingSpinner.classList.add('hidden');
 
 
-                if (viewHeader === 'archived') {
+                if (viewHeader === 'archived' || viewHeader === 'index') {
                     //reattach event listeners
                     if (window.initFlowbite) {
                         window.initFlowbite();
                     }
-                    // import tinymce from "../assets/tinymce/tinymce.js";
-                    //
-                    //
+
                     tinymce.remove(); // Remove any existing instances
                     tinymce.init({
                         selector: 'textarea.editor-modal',

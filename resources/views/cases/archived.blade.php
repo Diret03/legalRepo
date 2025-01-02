@@ -155,9 +155,14 @@
         </div>
     </div>
 
+{{--    <script type="module">--}}
+{{--        // Use the function--}}
+{{--        initializeLiveSearch('archived', [], tinymce);--}}
+{{--    </script>--}}
     <script type="module">
-        // Use the function
-        initializeLiveSearch('archived', [], tinymce);
+        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
+
+        initializeLiveSearchCases('archived', [], tinymce);
     </script>
 
 </x-app-dash-layout>

@@ -97,7 +97,7 @@
                         </div>
                         <input type="text" id="search" name="search"
                                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               placeholder="Buscar materias">
+                               placeholder="Buscar juicios">
                     </div>
 
                 </div>
@@ -148,7 +148,7 @@
 
                 </tbody>
             </table>
-            <div class="pagination mt-4 pb-10">
+            <div id="pagination" class="pagination mt-4 pb-10">
                 {{ $trials->links() }}
             </div>
         </div>
@@ -180,8 +180,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-4 md:p-5">
-                    <form class="space-y-4" action="{{ route('trials.store') }}" method="POST"
-                    >
+                    <form class="space-y-4" action="{{ route('trials.store') }}" method="POST">
                         @csrf
                         <div>
                             <label for="name"
@@ -221,8 +220,7 @@
 @endcan
 
 <script>
-
-    function setupToggleDescriptionListeners() {
+    function setupToggleDescListeners() {
         document.querySelectorAll('.toggle-description').forEach(button => {
             button.addEventListener('click', function () {
                 const descriptionContent = this.nextElementSibling;
@@ -237,55 +235,18 @@
         });
     }
 
-    $(document).ready(function () {
-        setupToggleDescriptionListeners();
-
-        const $loadingSpinner = $('#loading-spinner');
-        const $data = $('#trials-data');
-        let debounceTimer;
-
-        $('#search').on('keyup', function () {
-            let query = $(this).val();
-            // Clear the previous timer
-            clearTimeout(debounceTimer);
-
-            if (query.length > 0) {
-                $('.pagination').hide();
-            } else {
-                $('.pagination').show();
-            }
-
-            // Set a new timer
-            debounceTimer = setTimeout(function () {
-                // Show the loading spinner
-                $loadingSpinner.removeClass('hidden');
-
-                $.ajax({
-                    url: "{{ route('trials.search') }}",
-                    type: "GET",
-                    data: {
-                        'search': query,
-                    },
-                    success: function (data) {
-                        $data.html(data);
-                    },
-                    complete: function () {
-                        // Hide the loading spinner
-                        $loadingSpinner.addClass('hidden');
-                        setupToggleDescriptionListeners();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error al buscar:', error);
-                        console.error('Detalles del error:', xhr, status);
-                        // Hide the loading spinner in case of error
-                        $loadingSpinner.addClass('hidden');
-                    }
-                });
-            }, 300); // delay time
-        });
-
+    document.addEventListener('DOMContentLoaded', function () {
+        setupToggleDescListeners();
     });
 </script>
+
+<script type="module">
+    import {initializeLiveSearchNoCases} from "{{Vite::asset('resources/js/searchNoCases.js')}}";
+
+    initializeLiveSearchNoCases('trials', setupToggleDescListeners);
+</script>
+
+
 <script src="{{ asset('js/deleteSelected.js') }}"></script>
 <script>
     initializeDeleteFunction("{{ route('trials.delete') }}", "trial_ids");

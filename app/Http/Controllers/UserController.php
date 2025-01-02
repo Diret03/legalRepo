@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -67,6 +68,99 @@ class UserController extends Controller
         }
     }
 
+    public function filter(Request $request)
+    {
+        Gate::authorize('viewAny', User::class);
+
+        try {
+
+            // Log incoming request data
+            Log::info('Filter user request received', [
+                'search' => $request->input('q'),
+                'sort' => $request->input('sort'),
+                'direction' => $request->input('direction'),
+                'page' => $request->input('page'),
+            ]);
+
+            $query = User::query();
+
+            // Apply search if provided
+            if ($request->filled('q')) {
+                $searchTerm = $request->q;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('id', 'ILIKE', "%{$searchTerm}%")
+                        ->orWhere('name', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhere('last_name', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhere('email', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhere('status', 'ILIKE', '%' . $searchTerm . '%')
+                        ->orWhereHas('roles', function ($q) use ($searchTerm) {
+                            $q->where('name', 'ILIKE', '%' . $searchTerm . '%');
+                        });
+                });
+            }
+
+            // Apply sorting
+            $sortField = in_array(strtolower($request->query('sort')), ['updated_at'])
+                ? strtolower($request->query('sort'))
+                : 'updated_at';
+            $sortDirection = in_array(strtolower($request->query('direction')), ['asc', 'desc'])
+                ? strtolower($request->query('direction'))
+                : 'desc';
+            $page = intval($request->input('page', 1));
+
+            $query->orderBy($sortField, $sortDirection);
+
+            // Log the SQL query being executed
+            Log::info('SQL User Query:', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
+            $totalCount = $query->count();
+
+            // Adjust page if it exceeds the last possible page
+            $perPage = 10;
+            $lastPage = max(1, ceil($totalCount / $perPage));
+            $page = min($page, $lastPage);
+
+            //paginate results
+            $users = $query->paginate($perPage, ['*'], 'page', $page);
+
+            Log::info('Obtained users', ['users' => $users]);
+
+            $roles = Role::all()->pluck('name');
+
+            if ($request->ajax()) {
+
+                if ($users->isEmpty()) {
+
+                    return '<tr class="bg-white border-b hover:bg-gray-50">
+                                            <td colspan="8" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron usuarios</td>
+                                        </tr>';
+                }
+
+
+                return response()->view('users.row', compact('users', 'roles'))->header('Content-Type', 'text/html');
+            }
+
+            return view('users.index', compact('users', 'roles'));
+
+        } catch (\Exception $e) {
+            Log::error('Error in filter method - users', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            throw $e;
+        }
+    }
+
 
     public function store(Request $request){
 
@@ -94,13 +188,12 @@ class UserController extends Controller
         ]);
 
         if (!empty($validated_data['roles'])) {
+            Log::info('Assigning roles', $validated_data['roles']);
             $user->syncRoles($validated_data['roles']);
             $user->save();
         }
 
-
         $user->notify(new AccountCreated());
-
 
         return redirect()->back()->with('success', 'Usuario creado exitosamente.');
 
@@ -151,6 +244,7 @@ class UserController extends Controller
         }
 
         if (!empty($validated_data['roles'])) {
+            Log::info('Assigning roles', $validated_data['roles']);
             $user->syncRoles($validated_data['roles']);
         }
         else{
@@ -226,7 +320,7 @@ class UserController extends Controller
 
 
 
-        $output = view('users.row', ['users' => User::orderBy('updated_at', 'desc')->paginate(10)])->render();
+        $output = view('users.row', ['users' => User::orderBy('updated_at', 'desc')->paginate(10), 'roles' => Role::all()->pluck('name')])->render();
         $response['success'] = [
             'message' => 'Se han desactivado los siguientes usuarios:',
             'names' => $userNames,
