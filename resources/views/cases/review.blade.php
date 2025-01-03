@@ -111,58 +111,16 @@
                         @include('cases.partials.reviewlist', ['cases' => $cases])
                     </div>
 
-                    <div class="pagination pb-10">
+                    <div id="pagination" class="pagination pb-10">
                         {{ $cases->links('pagination::tailwind') }}
                     </div>
                 @endif
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            const $loadingSpinner = $('#loading-spinner');
-            const $casesData = $('#cases-data');
-            let debounceTimer;
+    <script type="module">
+        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
 
-            $('#search').on('keyup', function() {
-                let query = $(this).val();
-                // Clear the previous timer
-                clearTimeout(debounceTimer);
-
-                if (query.length > 0) {
-                    $('.pagination').hide();
-                } else {
-                    $('.pagination').show();
-                }
-
-                // Set a new timer
-                debounceTimer = setTimeout(function() {
-                    // Show the loading spinner
-                    $loadingSpinner.removeClass('hidden');
-
-                    $.ajax({
-                        url: "{{ route('cases.search') }}",
-                        type: "GET",
-                        data: {
-                            'search': query,
-                            'view': "review",
-                        },
-                        success: function(data) {
-                            $casesData.html(data);
-                        },
-                        complete: function() {
-                            // Hide the loading spinner
-                            $loadingSpinner.addClass('hidden');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error al buscar:', error);
-                            console.error('Detalles del error:', xhr, status);
-                            // Hide the loading spinner in case of error
-                            $loadingSpinner.addClass('hidden');
-                        }
-                    });
-                }, 300); // delay time
-            });
-        });
+        initializeLiveSearchCases('review', []);
     </script>
 </x-app-dash-layout>

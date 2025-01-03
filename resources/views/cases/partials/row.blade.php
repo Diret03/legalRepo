@@ -14,7 +14,11 @@
             </td>
             <td class="px-6 py-4">
                 <div class="text-black">
-                    <div class="text-base font-semibold">{{$case->user->name}} {{$case->user->last_name}}</div>
+                    <div
+                        class="text-base font-semibold">{{$case->user->name}} {{$case->user->last_name}}
+                        @if($case->user->status === false)
+                            <span class="font-bold text-red-650">(Inactivo)</span>
+                        @endif</div>
                     <div class="font-normal text-gray-500">{{$case->user->email}}</div>
                 </div>
             </td>

@@ -30,8 +30,18 @@ export function initializeLiveSearchCases(viewHeader, tagSelector = {}, tinymce 
 
         // Get current sort parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const sortField = urlParams.get('sort') || 'id';
-        const sortDirection = urlParams.get('direction') || 'asc';
+        let sortField = '';
+        let sortDirection = '';
+
+        if (['index', 'review', 'mycases'].includes(viewHeader)){
+            sortField = urlParams.get('sort') || 'updated_at';
+            sortDirection = urlParams.get('direction') || 'desc';
+        }
+        else{
+            sortField = urlParams.get('sort') || 'id';
+            sortDirection = urlParams.get('direction') || 'asc';
+        }
+
         const page = urlParams.get('page') || 1;
 
         // Show loading state
@@ -63,6 +73,11 @@ export function initializeLiveSearchCases(viewHeader, tagSelector = {}, tinymce 
         params.append('sort', sortField);
         params.append('direction', sortDirection);
         params.append('page', page);
+
+        if (['mycases', 'review'].includes(viewHeader)){
+            const status = urlParams.get('status') || 'pending';
+            params.append('status', status);
+        }
 
         if (searchQuery.length > 0 || (subjectIds.length > 0 || trialIds.length > 0 || tagIds.length > 0)) {
             pagination.style.display = 'none';
@@ -220,10 +235,10 @@ export function initializeLiveSearchCases(viewHeader, tagSelector = {}, tinymce 
             searchInput.addEventListener('input', debounce(filterCases, 300));
         }
 
+        const urlParams = new URLSearchParams(window.location.search);
         // Initial load if there are URL parameters
-        if (window.location.search) {
+        if (urlParams.get('q') || urlParams.get('tags_ids[]') || urlParams.get('subject_ids[]')  || urlParams.get('trial_ids[]') ) {
             filterCases();
-
         }
     });
 }

@@ -27,11 +27,7 @@ class CaseController extends Controller
         $sortField = $request->query('sort', 'updated_at'); // default sort field
         $sortDirection = $request->query('direction', 'desc'); // default sort direction
 
-        $cases = LegalCase::orderBy($sortField, $sortDirection)
-            ->whereHas('user', function ($q) {
-                $q->where('status', true);
-            })
-            ->paginate(10);
+        $cases = LegalCase::orderBy($sortField, $sortDirection)->paginate(10);
         $trials = Trial::all();
 
         // Append sort parameters to pagination links
@@ -520,7 +516,10 @@ class CaseController extends Controller
 
         $status = $request->query('status', 'pending'); // default sort field
 
-        $query = LegalCase::query();
+        $query = LegalCase::query()
+            ->whereHas('user', function ($q) {
+                $q->where('status', true);
+            });
 
         $query->when($status !== 'all', function ($q) use ($status) {
             return $q->where('status', $status);
@@ -722,23 +721,41 @@ class CaseController extends Controller
                 'sort' => $request->input('sort'),
                 'direction' => $request->input('direction'),
                 'page' => $request->input('page'),
+                'status' => $request->input('status'),
             ]);
 
             $query = LegalCase::query();
+            $view = $request->header('View');
 
-
-            if ($request->header('View') === 'list') {
+            if ($view === 'list') {
                 $query->where('status', 'accepted')
                     ->whereHas('user', function ($q) {
                         $q->where('status', true);
                     });
             }
 
+            if (in_array($view, ['mycases', 'review'])) {
+
+                //if there is a status param, search by it
+                if ($request->input('status') !== 'all') {
+                    $query->where('status', $request->input('status'));
+                }
+                //if it is 'mycases' view, only the associated cases of the current user are visible
+                if ($view === 'mycases') {
+                    $query->where('user_id', Auth::id());
+                }
+                //if it is 'review' view, only cases from active users are visible
+                if ($view === 'review') {
+                    $query->whereHas('user', function ($q) {
+                        $q->where('status', true);
+                    });
+                }
+            }
 
             // Apply search if provided
             if ($request->filled('q')) {
                 $searchTerm = $request->q;
-                $query->where(function ($q) use ($searchTerm) {
+                $query->where(function ($q) use ($searchTerm, $view) {
                     $q->where('id', 'ILIKE', "%{$searchTerm}%")
                         ->orWhere('title', 'ILIKE', "%{$searchTerm}%")
                         //search by subject name
@@ -753,19 +770,21 @@ class CaseController extends Controller
                         ->orWhereHas('tags', function ($q) use ($searchTerm) {
                             $q->where('name', 'ILIKE', "%{$searchTerm}%");
                         });
+
+                    //search by author user
+                    if (in_array($view, ['mycases', 'review', 'review'])) {
+                        $q->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                            $userQuery->where('name', 'ILIKE', "%{$searchTerm}%")
+                                ->orWhere('last_name', 'ILIKE', "%{$searchTerm}%")
+                                ->orWhere('email', 'ILIKE', "%{$searchTerm}%");
+                        });
+                    }
                 });
 
-                //search by author user
-                if ($request->header('View') === 'archived' || $request->header('View') === 'index') {
-                    $query->orWhereHas('user', function ($q) use ($searchTerm) {
-                        $q->where('name', 'ILIKE', "%{$searchTerm}%")
-                            ->orWhere('last_name', 'ILIKE', "%{$searchTerm}%")
-                            ->orWhere('email', 'ILIKE', "%{$searchTerm}%");
-                    });
-                }
+
             }
 
-            if ($request->header('View') === 'archived') {
+            if ($view === 'archived') {
                 $query->onlyTrashed();
             }
 
@@ -800,8 +819,11 @@ class CaseController extends Controller
             $sortDirection = in_array(strtolower($request->query('direction')), ['asc', 'desc'])
                 ? strtolower($request->query('direction'))
                 : 'asc';
+
+
             $page = intval($request->input('page', 1));
 
+            Log::info('Ordering', ['sortField' => $sortField, 'sortDirection' => $sortDirection, 'page' => $page]);
             $query->orderBy($sortField, $sortDirection);
 
             // Log the SQL query being executed
@@ -813,7 +835,14 @@ class CaseController extends Controller
             $totalCount = $query->count();
 
             // Adjust page if it exceeds the last possible page
-            $perPage = 10;
+
+            if (in_array($view, ['mycases', 'review'])) {
+                $perPage = 12;
+            } else {
+                $perPage = 10;
+            }
+
+
             $lastPage = max(1, ceil($totalCount / $perPage));
             $page = min($page, $lastPage);
 
@@ -826,28 +855,38 @@ class CaseController extends Controller
 //                'current_page' => $cases->currentPage()
 //            ]);
 
-            Log::info('Obtained cases', ['cases'=>$cases]);
+            Log::info('Obtained cases', ['cases' => $cases]);
 
             if ($request->ajax()) {
-
                 if ($cases->isEmpty()) {
 
-                    if($request->header('View') === 'archived' || $request->header('View') === 'index') {
+                    if ($view === 'archived') {
                         return '<tr class="bg-white border-b hover:bg-gray-50">
                                             <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron casos archivados</td>
                                         </tr>';
+                    }
 
+                    if ($view === 'index') {
+                        return '<tr class="bg-white border-b hover:bg-gray-50">
+                                            <td colspan="10" class="px-6 py-12 font-bold text-2xl text-center">No se encontraron casos</td>
+                                        </tr>';
                     }
 
                     return response()->view('cases.partials.empty-results')->header('Content-Type', 'text/html');
                 }
-                if ($request->header('View') === 'archived') {
+                if ($view === 'archived') {
                     return response()->view('cases.partials.archived-row', compact('cases'))->header('Content-Type', 'text/html');
                 }
-                if ($request->header('View') === 'index') {
+                if ($view === 'index') {
                     return response()->view('cases.partials.row', compact('cases'))->header('Content-Type', 'text/html');
                 }
-                if ($request->header('View') === 'list') {
+                if ($view === 'mycases') {
+                    return response()->view('cases.partials.mylist', compact('cases'))->header('Content-Type', 'text/html');
+                }
+                if ($view === 'review') {
+                    return response()->view('cases.partials.reviewlist', compact('cases'))->header('Content-Type', 'text/html');
+                }
+                if ($view === 'list') {
                     return response()->view('cases.partials.all-list', compact('cases'))->header('Content-Type', 'text/html');
                 }
             }
