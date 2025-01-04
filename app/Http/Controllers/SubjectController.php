@@ -251,6 +251,13 @@ class SubjectController extends Controller
                 $invalidIds[] = strval($subject->id);
             } else {
                 $deletedNames[] = $subject->name;
+
+                // unlink/delete subject's image
+                $image_path = public_path($subject->image);
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
+
                 $subject->delete();
 
             }
@@ -283,6 +290,13 @@ class SubjectController extends Controller
 
         if ($subject->trials->count() > 0) {
             return redirect()->back()->with('error', 'No se puede eliminar esta materia, tiene juicios asociados.');
+        }
+
+        // unlink/delete subject's image
+        $image_path = public_path($subject->image);
+
+        if (file_exists($image_path)) {
+            unlink($image_path);
         }
 
         $subject->delete();

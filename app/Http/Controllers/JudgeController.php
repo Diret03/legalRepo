@@ -41,7 +41,7 @@ class JudgeController extends Controller
             'name' => 'required|string',
             'last_name' => 'required|string',
             'job_title' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $path = NULL;
@@ -180,7 +180,7 @@ class JudgeController extends Controller
             'name' => 'required|string',
             'last_name' => 'required|string',
             'job_title' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $path = NULL;
@@ -216,6 +216,13 @@ class JudgeController extends Controller
 
         foreach ($judges as $judge) {
             $deletedNames[] = $judge->name.' '.$judge->last_name;
+
+            // unlink/delete judge's image
+            $image_path = public_path($judge->image);
+            if (file_exists($image_path)) {
+                unlink($image_path);
+            }
+
             $judge->delete();
         }
 
@@ -233,6 +240,14 @@ class JudgeController extends Controller
     public function destroy(string $id)
     {
         $judge = Judge::findOrFail($id);
+
+        // unlink/delete judge's image
+        $image_path = public_path($judge->image);
+
+        if (file_exists($image_path)) {
+            unlink($image_path);
+        }
+
         $judge->delete();
 
         return redirect()->back()->with('success', 'Juez eliminado exitosamente.');
