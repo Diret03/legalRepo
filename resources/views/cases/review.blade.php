@@ -119,8 +119,6 @@
         </div>
     </div>
     <script type="module">
-        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
-
         initializeLiveSearchCases('review', []);
     </script>
 </x-app-dash-layout>

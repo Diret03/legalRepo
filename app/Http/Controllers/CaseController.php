@@ -736,10 +736,12 @@ class CaseController extends Controller
 
             if (in_array($view, ['mycases', 'review'])) {
 
+                Log::info("status cases", ["status"=>$request->input('status')]);
                 //if there is a status param, search by it
                 if ($request->input('status') !== 'all') {
                     $query->where('status', $request->input('status'));
                 }
+                
                 //if it is 'mycases' view, only the associated cases of the current user are visible
                 if ($view === 'mycases') {
                     $query->where('user_id', Auth::id());
@@ -750,6 +752,8 @@ class CaseController extends Controller
                         $q->where('status', true);
                     });
                 }
+
+              
             }
 
             // Apply search if provided
@@ -772,7 +776,7 @@ class CaseController extends Controller
                         });
 
                     //search by author user
-                    if (in_array($view, ['mycases', 'review', 'review'])) {
+                    if (in_array($view, ['review', 'index', 'archived'])) {
                         $q->orWhereHas('user', function ($userQuery) use ($searchTerm) {
                             $userQuery->where('name', 'ILIKE', "%{$searchTerm}%")
                                 ->orWhere('last_name', 'ILIKE', "%{$searchTerm}%")

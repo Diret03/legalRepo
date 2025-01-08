@@ -75,7 +75,16 @@ export function initializeLiveSearchCases(viewHeader, tagSelector = {}, tinymce 
         params.append('page', page);
 
         if (['mycases', 'review'].includes(viewHeader)){
-            const status = urlParams.get('status') || 'pending';
+            let status = urlParams.get('status');
+            console.log(`status ->${status}`);
+            if (!status){
+                if (viewHeader === 'mycases') {
+                    status = 'accepted';
+                } else {
+                    status = 'pending';
+                }
+            }
+            
             params.append('status', status);
         }
 

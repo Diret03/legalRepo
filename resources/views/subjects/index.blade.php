@@ -241,8 +241,6 @@
 
 
     <script type="module">
-        import {initializeLiveSearchNoCases} from "{{Vite::asset('resources/js/searchNoCases.js')}}";
-
         initializeLiveSearchNoCases('subjects', setupToggleDescListeners);
     </script>
 

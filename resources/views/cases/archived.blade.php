@@ -160,7 +160,6 @@
 {{--        initializeLiveSearch('archived', [], tinymce);--}}
 {{--    </script>--}}
     <script type="module">
-        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
 
         initializeLiveSearchCases('archived', [], tinymce);
     </script>

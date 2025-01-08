@@ -219,9 +219,6 @@
         let tagSelector = new TomSelect('#select-tags', settings);
 
 
-
-        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
-
         initializeLiveSearchCases('list', tagSelector);
     </script>
 

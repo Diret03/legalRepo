@@ -173,8 +173,6 @@
     </div>
 
     <script type="module">
-        import {initializeLiveSearchCases} from "{{Vite::asset('resources/js/search.js')}}";
-
         initializeLiveSearchCases('index', [], tinymce);
     </script>
 
